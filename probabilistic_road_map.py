@@ -400,7 +400,7 @@ def main(data_graph, algorithm_name):
 #   todo fix graph 6, 3 exit
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
+    graph = Graph('floors.yaml', 'OUTLINE_OBSTACLES_DEMO_BUILDING_8', 1)
     amount = 5
     for i in range(amount):
         # graph.randomize_graph_selection()
