@@ -3,6 +3,7 @@ import yaml
 import math
 
 
+# test
 class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
         current_file = open(yaml_file, 'r')
