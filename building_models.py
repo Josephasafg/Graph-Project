@@ -1,6 +1,6 @@
 from numpy import arange
 
-DEFAULT = 1
+DEFAULT = 0.5
 
 
 def outline_obstacles_demo_building_1(obstacle_x, obstacle_y):
@@ -868,7 +868,6 @@ def outline_obstacles_demo_building_8(obstacle_x, obstacle_y):
         obstacle_y.append(j-1)
         j -= 1
 
-
     # outline exit/enter 1
     for i in arange(0, 3 * DEFAULT):
         obstacle_y.append(i)
@@ -901,8 +900,6 @@ def outline_obstacles_demo_building_8(obstacle_x, obstacle_y):
     for i in arange(0, 22 * DEFAULT):
         obstacle_y.append(i)
         obstacle_x.append(40 * DEFAULT)
-
-
 
     # outline obst rectangle in the middle
     for i in arange(25 * DEFAULT, 40 * DEFAULT):
@@ -968,13 +965,12 @@ def outline_obstacles_demo_building_9(obstacle_x, obstacle_y):
     for i in arange(30 * DEFAULT, 61 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(0,61 * DEFAULT):
+    for i in arange(0, 61 * DEFAULT):
         obstacle_x.append(60.0 * DEFAULT)
         obstacle_y.append(i)
     for i in arange(30 * DEFAULT, 61 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * DEFAULT)
-
 
     j = 0
     for i in arange(30 * DEFAULT, 61 * DEFAULT):
@@ -982,13 +978,11 @@ def outline_obstacles_demo_building_9(obstacle_x, obstacle_y):
         obstacle_y.append(i)
         j += 1
 
-
-    j = 30
+    j = 30 * DEFAULT
     for i in arange(0, j):
         obstacle_x.append(i)
         obstacle_y.append(j-1)
         j -= 1
-
 
     # outline exit/enter 1
     for i in arange(10 * DEFAULT, 13 * DEFAULT):
@@ -1102,7 +1096,6 @@ def outline_obstacles_demo_building_10(obstacle_x, obstacle_y):
         obstacle_y.append(j+1)
         j += 1
 
-
     # outline exit/enter 1
     for i in arange(0, 3 * DEFAULT):
         obstacle_y.append(i)
@@ -1146,68 +1139,67 @@ def outline_obstacles_demo_building_10(obstacle_x, obstacle_y):
     for i in arange(20 * DEFAULT, 26 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(25 * DEFAULT)
-    for i in arange(20, 26):
+    for i in arange(20 * DEFAULT, 26 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(40)
+        obstacle_y.append(40 * DEFAULT)
 
     # outline obst around x = 0
-    for i in arange(30, 33):
-        obstacle_x.append(10)
+    for i in arange(30 * DEFAULT, 33 * DEFAULT):
+        obstacle_x.append(10 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(36, 40):
-        obstacle_x.append(10)
+    for i in arange(36 * DEFAULT, 40 * DEFAULT):
+        obstacle_x.append(10 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(0, 11):
+    for i in arange(0, 11 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(30)
-    for i in arange(0, 11):
+        obstacle_y.append(30 * DEFAULT)
+    for i in arange(0, 11 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(40)
-
-
-    # outline obst
-    for i in arange(30, 36):
-        obstacle_x.append(i)
-        obstacle_y.append(40)
-    for i in arange(39, 45):
-        obstacle_x.append(i)
-        obstacle_y.append(40)
-    for i in arange(40, 60):
-        obstacle_y.append(i)
-        obstacle_x.append(30)
-    for i in arange(40, 60):
-        obstacle_y.append(i)
-        obstacle_x.append(45)
+        obstacle_y.append(40 * DEFAULT)
 
     # outline obst
-    for i in arange(40, 60):
+    for i in arange(30 * DEFAULT, 36 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(20)
-    for i in arange(0, 20):
+        obstacle_y.append(40 * DEFAULT)
+    for i in arange(39 * DEFAULT, 45 * DEFAULT):
+        obstacle_x.append(i)
+        obstacle_y.append(40 * DEFAULT)
+    for i in arange(40 * DEFAULT, 60 * DEFAULT):
         obstacle_y.append(i)
-        obstacle_x.append(40)
+        obstacle_x.append(30 * DEFAULT)
+    for i in arange(40 * DEFAULT, 60 * DEFAULT):
+        obstacle_y.append(i)
+        obstacle_x.append(45 * DEFAULT)
 
     # outline obst
-    for i in arange(55, 60):
+    for i in arange(40 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(25)
-    for i in arange(55, 60):
+        obstacle_y.append(20 * DEFAULT)
+    for i in arange(0, 20 * DEFAULT):
+        obstacle_y.append(i)
+        obstacle_x.append(40 * DEFAULT)
+
+    # outline obst
+    for i in arange(55 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(35)
-    for i in arange(25, 29):
+        obstacle_y.append(25 * DEFAULT)
+    for i in arange(55 * DEFAULT, 60 * DEFAULT):
+        obstacle_x.append(i)
+        obstacle_y.append(35 * DEFAULT)
+    for i in arange(25 * DEFAULT, 29 * DEFAULT):
         obstacle_y.append(i)
-        obstacle_x.append(55)
-    for i in arange(32, 36):
+        obstacle_x.append(55 * DEFAULT)
+    for i in arange(32 * DEFAULT, 36 * DEFAULT):
         obstacle_y.append(i)
-        obstacle_x.append(55)
+        obstacle_x.append(55 * DEFAULT)
 
     # outline exit/enter 2
-    for i in arange(57, 61):
+    for i in arange(57 * DEFAULT, 61 * DEFAULT):
         obstacle_y.append(i)
-        obstacle_x.append(52)
-    for i in arange(57, 61):
+        obstacle_x.append(52 * DEFAULT)
+    for i in arange(57 * DEFAULT, 61 * DEFAULT):
         obstacle_y.append(i)
-        obstacle_x.append(55)
+        obstacle_x.append(55 * DEFAULT)
 
     return obstacle_x, obstacle_y
 
@@ -1328,96 +1320,96 @@ def outline_obstacles_floor_one_other(obstacle_x, obstacle_y):
 
 def outline_obstacles_floor_one(obstacle_x, obstacle_y):
     # Room outline
-    for i in arange(60):
+    for i in arange(60 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60):
-        obstacle_x.append(60.0)
+    for i in arange(60 * DEFAULT):
+        obstacle_x.append(60.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(35):
+    for i in arange(35 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(60.0)
-    for i in arange(45, 61):
+        obstacle_y.append(60.0 * DEFAULT)
+    for i in arange(45 * DEFAULT, 61 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(60.0)
+        obstacle_y.append(60.0 * DEFAULT)
 
-    for i in arange(10):
+    for i in arange(10 * DEFAULT):
         obstacle_x.append(0)
         obstacle_y.append(i)
-    for i in arange(18, 61):
+    for i in arange(18 * DEFAULT, 61 * DEFAULT):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # bottom left class
-    for i in arange(11):
+    for i in arange(11 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(8.0)
-    for i in arange(7):
-        obstacle_x.append(10.0)
+        obstacle_y.append(8.0 * DEFAULT)
+    for i in arange(7 * DEFAULT):
+        obstacle_x.append(10.0 * DEFAULT)
         obstacle_y.append(i)
 
     # stairs bottom left
-    for i in arange(16, 21):
+    for i in arange(16 * DEFAULT, 21 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(3)
-    for i in arange(3, 9):
-        obstacle_x.append(16)
+        obstacle_y.append(3 * DEFAULT)
+    for i in arange(3 * DEFAULT, 9 * DEFAULT):
+        obstacle_x.append(16 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(3, 9):
-        obstacle_x.append(21)
+    for i in arange(3 * DEFAULT, 9 * DEFAULT):
+        obstacle_x.append(21 * DEFAULT)
         obstacle_y.append(i)
     # elevator
-    for i in arange(25, 35):
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(3.0)
-    for i in arange(4):
-        obstacle_x.append(25)
+        obstacle_y.append(3.0 * DEFAULT)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(25 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(4):
-        obstacle_x.append(34)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(34 * DEFAULT)
         obstacle_y.append(i)
 
     # bottom right class
-    for i in arange(50, 60):
+    for i in arange(50 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(10.0)
-    for i in arange(7):
-        obstacle_x.append(50.0)
+        obstacle_y.append(10.0 * DEFAULT)
+    for i in arange(7 * DEFAULT):
+        obstacle_x.append(50.0 * DEFAULT)
         obstacle_y.append(i)
 
     # toilet near bottom right class
     # for i in arange(47, 50):
     #     obstacle_x.append(i)
     #     obstacle_y.append(7)
-    for i in arange(8):
-        obstacle_x.append(47)
+    for i in arange(8 * DEFAULT):
+        obstacle_x.append(47 * DEFAULT)
         obstacle_y.append(i)
 
     # mid left class
-    for i in arange(10):
+    for i in arange(10 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(40.0)
-    for i in arange(10):
+        obstacle_y.append(40.0 * DEFAULT)
+    for i in arange(10 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(55.0)
-    for i in arange(40, 52):
-        obstacle_x.append(10)
+        obstacle_y.append(55.0 * DEFAULT)
+    for i in arange(40 * DEFAULT, 52 * DEFAULT):
+        obstacle_x.append(10 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(10):
+    for i in arange(10 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(48)
+        obstacle_y.append(48 * DEFAULT)
 
     # # top left stairs
         # middle stairs
-    for i in arange(25, 35):
-        obstacle_x.append(10.0)
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
+        obstacle_x.append(10.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(25, 35):
-        obstacle_x.append(16.0)
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
+        obstacle_x.append(16.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(10, 16):
+    for i in arange(10 * DEFAULT, 16 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(25.0)
+        obstacle_y.append(25.0 * DEFAULT)
     # for i in arange(20, 33):
     #     obstacle_x.append(20.0)
     #     obstacle_y.append(i)
@@ -1429,249 +1421,249 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y):
     #     obstacle_y.append(i)
 
     # right class
-    for i in arange(25, 45):
-        obstacle_x.append(50)
+    for i in arange(25 * DEFAULT, 45 * DEFAULT):
+        obstacle_x.append(50 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(11):
-        obstacle_x.append(60 - i)
-        obstacle_y.append(25.0)
-    for i in arange(11):
-        obstacle_x.append(60 - i)
-        obstacle_y.append(45.0)
+    for i in arange(11 * DEFAULT):
+        obstacle_x.append((60 - i) * DEFAULT)
+        obstacle_y.append(25.0 * DEFAULT)
+    for i in arange(11 * DEFAULT):
+        obstacle_x.append((60 - i) * DEFAULT)
+        obstacle_y.append(45.0 * DEFAULT)
 
     return obstacle_x, obstacle_y
 
 
 def outline_obstacles_floor_two_and_three(obstacle_x, obstacle_y):
     #   Room outline
-    for i in arange(60):
+    for i in arange(60 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60):
-        obstacle_x.append(60.0)
+    for i in arange(60 * DEFAULT):
+        obstacle_x.append(60.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(61):
+    for i in arange(61 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(60.0)
-    for i in arange(61):
+        obstacle_y.append(60.0 * DEFAULT)
+    for i in arange(61 * DEFAULT):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # two classes bottom left
-    for i in arange(10):
+    for i in arange(10 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(10.0)
-    for i in arange(11):
-        obstacle_x.append(10.0)
+        obstacle_y.append(10.0 * DEFAULT)
+    for i in arange(11 * DEFAULT):
+        obstacle_x.append(10.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(11):
-        obstacle_x.append(15.0)
+    for i in arange(11 * DEFAULT):
+        obstacle_x.append(15.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(11, 15):
+    for i in arange(11 * DEFAULT, 15 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(10.0)
+        obstacle_y.append(10.0 * DEFAULT)
 
     # stairs bottom left
-    for i in arange(16, 21):
+    for i in arange(16 * DEFAULT, 21 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(3)
-    for i in arange(3, 9):
-        obstacle_x.append(16)
+        obstacle_y.append(3 * DEFAULT)
+    for i in arange(3 * DEFAULT, 9 * DEFAULT):
+        obstacle_x.append(16 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(3, 9):
-        obstacle_x.append(21)
+    for i in arange(3 * DEFAULT, 9 * DEFAULT):
+        obstacle_x.append(21 * DEFAULT)
         obstacle_y.append(i)
     # bottom elevator
-    for i in arange(28, 34):
+    for i in arange(28 * DEFAULT, 34 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(3)
-    for i in arange(4):
-        obstacle_x.append(28)
+        obstacle_y.append(3 * DEFAULT)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(28 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(4):
-        obstacle_x.append(34)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(34 * DEFAULT)
         obstacle_y.append(i)
 
     # toilets
-    for i in arange(42, 53):
+    for i in arange(42 * DEFAULT, 53 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(8.0)
-    for i in arange(8):
-        obstacle_x.append(42)
+        obstacle_y.append(8.0 * DEFAULT)
+    for i in arange(8 * DEFAULT):
+        obstacle_x.append(42 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(9):
-        obstacle_x.append(53)
+    for i in arange(9 * DEFAULT):
+        obstacle_x.append(53 * DEFAULT)
         obstacle_y.append(i)
 
     # faculty offices
-    for i in arange(56, 60):
+    for i in arange(56 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(8.0)
-    for i in arange(8):
-        obstacle_x.append(56.0)
+        obstacle_y.append(8.0 * DEFAULT)
+    for i in arange(8 * DEFAULT):
+        obstacle_x.append(56.0 * DEFAULT)
         obstacle_y.append(i)
 
     # big class number 1
-    for i in arange(45, 60):
+    for i in arange(45 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(20.0)
-    for i in arange(45, 60):
+        obstacle_y.append(20.0 * DEFAULT)
+    for i in arange(45 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(35.0)
-    for i in arange(20, 33):
-        obstacle_x.append(45.0)
+        obstacle_y.append(35.0 * DEFAULT)
+    for i in arange(20 * DEFAULT, 33 * DEFAULT):
+        obstacle_x.append(45.0 * DEFAULT)
         obstacle_y.append(i)
 
     # big class number 2
-    for i in arange(45, 60):
+    for i in arange(45 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(37.0)
-    for i in arange(45, 60):
+        obstacle_y.append(37.0 * DEFAULT)
+    for i in arange(45 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(52.0)
-    for i in arange(37, 45):
-        obstacle_x.append(45.0)
+        obstacle_y.append(52.0 * DEFAULT)
+    for i in arange(37 * DEFAULT, 45 * DEFAULT):
+        obstacle_x.append(45.0 * DEFAULT)
         obstacle_y.append(i)
 
     # benches
-    for i in arange(25, 35):
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(57)
-    for i in arange(4):
-        obstacle_x.append(25)
-        obstacle_y.append(60 - i)
-    for i in arange(4):
-        obstacle_x.append(35)
-        obstacle_y.append(60 - i)
+        obstacle_y.append(57 * DEFAULT)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(25 * DEFAULT)
+        obstacle_y.append((60 - i) * DEFAULT)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(35 * DEFAULT)
+        obstacle_y.append((60 - i) * DEFAULT)
 
     # balcony
-    for i in arange(55, 60):
-        obstacle_x.append(5.0)
+    for i in arange(55 * DEFAULT, 60 * DEFAULT):
+        obstacle_x.append(5.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(5):
+    for i in arange(5 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(55.0)
-    for i in arange(5):
+        obstacle_y.append(55.0 * DEFAULT)
+    for i in arange(5 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(60.0)
+        obstacle_y.append(60.0 * DEFAULT)
 
     # middle stairs
-    for i in arange(25, 35):
-        obstacle_x.append(10.0)
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
+        obstacle_x.append(10.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(25, 35):
-        obstacle_x.append(16.0)
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
+        obstacle_x.append(16.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(10, 16):
+    for i in arange(10 * DEFAULT, 16 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(25.0)
+        obstacle_y.append(25.0 * DEFAULT)
 
     return obstacle_x, obstacle_y
 
 
 def outline_obstacles_floor_four(obstacle_x, obstacle_y):
     #  outline of room
-    for i in arange(0, 60):
+    for i in arange(0, 60 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60):
-        obstacle_x.append(60.0)
+    for i in arange(60 * DEFAULT):
+        obstacle_x.append(60.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(61):
+    for i in arange(61 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(60.0)
-    for i in arange(61):
+        obstacle_y.append(60.0 * DEFAULT)
+    for i in arange(61 * DEFAULT):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # stairs bottom left
-    for i in arange(16, 21):
+    for i in arange(16 * DEFAULT, 21 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(3)
-    for i in arange(3, 9):
-        obstacle_x.append(16)
+        obstacle_y.append(3 * DEFAULT)
+    for i in arange(3 * DEFAULT, 9 * DEFAULT):
+        obstacle_x.append(16 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(3, 9):
-        obstacle_x.append(21)
+    for i in arange(3 * DEFAULT, 9 * DEFAULT):
+        obstacle_x.append(21 * DEFAULT)
         obstacle_y.append(i)
 
     # Lecture hall
-    for i in arange(35, 60):
+    for i in arange(35 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(20.0)
-    for i in arange(35, 60):
+        obstacle_y.append(20.0 * DEFAULT)
+    for i in arange(35 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(45.0)
-    for i in arange(20, 25):
-        obstacle_x.append(35)
+        obstacle_y.append(45.0 * DEFAULT)
+    for i in arange(20 * DEFAULT, 25 * DEFAULT):
+        obstacle_x.append(35 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(29, 42):
-        obstacle_x.append(35)
+    for i in arange(29 * DEFAULT, 42 * DEFAULT):
+        obstacle_x.append(35 * DEFAULT)
         obstacle_y.append(i)
 
     # small room under hall
-    for i in arange(57, 60):
+    for i in arange(57 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(15.0)
-    for i in arange(57, 60):
+        obstacle_y.append(15.0 * DEFAULT)
+    for i in arange(57 * DEFAULT, 60 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(10.0)
-    for i in arange(10, 15):
-        obstacle_x.append(57.0)
+        obstacle_y.append(10.0 * DEFAULT)
+    for i in arange(10 * DEFAULT, 15 * DEFAULT):
+        obstacle_x.append(57.0 * DEFAULT)
         obstacle_y.append(i)
 
     # toilets
-    for i in arange(46, 56):
+    for i in arange(46 * DEFAULT, 56 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(7.0)
-    for i in arange(8):
-        obstacle_x.append(46.0)
+        obstacle_y.append(7.0 * DEFAULT)
+    for i in arange(8 * DEFAULT):
+        obstacle_x.append(46.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(8):
-        obstacle_x.append(56.0)
+    for i in arange(8 * DEFAULT):
+        obstacle_x.append(56.0 * DEFAULT)
         obstacle_y.append(i)
 
     # elevator
-    for i in arange(26, 38):
+    for i in arange(26 * DEFAULT, 38 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(3.0)
-    for i in arange(4):
-        obstacle_x.append(26)
+        obstacle_y.append(3.0 * DEFAULT)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(26 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(4):
-        obstacle_x.append(38)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(38 * DEFAULT)
         obstacle_y.append(i)
 
     # faculty offices
-    for i in arange(6):
+    for i in arange(6 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(20.0)
-    for i in arange(21):
-        obstacle_x.append(6.0)
+        obstacle_y.append(20.0 * DEFAULT)
+    for i in arange(21 * DEFAULT):
+        obstacle_x.append(6.0 * DEFAULT)
         obstacle_y.append(i)
 
     # more offices
-    for i in arange(6):
+    for i in arange(6 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(50.0)
-    for i in arange(9):
+        obstacle_y.append(50.0 * DEFAULT)
+    for i in arange(9 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(30.0)
-    for i in arange(30, 51):
-        obstacle_x.append(9.0)
+        obstacle_y.append(30.0 * DEFAULT)
+    for i in arange(30 * DEFAULT, 51 * DEFAULT):
+        obstacle_x.append(9.0 * DEFAULT)
         obstacle_y.append(i)
 
     # stairs near offices
         # middle stairs
-    for i in arange(25, 35):
-        obstacle_x.append(10.0)
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
+        obstacle_x.append(10.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(25, 35):
-        obstacle_x.append(16.0)
+    for i in arange(25 * DEFAULT, 35 * DEFAULT):
+        obstacle_x.append(16.0 * DEFAULT)
         obstacle_y.append(i)
-    for i in arange(10, 16):
+    for i in arange(10 * DEFAULT, 16 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(25.0)
+        obstacle_y.append(25.0 * DEFAULT)
     # for i in arange(6, 11):
     #     obstacle_x.append(i)
     #     obstacle_y.append(30.0)
@@ -1691,14 +1683,14 @@ def outline_obstacles_floor_four(obstacle_x, obstacle_y):
     #     obstacle_y.append(i)
 
     # benches - top
-    for i in arange(20, 33):
+    for i in arange(20 * DEFAULT, 33 * DEFAULT):
         obstacle_x.append(i)
-        obstacle_y.append(57.0)
-    for i in arange(4):
-        obstacle_x.append(20)
-        obstacle_y.append(60 - i)
-        for i in arange(4):
-            obstacle_x.append(33)
-            obstacle_y.append(60 - i)
+        obstacle_y.append(57.0 * DEFAULT)
+    for i in arange(4 * DEFAULT):
+        obstacle_x.append(20 * DEFAULT)
+        obstacle_y.append((60 - i) * DEFAULT)
+        for i in arange(4 * DEFAULT):
+            obstacle_x.append(33 * DEFAULT)
+            obstacle_y.append((60 - i) * DEFAULT)
 
     return obstacle_x, obstacle_y
