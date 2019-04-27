@@ -18,6 +18,7 @@ MAX_EDGE_LEN = 30.0  # [m] Maximum edge length
 TOTAL_TIME = 0
 BUILDING_NAME = 'OUTLINE_OBSTACLES_DEMO_BUILDING_1'
 FLOOR_NUMBER = 1
+DEFAULT = 1.0
 ALGORITHM = "a_star"
 X = list()
 Y = list()
@@ -65,7 +66,7 @@ def prm_planning(start_tuple, obstacle_x, obstacle_y, robot_radius, algorithm_na
         print(f"result x:{len(result_x)}, y:{len(result_y)}")
 
     min_index, min_time = find_min_time(total_time_list)
-    data_graph.goal_point = goal_list_tuple[min_index]  # todo check if needed here
+    data_graph.goal_point = goal_list_tuple[min_index]
     return result_tuple_list[min_index][0], result_tuple_list[min_index][1],\
         min_index, min_time, result_tuple_list[min_index][2]
 
