@@ -267,7 +267,6 @@ def outline_obstacles_demo_building_3(obstacle_x, obstacle_y):
         obstacle_y.append(i)
         obstacle_x.append(40 * DEFAULT)
 
-
     # outline obstacle middle top 1
     for i in arange(20 * DEFAULT, 26 * DEFAULT):
         obstacle_x.append(i)
@@ -299,18 +298,18 @@ def outline_obstacles_demo_building_3(obstacle_x, obstacle_y):
         obstacle_x.append(6 * DEFAULT)
 
     # outline exit/enter 1
-    for i in arange(0, 3 * DEFAULT):
+    for i in arange(0, 5 * DEFAULT):
         obstacle_y.append(i)
         obstacle_x.append(8 * DEFAULT)
-    for i in arange(0, 3 * DEFAULT):
+    for i in arange(0, 5 * DEFAULT):
         obstacle_y.append(i)
         obstacle_x.append(11 * DEFAULT)
 
     # outline exit/enter 2
-    for i in arange(0, 3 * DEFAULT):
+    for i in arange(0, 5 * DEFAULT):
         obstacle_y.append(i)
         obstacle_x.append(48 * DEFAULT)
-    for i in arange(0, 3 * DEFAULT):
+    for i in arange(0, 5 * DEFAULT):
         obstacle_y.append(i)
         obstacle_x.append(51 * DEFAULT)
 
@@ -690,10 +689,10 @@ def outline_obstacles_demo_building_6(obstacle_x, obstacle_y):
         obstacle_x.append(40 * DEFAULT)
 
     # outline exit/enter 2 top
-    for i in arange(57 * DEFAULT, 61 * DEFAULT):
+    for i in arange(55 * DEFAULT, 61 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(21 * DEFAULT)
-    for i in arange(57 * DEFAULT, 61 * DEFAULT):
+    for i in arange(55 * DEFAULT, 61 * DEFAULT):
         obstacle_x.append(i)
         obstacle_y.append(17 * DEFAULT)
 

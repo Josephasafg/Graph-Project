@@ -403,10 +403,10 @@ if __name__ == '__main__':
     graph = Graph('floors.yaml')
     amount = 5
     for i in range(amount):
-        graph.randomize_graph_selection()
-        print(f"Current graph is {graph.model_name}")
-        graph.randomize_floor_selection()
-        print(f"Current graph is {graph.current_floor}")
+        # graph.randomize_graph_selection()
+        # print(f"Current graph is {graph.model_name}")
+        # graph.randomize_floor_selection()
+        # print(f"Current graph is {graph.current_floor}")
         start_time = time.time()
         exit_flag = True
         tries = 0
