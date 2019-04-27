@@ -13,7 +13,7 @@ from Node import Node
 N_SAMPLE = 500  # number of sample_points
 N_KNN = 10  # number of edge from one sampled point
 TOTAL_TIME = 0
-DEFAULT = 0.5
+DEFAULT = 1.0
 MAX_EDGE_LEN = 30.0 * DEFAULT # [m] Maximum edge length
 ALGORITHM = "a_star"
 X = list()

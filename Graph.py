@@ -2,7 +2,7 @@ import random
 import yaml
 import math
 
-DEFAULT = 0.5
+DEFAULT = 1.0
 
 
 class Graph:

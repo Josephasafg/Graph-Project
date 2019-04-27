@@ -1,6 +1,6 @@
 from numpy import arange
 
-DEFAULT = 0.5
+DEFAULT = 1.0
 
 
 def outline_obstacles_demo_building_1(obstacle_x, obstacle_y):
