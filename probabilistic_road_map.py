@@ -9,15 +9,12 @@ from Graph import Graph
 from mpl_toolkits.mplot3d import Axes3D
 from Node import Node
 
-
-#   todo add z coordinate to each floor and calculate distance when switching between floors and add to total time
 # parameter
 N_SAMPLE = 500  # number of sample_points
 N_KNN = 10  # number of edge from one sampled point
-MAX_EDGE_LEN = 30.0  # [m] Maximum edge length
 TOTAL_TIME = 0
-BUILDING_NAME = 'OUTLINE_OBSTACLES_DEMO_BUILDING_1'
-FLOOR_NUMBER = 1
+DEFAULT = 1.0
+MAX_EDGE_LEN = 30.0 * DEFAULT # [m] Maximum edge length
 ALGORITHM = "a_star"
 X = list()
 Y = list()
@@ -47,9 +44,9 @@ def prm_planning(start_tuple, obstacle_x, obstacle_y, robot_radius, algorithm_na
     algorithms = _get_algorithm_function(algorithm_name)
 
     for index in range(len(data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'])):
-        goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][index],
-                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][index],
-                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][index])
+        goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][index] * DEFAULT,
+                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][index] * DEFAULT,
+                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][index] * DEFAULT)
 
         sample_x, sample_y = sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree)
 
@@ -65,7 +62,7 @@ def prm_planning(start_tuple, obstacle_x, obstacle_y, robot_radius, algorithm_na
         print(f"result x:{len(result_x)}, y:{len(result_y)}")
 
     min_index, min_time = find_min_time(total_time_list)
-    data_graph.goal_point = goal_list_tuple[min_index]  # todo check if needed here
+    data_graph.goal_point = goal_list_tuple[min_index]
     return result_tuple_list[min_index][0], result_tuple_list[min_index][1],\
         min_index, min_time, result_tuple_list[min_index][2]
 
@@ -355,7 +352,7 @@ def create_3d_graph(x, y, z):
 
 def main(data_graph, algorithm_name):
     # print(__file__ + " start!!")
-    robot_size = 1.0  # [m]
+    robot_size = 1.0 * DEFAULT # [m]
 
     obstacle_x, obstacle_y = list(), list()
 
@@ -372,8 +369,8 @@ def main(data_graph, algorithm_name):
         plt.plot(obstacle_x, obstacle_y, ".k")
         plt.plot(data_graph.starting_point[0],
                  data_graph.starting_point[1], "^r")
-        plt.plot(graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index],
-                 graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index], "^g")
+        plt.plot(graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * DEFAULT,
+                 graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * DEFAULT, "^g")
         plt.grid(True)
         plt.axis("equal")
 
@@ -393,9 +390,9 @@ def main(data_graph, algorithm_name):
     if return_code != 0:
         return False
 
-    data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index], \
-                            data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index],\
-                            data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index]
+    data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * DEFAULT, \
+                            data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * DEFAULT,\
+                            data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index] * DEFAULT
 
     return True
 
@@ -432,8 +429,8 @@ if __name__ == '__main__':
             if graph.current_floor < 1:
                 break
             else:
-                graph.starting_point = graph.goal_point[0], graph.goal_point[1] - 3.5, \
-                                       graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0]
+                graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.5 * DEFAULT), \
+                                       graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * DEFAULT
                 graph.total_min_time += graph.calc_height_distance()
 
         end_time = time.time()

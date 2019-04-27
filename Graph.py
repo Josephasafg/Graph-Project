@@ -2,6 +2,8 @@ import random
 import yaml
 import math
 
+DEFAULT = 1.0
+
 
 class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
@@ -16,9 +18,9 @@ class Graph:
     def randomize_start_points(self):
         amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'])
         result = random.randint(0, amount_of_options - 1)
-        start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
-        start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
-        start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
+        start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result] * DEFAULT
+        start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result] * DEFAULT
+        start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result] * DEFAULT
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
