@@ -352,7 +352,7 @@ def create_3d_graph(x, y, z):
 
 def main(data_graph, algorithm_name):
     # print(__file__ + " start!!")
-    robot_size = 1.0 * DEFAULT # [m]
+    robot_size = 1.0 * DEFAULT
 
     obstacle_x, obstacle_y = list(), list()
 
@@ -376,28 +376,25 @@ def main(data_graph, algorithm_name):
 
     assert result_x, 'Cannot find path'
 
-    for i in range(len(result_x)):
+    for _ in range(len(result_x)):
         Z.append(float(60 * (data_graph.current_floor-1)))
 
     X.extend(result_x)
     Y.extend(result_y)
-    # print(X)
     if show_animation:
         plt.plot(result_x, result_y, "-r")
         plt.show()
-    # print(return_code)
 
     if return_code != 0:
         return False
 
     data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * DEFAULT, \
-                            data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * DEFAULT,\
-                            data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index] * DEFAULT
+        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * DEFAULT,\
+        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index] * DEFAULT
 
     return True
 
 
-#   todo fix graph 6, 3 exit
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
@@ -410,6 +407,7 @@ if __name__ == '__main__':
         start_time = time.time()
         exit_flag = True
         tries = 0
+        graph.prioritize_starting_points()
         graph.randomize_start_points()
         while exit_flag:
             if tries > 10:
