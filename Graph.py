@@ -38,16 +38,16 @@ class Graph:
         for index in range(amount_of_options):
             priority = random.randint(0, 1000)
             current_node = Node(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_x'][index],
+                                ['start_x'][index] * DEFAULT,
                                 self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_y'][index])
+                                ['start_y'][index] * DEFAULT)
+            current_node.z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][index] * DEFAULT
             current_node.priority = priority
             self.starting_nodes.append(current_node)
-        self.choose_and_sort_starting_point()
+        self.sort_starting_point()
 
-    def choose_and_sort_starting_point(self):
-        self.starting_nodes.sort(key=lambda current_point: current_point.priority)
-        print([item.priority for item in self.starting_nodes]) #    todo continue from here after list of starting points is sorted
+    def sort_starting_point(self):
+        self.starting_nodes.sort(key=lambda current_point: current_point.priority, reverse=True)
 
     def randomize_graph_selection(self):
         random_key = random.choice(list(self.coordinate['Building']))

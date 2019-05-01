@@ -359,8 +359,8 @@ def main(data_graph, algorithm_name):
     current_floor = _get_building_model(data_graph.model_name, data_graph.current_floor)
     obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y)
 
-    start_tuple = (data_graph.starting_point[0], data_graph.starting_point[1], data_graph.starting_point[2])
-    result_x, result_y, min_index, current_min_time, return_code = prm_planning(start_tuple,
+    # start_tuple = (data_graph.starting_point[0], data_graph.starting_point[1], data_graph.starting_point[2])
+    result_x, result_y, min_index, current_min_time, return_code = prm_planning(data_graph.starting_point,
                                                                                 obstacle_x, obstacle_y, robot_size,
                                                                                 algorithm_name, data_graph)
 
@@ -376,7 +376,7 @@ def main(data_graph, algorithm_name):
 
     assert result_x, 'Cannot find path'
 
-    for _ in range(len(result_x)):
+    for i in range(len(result_x)):
         Z.append(float(60 * (data_graph.current_floor-1)))
 
     X.extend(result_x)
@@ -397,48 +397,58 @@ def main(data_graph, algorithm_name):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
-    amount = 5
+    graph = Graph('floors.yaml', 'BUILDING_8_HIT', 4)
+    amount = 1
     for i in range(amount):
-        graph.randomize_graph_selection()
-        print(f"Current graph is {graph.model_name}")
-        graph.randomize_floor_selection()
-        print(f"Current graph is {graph.current_floor}")
-        start_time = time.time()
         exit_flag = True
         tries = 0
+
+        # graph.randomize_graph_selection()
+        # print(f"Current graph is {graph.model_name}")
+        # graph.randomize_floor_selection()
+        # print(f"Current graph is {graph.current_floor}")
         graph.prioritize_starting_points()
-        graph.randomize_start_points()
-        while exit_flag:
-            if tries > 10:
-                break
-            exit_flag = main(graph, ALGORITHM)
+        # graph.randomize_start_points()
+        current_floor = graph.current_floor
+        for c_index in range(len(graph.starting_nodes)):
+            graph.current_floor = current_floor # todo put this somewhere else
+            graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
+                                   graph.starting_nodes[c_index].z
+            print(f"starting point number {graph.starting_point}")
+            start_time = time.time()
+            while exit_flag:
+                if tries > 10:
+                    break
+                exit_flag = main(graph, ALGORITHM)
 
-            if not exit_flag:
-                print(f'Returned from floor {graph.current_floor} unsuccessfully')
-                tries += 1
-                exit_flag = True
-                continue
-            else:
-                print(f'Returned successfully from floor {graph.current_floor}')
-                tries = 1
-                graph.current_floor -= 1
+                if not exit_flag:
+                    print(f'Returned from floor {graph.current_floor} unsuccessfully')
+                    tries += 1
+                    exit_flag = True
+                    continue
+                else:
+                    print(f'Returned successfully from floor {graph.current_floor}')
+                    tries = 1
+                    if c_index == len(graph.starting_nodes) - 1 or graph.current_floor > 1:
+                        graph.current_floor -= 1
+                    else:
+                        break
 
-            if graph.current_floor < 1:
-                break
-            else:
-                graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.5 * DEFAULT), \
-                                       graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * DEFAULT
-                graph.total_min_time += graph.calc_height_distance()
+                if graph.current_floor < 1:
+                    break
+                else:
+                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.5 * DEFAULT), \
+                                           graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * DEFAULT
+                    graph.total_min_time += graph.calc_height_distance()
 
-        end_time = time.time()
-        average_of_run += (end_time - start_time)
-        print(f"Graph total time is: {graph.total_min_time}")
-        print(f"Finished running in {end_time - start_time} seconds")
-        create_3d_graph(X, Y, Z)
-        X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
-        graph.delete_current_model()
-        graph.total_min_time = 0
+            end_time = time.time()
+            average_of_run += (end_time - start_time)
+            print(f"Graph total time is: {graph.total_min_time}")
+            print(f"Finished running in {end_time - start_time} seconds")
+            create_3d_graph(X, Y, Z)
+            X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
+            graph.total_min_time = 0
+        # graph.delete_current_model()
     average_of_run /= amount
     print(f"Finished Experiment on {ALGORITHM} algorithm. Average is: {average_of_run}")
     exit(0)
