@@ -6,6 +6,8 @@ import building_models
 import matplotlib.pyplot as plt
 from KDTree import KDTree
 from Graph import Graph
+from timer_decorator import timer
+from timer_decorator import calculate_average_time
 from mpl_toolkits.mplot3d import Axes3D
 from Node import Node
 
@@ -36,7 +38,8 @@ def find_min_time(time_list):
     return time_list.index(min(time_list)), min(time_list)
 
 
-def prm_planning(start_tuple, obstacle_x, obstacle_y, robot_radius, algorithm_name, data_graph):
+@timer
+def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_graph):
     result_tuple_list = list()
     total_time_list = list()
     goal_list_tuple = list()
@@ -48,18 +51,18 @@ def prm_planning(start_tuple, obstacle_x, obstacle_y, robot_radius, algorithm_na
                       data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][index] * DEFAULT,
                       data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][index] * DEFAULT)
 
-        sample_x, sample_y = sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree)
+        sample_x, sample_y = sample_points(data_graph.starting_point, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree)
 
-        if show_animation:
-            plt.plot(sample_x, sample_y, ".b")
+        # if show_animation:
+        #     plt.plot(sample_x, sample_y, ".b")
 
         road_map = generate_roadmap(sample_x, sample_y, robot_radius, obkdtree)
 
-        result_x, result_y, total_time, return_code = algorithms(start_tuple, goal_tuple, sample_x, sample_y, road_map)
+        result_x, result_y, total_time, return_code = algorithms(data_graph.starting_point, goal_tuple, sample_x, sample_y, road_map)
         result_tuple_list.append((result_x, result_y, return_code))
         total_time_list.append(total_time)
         goal_list_tuple.append(goal_tuple)
-        print(f"result x:{len(result_x)}, y:{len(result_y)}")
+        # print(f"result x:{len(result_x)}, y:{len(result_y)}")
 
     min_index, min_time = find_min_time(total_time_list)
     data_graph.goal_point = goal_list_tuple[min_index]
@@ -74,7 +77,6 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
     open_set[len(road_map) - 2] = start_node
     total_time = 0
     break_flag = 0
-    amount_of_nodes = 0
     while True:
         if not open_set:
             print("Cannot find path")
@@ -123,9 +125,6 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
         total.append(n.cost)
         pind = n.pind
 
-    # total_path = 0
-    # for k in range(len(result_x)):
-    #     print("x {0}, x+1 {1}".format(result_x[k], result_x[k+1]))
     amount = 0
     for value in total:
         amount += value
@@ -242,7 +241,7 @@ def dijkstra_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
             neighbour_id = road_map[current_id][i]
             distance_x = sample_x[neighbour_id] - current.x
             distance_y = sample_y[neighbour_id] - current.y
-            total_distance = math.sqrt(distance_x**2 + distance_y**2)
+            total_distance = weight_on_sub_path(math.sqrt(distance_x**2 + distance_y**2))
             node = Node(sample_x[neighbour_id], sample_y[neighbour_id], current.cost + total_distance, current_id)
 
             if neighbour_id in closed_set:
@@ -256,16 +255,22 @@ def dijkstra_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
                 open_set[neighbour_id] = node
 
     # generate final course
-    result_x, result_y = [goal_node.x], [goal_node.y]
+    result_x, result_y, total = [goal_node.x], [goal_node.y], [goal_node.cost]
     pind = goal_node.pind
 
     while pind != -1:
         n = closed_set[pind]
         result_x.append(n.x)
         result_y.append(n.y)
+        total.append(n.cost)
         pind = n.pind
 
-    return result_x, result_y, flag
+    amount_of_total = 0
+    for value in total:
+        amount_of_total += value
+    print(f"total time: {amount_of_total}")
+
+    return result_x, result_y, amount_of_total, flag
 
 
 def plot_road_map(road_map, sample_x, sample_y):  # pragma: no cover
@@ -360,12 +365,12 @@ def main(data_graph, algorithm_name):
     obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y)
 
     # start_tuple = (data_graph.starting_point[0], data_graph.starting_point[1], data_graph.starting_point[2])
-    result_x, result_y, min_index, current_min_time, return_code = prm_planning(data_graph.starting_point,
-                                                                                obstacle_x, obstacle_y, robot_size,
+    result_x, result_y, min_index, current_min_time, return_code = prm_planning(obstacle_x, obstacle_y, robot_size,
                                                                                 algorithm_name, data_graph)
 
     data_graph.total_min_time += current_min_time
-    if show_animation:
+    if show_animation and return_code == 0:
+        print(f"return code is: {return_code}")
         plt.plot(obstacle_x, obstacle_y, ".k")
         plt.plot(data_graph.starting_point[0],
                  data_graph.starting_point[1], "^r")
@@ -381,7 +386,7 @@ def main(data_graph, algorithm_name):
 
     X.extend(result_x)
     Y.extend(result_y)
-    if show_animation:
+    if show_animation and return_code == 0:
         plt.plot(result_x, result_y, "-r")
         plt.show()
 
@@ -397,20 +402,22 @@ def main(data_graph, algorithm_name):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'BUILDING_8_HIT', 4)
-    amount = 1
+    graph = Graph('floors.yaml')
+    amount = 100
+    amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
         tries = 0
 
-        # graph.randomize_graph_selection()
-        # print(f"Current graph is {graph.model_name}")
-        # graph.randomize_floor_selection()
-        # print(f"Current graph is {graph.current_floor}")
+        graph.randomize_graph_selection()
+        print(f"Current graph is {graph.model_name}")
+        graph.randomize_floor_selection()
+        print(f"Current floor is {graph.current_floor}")
         graph.prioritize_starting_points()
         # graph.randomize_start_points()
         current_floor = graph.current_floor
         for c_index in range(len(graph.starting_nodes)):
+            amount_of_plots += 1
             graph.current_floor = current_floor # todo put this somewhere else
             graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
                                    graph.starting_nodes[c_index].z
@@ -424,6 +431,7 @@ if __name__ == '__main__':
                 if not exit_flag:
                     print(f'Returned from floor {graph.current_floor} unsuccessfully')
                     tries += 1
+                    amount_of_plots += 1
                     exit_flag = True
                     continue
                 else:
@@ -448,7 +456,9 @@ if __name__ == '__main__':
             create_3d_graph(X, Y, Z)
             X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
             graph.total_min_time = 0
+        graph.starting_nodes.clear()
         # graph.delete_current_model()
     average_of_run /= amount
+    calculate_average_time(amount_of_plots)
     print(f"Finished Experiment on {ALGORITHM} algorithm. Average is: {average_of_run}")
     exit(0)
