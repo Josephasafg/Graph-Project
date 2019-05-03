@@ -369,7 +369,8 @@ def main(data_graph, algorithm_name):
                                                                                 algorithm_name, data_graph)
 
     data_graph.total_min_time += current_min_time
-    if show_animation and return_code == 0:
+    # if show_animation and return_code == 0:
+    if show_animation:
         print(f"return code is: {return_code}")
         plt.plot(obstacle_x, obstacle_y, ".k")
         plt.plot(data_graph.starting_point[0],
@@ -386,7 +387,7 @@ def main(data_graph, algorithm_name):
 
     X.extend(result_x)
     Y.extend(result_y)
-    if show_animation and return_code == 0:
+    if show_animation:
         plt.plot(result_x, result_y, "-r")
         plt.show()
 

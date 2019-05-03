@@ -38,6 +38,27 @@ Building:
         goal_y: [31.5]
         goal_z: [0.0]
         start_z: [0.0, 0.0]
+      '2':
+        start_x: [5.0, 55.0]
+        start_y: [10.0, 50.0]
+        goal_x: [41.0]
+        goal_y: [31.5]
+        goal_z: [20.0]
+        start_z: [0.0, 0.0]
+      '3':
+        start_x: [5.0, 55.0]
+        start_y: [10.0, 50.0]
+        goal_x: [41.0]
+        goal_y: [31.5]
+        goal_z: [40.0]
+        start_z: [0.0, 0.0]
+      '4':
+        start_x: [5.0, 55.0]
+        start_y: [10.0, 50.0]
+        goal_x: [41.0]
+        goal_y: [31.5]
+        goal_z: [60.0]
+        start_z: [0.0, 0.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_2:
     Floors:
       '1':
@@ -47,33 +68,110 @@ Building:
         goal_y: [15.0]
         goal_z: [0.0]
         start_z: [0.0, 0.0]
-  OUTLINE_OBSTACLES_DEMO_BUILDING_3:
+      '2':
+        start_x: [10.0, 50.0]
+        start_y: [10.0, 15.0]
+        goal_x: [55.0]
+        goal_y: [15.0]
+        goal_z: [10.0]
+        start_z: [10.0, 10.0]
+      '3':
+        start_x: [10.0, 50.0]
+        start_y: [10.0, 15.0]
+        goal_x: [55.0]
+        goal_y: [15.0]
+        goal_z: [20.0]
+        start_z: [20.0, 20.0]
+      '4':
+        start_x: [10.0, 50.0]
+        start_y: [10.0, 15.0]
+        goal_x: [55.0]
+        goal_y: [15.0]
+        goal_z: [30.0]
+        start_z: [30.0, 30.0]
+      '5':
+        start_x: [10.0, 50.0]
+        start_y: [10.0, 15.0]
+        goal_x: [55.0]
+        goal_y: [15.0]
+        goal_z: [40.0]
+        start_z: [40.0, 40.0]
+  OUTLINE_OBSTACLES_DEMO_BUILDING_3: # edit exits points
     Floors:
       '1':
         start_x: [30.0, 5.0]
         start_y: [45.0, 15.0]
         goal_x: [9.5, 49.5]
-        goal_y: [2.0, 2.0]
+        goal_y: [5.0, 5.0]
         goal_z: [0.0, 0.0]
         start_z: [0.0, 0.0]
-  OUTLINE_OBSTACLES_DEMO_BUILDING_4:
+      '2':
+        start_x: [30.0, 5.0]
+        start_y: [45.0, 15.0]
+        goal_x: [9.5, 49.5]
+        goal_y: [5.0, 5.0]
+        goal_z: [12.0, 12.0]
+        start_z: [12.0, 12.0]
+      '3':
+        start_x: [30.0, 5.0]
+        start_y: [45.0, 15.0]
+        goal_x: [9.5, 49.5]
+        goal_y: [5.0, 5.0]
+        goal_z: [24.0, 24.0]
+        start_z: [24.0, 24.0]
+      '4':
+        start_x: [30.0, 5.0]
+        start_y: [45.0, 15.0]
+        goal_x: [9.5, 49.5]
+        goal_y: [5.0, 5.0]
+        goal_z: [36.0, 36.0]
+        start_z: [36.0, 36.0]
+  OUTLINE_OBSTACLES_DEMO_BUILDING_4: # change exit frame
     Floors:
       '1':
         start_x: [20.0, 10.0]
         start_y: [25.0, 50.0]
         goal_x: [9.5, 49.5]
-        goal_y: [2.0, 58.0]
+        goal_y: [5.0, 58.0]
         goal_z: [0.0, 0.0]
         start_z: [0.0, 0.0]
+      '2':
+        start_x: [20.0, 10.0]
+        start_y: [25.0, 50.0]
+        goal_x: [9.5, 49.5]
+        goal_y: [5.0, 58.0]
+        goal_z: [5.0, 5.0]
+        start_z: [5.0, 5.0]
+      '3':
+        start_x: [20.0, 10.0]
+        start_y: [25.0, 50.0]
+        goal_x: [12.5, 49.5]
+        goal_y: [5.0, 58.0]
+        goal_z: [10.0, 10.0]
+        start_z: [10.0, 10.0]
+      '4':
+        start_x: [20.0, 10.0]
+        start_y: [25.0, 50.0]
+        goal_x: [12.5, 49.5]
+        goal_y: [5.0, 58.0]
+        goal_z: [15.0, 15.0]
+        start_z: [15.0, 15.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_5:
     Floors:
       '1':
         start_x: [23.0, 10.0]
         start_y: [10.0, 35.0]
         start_z: [0.0, 0.0]
-        goal_x: [30.0, 58.5]
-        goal_y: [58.0, 48.5]
-        goal_z: [0.0, 0.0]
+        goal_x: [56.5]
+        goal_y: [47.0]
+        goal_z: [0.0]
+      '2':
+        start_x: [23.0, 10.0]
+        start_y: [10.0, 35.0]
+        start_z: [4.0, 4.0]
+        goal_x: [56.5]
+        goal_y: [47.0]
+        goal_z: [4.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_6:
     Floors:
       '1':
@@ -83,39 +181,88 @@ Building:
         goal_y: [19.0, 23.5]
         goal_z: [0.0, 0.0]
         start_z: [0.0, 0.0]
+      '2':
+        start_x: [32.0, 50.0]
+        start_y: [10.0, 5.0]
+        goal_x: [58.0, 2.0]
+        goal_y: [19.0, 23.5]
+        goal_z: [8.0, 8.0]
+        start_z: [8.0, 8.0]
+      '3':
+        start_x: [32.0, 50.0]
+        start_y: [10.0, 5.0]
+        goal_x: [58.0, 2.0]
+        goal_y: [19.0, 23.5]
+        goal_z: [16.0, 16.0]
+        start_z: [16.0, 16.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_7:
     Floors:
       '1':
         start_x: [23.0, 8.0]
         start_y: [10.0, 35.0]
         goal_x: [57.0]
-        goal_y: [38.5]
+        goal_y: [37.0]
         goal_z: [0.0]
         start_z: [0.0, 0.0]
+      '2':
+        start_x: [23.0, 8.0]
+        start_y: [10.0, 35.0]
+        goal_x: [57.0]
+        goal_y: [37.0]
+        goal_z: [11.0]
+        start_z: [11.0, 11.0]
+      '3':
+        start_x: [23.0, 8.0]
+        start_y: [10.0, 35.0]
+        goal_x: [57.0]
+        goal_y: [37.0]
+        goal_z: [22.0]
+        start_z: [22.0, 22.0]
+      '4':
+        start_x: [23.0, 8.0]
+        start_y: [10.0, 35.0]
+        start_z: [33.0, 33.0]
+        goal_x: [57.0]
+        goal_y: [37.0]
+        goal_z: [33.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_8:
     Floors:
       '1':
-        start_x: [50.0, 32.0]
-        start_y: [32.4, 10.1]
-        goal_x: [58.0, 21.5]
-        goal_y: [38.5, 1.5]
-        goal_z: [0.0, 0.0]
-        start_z: [0.0, 0.0]
+        start_x: [50.0, 32.0, 21.1]
+        start_y: [32.4, 10.1, 42.0]
+        start_z: [0.0, 0.0, 0.0]
+        goal_x: [58.0]
+        goal_y: [37.0]
+        goal_z: [0.0]
+      '2':
+        start_x: [50.0, 32.0, 21.1]
+        start_y: [32.4, 10.1, 42.0]
+        start_z: [2.0, 2.0, 2.0]
+        goal_x: [58.0]
+        goal_y: [37.0]
+        goal_z: [2.0]
+      '3':
+        start_x: [50.0, 32.0, 21.1]
+        start_y: [32.4, 10.1, 42.0]
+        start_z: [4.0, 4.0, 4.0]
+        goal_x: [58.0]
+        goal_y: [37.0]
+        goal_z: [4.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_9:
     Floors:
       '1':
         start_x: [35.0, 10.0]
         start_y: [10.0, 35.0]
-        goal_x: [22.0, 58.0]
+        start_z: [0.0, 0.0]
+        goal_x: [23.2, 58.0]
         goal_y: [11.9, 38.5]
         goal_z: [0.0, 0.0]
-        start_z: [0.0, 0.0]
   OUTLINE_OBSTACLES_DEMO_BUILDING_10:
     Floors:
       '1':
         start_x: [23.0, 5.0]
         start_y: [10.0, 35.0]
+        start_z: [0.0, 0.0]
         goal_x: [21.3, 53.5]
         goal_y: [1.5, 58.5]
         goal_z: [0.0, 0.0]
-        start_z: [0.0, 0.0]
