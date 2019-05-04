@@ -1,6 +1,7 @@
 import random
 import math
 import time
+import multiprocessing
 import numpy as np
 import building_models
 import matplotlib.pyplot as plt
@@ -10,6 +11,8 @@ from timer_decorator import timer
 from timer_decorator import calculate_average_time
 from mpl_toolkits.mplot3d import Axes3D
 from Node import Node
+from functools import partial
+
 
 # parameter
 N_SAMPLE = 500  # number of sample_points
@@ -55,7 +58,6 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
 
         # if show_animation:
         #     plt.plot(sample_x, sample_y, ".b")
-
         road_map = generate_roadmap(sample_x, sample_y, robot_radius, obkdtree)
 
         result_x, result_y, total_time, return_code = algorithms(data_graph.starting_point, goal_tuple, sample_x, sample_y, road_map)
@@ -87,7 +89,7 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
         total_time += open_set[current_id].cost
         current = open_set[current_id]
 
-        if current.x == goal_node.x and current.y == goal_node.y:
+        if current_id == (len(road_map) - 1):
             print("Find goal")
             goal_node.pind = current.pind
             goal_node.cost = current.cost
@@ -355,6 +357,10 @@ def create_3d_graph(x, y, z):
     plt.show()
 
 
+# def multiprocess_to_prm(obstacle_x, obstacle_y, robot_size, algorithm_name, data_graph):
+#
+#         return result_x, result_y, min_index, current_min_time, return_code
+
 def main(data_graph, algorithm_name):
     # print(__file__ + " start!!")
     robot_size = 1.0 * DEFAULT
@@ -364,7 +370,6 @@ def main(data_graph, algorithm_name):
     current_floor = _get_building_model(data_graph.model_name, data_graph.current_floor)
     obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y)
 
-    # start_tuple = (data_graph.starting_point[0], data_graph.starting_point[1], data_graph.starting_point[2])
     result_x, result_y, min_index, current_min_time, return_code = prm_planning(obstacle_x, obstacle_y, robot_size,
                                                                                 algorithm_name, data_graph)
 
@@ -404,12 +409,12 @@ def main(data_graph, algorithm_name):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount = 100
+    amount = 40
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
         tries = 0
-
+        print(f"current index is: {i} out of {amount}")
         graph.randomize_graph_selection()
         print(f"Current graph is {graph.model_name}")
         graph.randomize_floor_selection()
