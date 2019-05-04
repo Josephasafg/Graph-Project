@@ -1,6 +1,7 @@
 import random
 import yaml
 import math
+from Node import Node
 
 DEFAULT = 1.0
 
@@ -13,18 +14,40 @@ class Graph:
         self.goal_point = tuple()
         self.current_floor = floor_number
         self.total_min_time = 0
+        self.starting_nodes = list()
         self.model_name = model_name
 
     def randomize_start_points(self):
-        amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'])
+        amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
+                                ['start_x'])
         result = random.randint(0, amount_of_options - 1)
-        start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result] * DEFAULT
-        start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result] * DEFAULT
-        start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result] * DEFAULT
+        start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]\
+            * DEFAULT
+        start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]\
+            * DEFAULT
+        start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]\
+            * DEFAULT
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
         self.starting_point = start_x, start_y, start_z
+
+    def prioritize_starting_points(self):
+        amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
+                                ['start_x'])
+        for index in range(amount_of_options):
+            priority = random.randint(0, 1000)
+            current_node = Node(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
+                                ['start_x'][index] * DEFAULT,
+                                self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
+                                ['start_y'][index] * DEFAULT)
+            current_node.z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][index] * DEFAULT
+            current_node.priority = priority
+            self.starting_nodes.append(current_node)
+        self.sort_starting_point()
+
+    def sort_starting_point(self):
+        self.starting_nodes.sort(key=lambda current_point: current_point.priority, reverse=True)
 
     def randomize_graph_selection(self):
         random_key = random.choice(list(self.coordinate['Building']))
