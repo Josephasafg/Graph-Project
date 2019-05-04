@@ -20,7 +20,7 @@ N_KNN = 10  # number of edge from one sampled point
 TOTAL_TIME = 0
 DEFAULT = 1.0
 MAX_EDGE_LEN = 30.0 * DEFAULT # [m] Maximum edge length
-ALGORITHM = "a_star"
+ALGORITHM = "dijkstra"
 X = list()
 Y = list()
 Z = list()
@@ -243,7 +243,7 @@ def dijkstra_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
             neighbour_id = road_map[current_id][i]
             distance_x = sample_x[neighbour_id] - current.x
             distance_y = sample_y[neighbour_id] - current.y
-            total_distance = math.sqrt(distance_x**2 + distance_y**2)
+            total_distance = weight_on_sub_path(math.sqrt(distance_x**2 + distance_y**2))
             node = Node(sample_x[neighbour_id], sample_y[neighbour_id], current.cost + total_distance, current_id)
 
             if neighbour_id in closed_set:
