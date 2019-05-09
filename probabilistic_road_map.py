@@ -1,17 +1,14 @@
 import random
 import math
-import time
-import multiprocessing
 import numpy as np
-import building_models
+from Utilities import building_models
 import matplotlib.pyplot as plt
-from KDTree import KDTree
+from Utilities.KDTree import KDTree
 from Graph import Graph
-from timer_decorator import timer
-from timer_decorator import calculate_average_time
-from mpl_toolkits.mplot3d import Axes3D
+from Utilities.timer_decorator import timer
+from Utilities.timer_decorator import calculate_average_time
 from Node import Node
-from utilities import randomize_dynamic_graph_size
+from Utilities.utilities import randomize_dynamic_graph_size
 
 
 # parameter
