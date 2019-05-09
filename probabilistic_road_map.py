@@ -9,6 +9,7 @@ from Utilities.timer_decorator import timer
 from Utilities.timer_decorator import calculate_average_time
 from Node import Node
 from Utilities.utilities import randomize_dynamic_graph_size
+from mpl_toolkits.mplot3d import Axes3D
 
 
 # parameter
