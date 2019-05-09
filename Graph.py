@@ -3,8 +3,6 @@ import yaml
 import math
 from Node import Node
 
-DEFAULT = 1.0
-
 
 class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
@@ -17,31 +15,31 @@ class Graph:
         self.starting_nodes = list()
         self.model_name = model_name
 
-    def randomize_start_points(self):
+    def randomize_start_points(self, dynamic_size):
         amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
                                 ['start_x'])
         result = random.randint(0, amount_of_options - 1)
         start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]\
-            * DEFAULT
+            * dynamic_size
         start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]\
-            * DEFAULT
+            * dynamic_size
         start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]\
-            * DEFAULT
+            * dynamic_size
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
         del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
         self.starting_point = start_x, start_y, start_z
 
-    def prioritize_starting_points(self):
+    def prioritize_starting_points(self, dynamic_size):
         amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
                                 ['start_x'])
         for index in range(amount_of_options):
             priority = random.randint(0, 1000)
             current_node = Node(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_x'][index] * DEFAULT,
+                                ['start_x'][index] * dynamic_size,
                                 self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_y'][index] * DEFAULT)
-            current_node.z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][index] * DEFAULT
+                                ['start_y'][index] * dynamic_size)
+            current_node.z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][index] * dynamic_size
             current_node.priority = priority
             self.starting_nodes.append(current_node)
         self.sort_starting_point()
@@ -73,7 +71,7 @@ class Graph:
         height_distance_y = (self.goal_point[1] - self.starting_point[1]) ** 2
         height_distance_z = (self.goal_point[2] - self.starting_point[2]) ** 2
         total_distance = math.sqrt(height_distance_x + height_distance_y + height_distance_z)
-        return total_distance/400
+        return total_distance/250
 
     # def randomize_goal_points(self, floor_number):
     #     amount_of_options = len(self.coordinate['Building']['Floors'][str(floor_number)]['goal_x'])
@@ -99,7 +97,7 @@ class Graph:
     def choose_next_goal(self, floor_number):
         min_list = list()
         for x, y in zip(self.coordinate['Building'][self.model_name]['Floors'][str(floor_number)]['goal_x'],
-                self.coordinate['Building'][self.model_name]['Floors'][str(floor_number)]['goal_y']):
+                        self.coordinate['Building'][self.model_name]['Floors'][str(floor_number)]['goal_y']):
             distance_x = abs(self.starting_point[0] - x)**2
             distance_y = abs(self.starting_point[1] - y)**2
             square_result = math.sqrt(distance_x + distance_y)

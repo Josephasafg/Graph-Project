@@ -1,31 +1,28 @@
 import random
 import math
-import time
-import multiprocessing
 import numpy as np
-import building_models
+from Utilities import building_models
 import matplotlib.pyplot as plt
-from KDTree import KDTree
+from Utilities.KDTree import KDTree
 from Graph import Graph
-from timer_decorator import timer
-from timer_decorator import calculate_average_time
-from mpl_toolkits.mplot3d import Axes3D
+from Utilities.timer_decorator import timer
+from Utilities.timer_decorator import calculate_average_time
 from Node import Node
-from functools import partial
+from Utilities.utilities import randomize_dynamic_graph_size
 
 
 # parameter
-DEFAULT = 1.0
+# DEFAULT = 1.0
 N_KNN = 10  # number of edge from one sampled point
 TOTAL_TIME = 0
-MAX_EDGE_LEN = 30.0 * DEFAULT
-N_SAMPLE = 500 * DEFAULT
+MAX_EDGE_LEN = 30.0
+N_SAMPLE = 500
 ALGORITHM = "a_star"
 X = list()
 Y = list()
 Z = list()
 
-show_animation = True
+SHOW_ANIMATION = True
 
 
 def _get_algorithm_function(algorithm_name):
@@ -42,7 +39,7 @@ def find_min_time(time_list):
 
 
 @timer
-def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_graph):
+def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_graph, random_graph_size):
     result_tuple_list = list()
     total_time_list = list()
     goal_list_tuple = list()
@@ -50,15 +47,19 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     algorithms = _get_algorithm_function(algorithm_name)
 
     for index in range(len(data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'])):
-        goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][index] * DEFAULT,
-                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][index] * DEFAULT,
-                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][index] * DEFAULT)
+        goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
+                      ['goal_x'][index] * random_graph_size,
+                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
+                      ['goal_y'][index] * random_graph_size,
+                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
+                      ['goal_z'][index] * random_graph_size)
 
-        sample_x, sample_y = sample_points(data_graph.starting_point, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree)
+        sample_x, sample_y = sample_points(data_graph.starting_point, goal_tuple, robot_radius, obstacle_x,
+                                           obstacle_y, obkdtree, random_graph_size)
 
-        # if show_animation:
+        # if SHOW_ANIMATION:
         #     plt.plot(sample_x, sample_y, ".b")
-        road_map = generate_roadmap(sample_x, sample_y, robot_radius, obkdtree)
+        road_map = generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_size)
 
         result_x, result_y, total_time, return_code = algorithms(data_graph.starting_point, goal_tuple, sample_x, sample_y, road_map)
         result_tuple_list.append((result_x, result_y, return_code))
@@ -214,7 +215,7 @@ def calc_heuristic(n1, n2):
     return distance
 
 
-def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree):
+def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree, random_graph_size):
     x = start_x
     y = start_y
     dx = goal_x - start_x
@@ -222,7 +223,7 @@ def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree):
     yaw = math.atan2(goal_y - start_y, goal_x - start_x)
     d = math.sqrt(dx**2 + dy**2)
 
-    if d >= MAX_EDGE_LEN:
+    if d >= (MAX_EDGE_LEN * random_graph_size):
         return True
 
     D = robot_radius
@@ -243,7 +244,7 @@ def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree):
     return False  # OK
 
 
-def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree):
+def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_size):
     """
     Road map generation
     sample_x: [m] x positions of sampled points
@@ -267,7 +268,7 @@ def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree):
             nx = sample_x[inds[ii]]
             ny = sample_y[inds[ii]]
 
-            if not is_collision(ix, iy, nx, ny, robot_radius, obkdtree):
+            if not is_collision(ix, iy, nx, ny, robot_radius, obkdtree, random_graph_size):
                 edge_id.append(inds[ii])
 
             if len(edge_id) >= N_KNN:
@@ -288,14 +289,14 @@ def plot_road_map(road_map, sample_x, sample_y):  # pragma: no cover
                      [sample_y[i], sample_y[ind]], "-k")
 
 
-def sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree):
+def sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree, random_graph_size):
     max_x = max(obstacle_x)
     max_y = max(obstacle_y)
     min_x = min(obstacle_x)
     min_y = min(obstacle_y)
     sample_x, sample_y = list(), list()
 
-    while len(sample_x) <= N_SAMPLE:
+    while len(sample_x) <= (N_SAMPLE * random_graph_size):
         random_x = (random.random() - min_x) * (max_x - min_x)
         random_y = (random.random() - min_y) * (max_y - min_y)
         index, dist = obkdtree.search(np.array([random_x, random_y]).reshape(2, 1))
@@ -360,27 +361,28 @@ def create_3d_graph(x, y, z):
     plt.show()
 
 
-def main(data_graph, algorithm_name):
+def main(data_graph, algorithm_name, random_graph_size):
     # print(__file__ + " start!!")
-    robot_size = 1.0 * DEFAULT
+    robot_size = 1.0 * random_graph_size
 
     obstacle_x, obstacle_y = list(), list()
 
     current_floor = _get_building_model(data_graph.model_name, data_graph.current_floor)
-    obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y)
+    obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y, random_graph_size)
 
     result_x, result_y, min_index, current_min_time, return_code = prm_planning(obstacle_x, obstacle_y, robot_size,
-                                                                                algorithm_name, data_graph)
+                                                                                algorithm_name, data_graph,
+                                                                                random_graph_size)
 
     data_graph.total_min_time += current_min_time
-    # if show_animation and return_code == 0:
-    if show_animation:
-        print(f"return code is: {return_code}")
+    # if SHOW_ANIMATION and return_code == 0:
+    if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
-        plt.plot(data_graph.starting_point[0],
-                 data_graph.starting_point[1], "^r")
-        plt.plot(graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * DEFAULT,
-                 graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * DEFAULT, "^g")
+        plt.plot(data_graph.starting_point[0], data_graph.starting_point[1], "^r")
+        plt.plot(graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x']
+                 [min_index] * random_graph_size,
+                 graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y']
+                 [min_index] * random_graph_size, "^g")
         plt.grid(True)
         plt.axis("equal")
 
@@ -388,43 +390,42 @@ def main(data_graph, algorithm_name):
 
     #   todo change to floor's actual height
     for i in range(len(result_x)):
-        Z.append(float((60 * DEFAULT) * (data_graph.current_floor-1)))
+        Z.append(float((60 * random_graph_size) * (data_graph.current_floor-1)))
 
     X.extend(result_x)
     Y.extend(result_y)
-    if show_animation:
+    if SHOW_ANIMATION:
         plt.plot(result_x, result_y, "-r")
         plt.show()
 
     if return_code != 0:
         return False
 
-    data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * DEFAULT, \
-        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * DEFAULT,\
-        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index] * DEFAULT
+    data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * random_graph_size, \
+        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * random_graph_size,\
+        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index] * random_graph_size
 
     return True
 
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'BUILDING_8_HIT', 4)
-    amount = 10
+    graph = Graph('floors.yaml')
+    amount = 2
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
         tries = 0
-        # print(f"current index is: {i} out of {amount}")
-        # graph.randomize_graph_selection()
-        # print(f"Current graph is {graph.model_name}")
-        # graph.randomize_floor_selection()
-        # print(f"Current floor is {graph.current_floor}")
-        graph.prioritize_starting_points()
-        # graph.randomize_start_points()
+        graph_size = randomize_dynamic_graph_size()
+        print(f"current random size is: {graph_size}")
+        graph.randomize_graph_selection()
+        graph.randomize_floor_selection()
+        graph.prioritize_starting_points(graph_size)
+
         current_floor = graph.current_floor
         for c_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
-            graph.current_floor = current_floor # todo put this somewhere else
+            graph.current_floor = current_floor  # todo put this somewhere else
             graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
                                    graph.starting_nodes[c_index].z
             print(f"starting point number {graph.starting_point}")
@@ -432,7 +433,7 @@ if __name__ == '__main__':
             while exit_flag:
                 if tries > 10:
                     break
-                exit_flag = main(graph, ALGORITHM)
+                exit_flag = main(graph, ALGORITHM, graph_size)
 
                 if not exit_flag:
                     print(f'Returned from floor {graph.current_floor} unsuccessfully')
@@ -451,8 +452,8 @@ if __name__ == '__main__':
                 if graph.current_floor < 1:
                     break
                 else:
-                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.5 * DEFAULT), \
-                                           graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * DEFAULT
+                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.5 * graph_size), \
+                                           graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * graph_size
                     graph.total_min_time += graph.calc_height_distance()
 
             # average_of_run += (end_time - start_time)
