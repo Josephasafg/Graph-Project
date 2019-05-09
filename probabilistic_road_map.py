@@ -15,11 +15,11 @@ from functools import partial
 
 
 # parameter
-N_SAMPLE = 500  # number of sample_points
+DEFAULT = 1.0
 N_KNN = 10  # number of edge from one sampled point
 TOTAL_TIME = 0
-DEFAULT = 1.0
-MAX_EDGE_LEN = 30.0 * DEFAULT # [m] Maximum edge length
+MAX_EDGE_LEN = 30.0 * DEFAULT
+N_SAMPLE = 500 * DEFAULT
 ALGORITHM = "a_star"
 X = list()
 Y = list()
@@ -86,7 +86,6 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
             break
 
         current_id = min(open_set, key=lambda o: open_set[o].cost + calc_heuristic(goal_node, open_set[o]))
-        total_time += open_set[current_id].cost
         current = open_set[current_id]
 
         if current_id == (len(road_map) - 1):
@@ -102,21 +101,22 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
 
         # expand search grid based on motion model
         for i in range(len(road_map[current_id])):
-            n_id = road_map[current_id][i]
-            dx = sample_x[n_id] - current.x
-            dy = sample_y[n_id] - current.y
-            d = weight_on_sub_path(math.sqrt(dx ** 2 + dy ** 2))
-            node = Node(sample_x[n_id], sample_y[n_id], current.cost + d, current_id)
+            neighbour_id = road_map[current_id][i]
+            dx = sample_x[neighbour_id] - current.x
+            dy = sample_y[neighbour_id] - current.y
+            # todo dont add time to node, switch to distance
+            distance = math.sqrt(dx ** 2 + dy ** 2)
+            node = Node(sample_x[neighbour_id], sample_y[neighbour_id], distance, current_id)
 
-            if n_id in closed_set:
+            if neighbour_id in closed_set:
                 continue
 
-            if n_id not in open_set:
-                open_set[n_id] = node  # Discover a new node
+            if neighbour_id not in open_set:
+                open_set[neighbour_id] = node  # Discover a new node
             else:
-                if open_set[n_id].cost >= node.cost:
+                if open_set[neighbour_id].cost >= node.cost:
                     # This path is the best until now. record it!
-                    open_set[n_id] = node
+                    open_set[neighbour_id] = node
 
     result_x, result_y, total = [goal_node.x], [goal_node.y], [goal_node.cost]
     pind = goal_node.pind
@@ -127,22 +127,90 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
         total.append(n.cost)
         pind = n.pind
 
-    amount = 0
+    total_distance = 0
     for value in total:
-        amount += value
-    print(f"total time: {amount}")
-    return result_x, result_y, amount, break_flag
+        total_distance += value
+    print(f"total distance (meters): {total_distance}")
+    print(f"Total time in minutes: {weight_on_sub_path(total_distance)}")
+    return result_x, result_y, total_distance, break_flag
+
+
+def dijkstra_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
+    start_node = Node(start_tuple[0], start_tuple[1], 0.0, -1)
+    goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
+
+    open_set, closed_set = dict(), dict()
+    open_set[len(road_map) - 2] = start_node
+
+    flag = 0
+    while True:
+        if not open_set:
+            print("Cannot find path")
+            flag = 1
+            break
+
+        current_id = min(open_set, key=lambda o: open_set[o].cost)
+        current = open_set[current_id]
+
+        if current_id == (len(road_map) - 1):
+            print("Goal is found!")
+            goal_node.pind = current.pind
+            goal_node.cost = current.cost
+            break
+
+        # Remove the item from the open set
+        open_set.pop(current_id)
+        # Add it to the closed set
+        closed_set[current_id] = current
+
+        # expand search grid based on motion model
+        for i in range(len(road_map[current_id])):
+            neighbour_id = road_map[current_id][i]
+            distance_x = sample_x[neighbour_id] - current.x
+            distance_y = sample_y[neighbour_id] - current.y
+            # total_time = weight_on_sub_path(math.sqrt(distance_x**2 + distance_y**2))
+            distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
+
+            node = Node(sample_x[neighbour_id], sample_y[neighbour_id], distance, current_id)
+
+            if neighbour_id in closed_set:
+                continue
+            # Otherwise if it is already in the open set
+            if neighbour_id in open_set:
+                if open_set[neighbour_id].cost > node.cost:
+                    open_set[neighbour_id].cost = node.cost
+                    open_set[neighbour_id].pind = current_id
+            else:
+                open_set[neighbour_id] = node
+
+    # generate final course
+    result_x, result_y, total = [goal_node.x], [goal_node.y], [goal_node.cost]
+    pind = goal_node.pind
+
+    while pind != -1:
+        n = closed_set[pind]
+        result_x.append(n.x)
+        result_y.append(n.y)
+        total.append(n.cost)
+        pind = n.pind
+
+    amount_of_total = 0
+    for value in total:
+        amount_of_total += value
+    print(f"total distance (meters): {amount_of_total}")
+    print(f"total time in minutes: {weight_on_sub_path(amount_of_total)}")
+
+    return result_x, result_y, amount_of_total, flag
 
 
 #   400 meters per minute = 24 KMH
-def weight_on_sub_path(distance, average_speed=400):
+def weight_on_sub_path(distance, average_speed=250.0):
     return distance / average_speed
 
 
 def calc_heuristic(n1, n2):
-    factored_weight = random.randint(1, 500)  # weight of heuristic
+    factored_weight = 1.0
     distance = factored_weight * math.sqrt((n1.x - n2.x)**2 + (n1.y - n2.y)**2)
-    #time_to_escape = factored_weight * weight_on_sub_path(distance)
     return distance
 
 
@@ -208,71 +276,6 @@ def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree):
         road_map.append(edge_id)
 
     return road_map
-
-
-def dijkstra_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
-    start_node = Node(start_tuple[0], start_tuple[1], 0.0, -1)
-    goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
-
-    open_set, closed_set = dict(), dict()
-    open_set[len(road_map) - 2] = start_node
-
-    flag = 0
-    while True:
-        if not open_set:
-            print("Cannot find path")
-            flag = 1
-            break
-
-        current_id = min(open_set, key=lambda o: open_set[o].cost)
-        current = open_set[current_id]
-
-        if current_id == (len(road_map) - 1):
-            print("Goal is found!")
-            goal_node.pind = current.pind
-            goal_node.cost = current.cost
-            break
-
-        # Remove the item from the open set
-        open_set.pop(current_id)
-        # Add it to the closed set
-        closed_set[current_id] = current
-
-        # expand search grid based on motion model
-        for i in range(len(road_map[current_id])):
-            neighbour_id = road_map[current_id][i]
-            distance_x = sample_x[neighbour_id] - current.x
-            distance_y = sample_y[neighbour_id] - current.y
-            total_distance = weight_on_sub_path(math.sqrt(distance_x**2 + distance_y**2))
-            node = Node(sample_x[neighbour_id], sample_y[neighbour_id], current.cost + total_distance, current_id)
-
-            if neighbour_id in closed_set:
-                continue
-            # Otherwise if it is already in the open set
-            if neighbour_id in open_set:
-                if open_set[neighbour_id].cost > node.cost:
-                    open_set[neighbour_id].cost = node.cost
-                    open_set[neighbour_id].pind = current_id
-            else:
-                open_set[neighbour_id] = node
-
-    # generate final course
-    result_x, result_y, total = [goal_node.x], [goal_node.y], [goal_node.cost]
-    pind = goal_node.pind
-
-    while pind != -1:
-        n = closed_set[pind]
-        result_x.append(n.x)
-        result_y.append(n.y)
-        total.append(n.cost)
-        pind = n.pind
-
-    amount_of_total = 0
-    for value in total:
-        amount_of_total += value
-    print(f"total time: {amount_of_total}")
-
-    return result_x, result_y, amount_of_total, flag
 
 
 def plot_road_map(road_map, sample_x, sample_y):  # pragma: no cover
@@ -357,10 +360,6 @@ def create_3d_graph(x, y, z):
     plt.show()
 
 
-# def multiprocess_to_prm(obstacle_x, obstacle_y, robot_size, algorithm_name, data_graph):
-#
-#         return result_x, result_y, min_index, current_min_time, return_code
-
 def main(data_graph, algorithm_name):
     # print(__file__ + " start!!")
     robot_size = 1.0 * DEFAULT
@@ -387,8 +386,9 @@ def main(data_graph, algorithm_name):
 
     assert result_x, 'Cannot find path'
 
+    #   todo change to floor's actual height
     for i in range(len(result_x)):
-        Z.append(float(60 * (data_graph.current_floor-1)))
+        Z.append(float((60 * DEFAULT) * (data_graph.current_floor-1)))
 
     X.extend(result_x)
     Y.extend(result_y)
@@ -408,17 +408,17 @@ def main(data_graph, algorithm_name):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
-    amount = 40
+    graph = Graph('floors.yaml', 'BUILDING_8_HIT', 4)
+    amount = 10
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
         tries = 0
-        print(f"current index is: {i} out of {amount}")
-        graph.randomize_graph_selection()
-        print(f"Current graph is {graph.model_name}")
-        graph.randomize_floor_selection()
-        print(f"Current floor is {graph.current_floor}")
+        # print(f"current index is: {i} out of {amount}")
+        # graph.randomize_graph_selection()
+        # print(f"Current graph is {graph.model_name}")
+        # graph.randomize_floor_selection()
+        # print(f"Current floor is {graph.current_floor}")
         graph.prioritize_starting_points()
         # graph.randomize_start_points()
         current_floor = graph.current_floor
@@ -428,7 +428,7 @@ if __name__ == '__main__':
             graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
                                    graph.starting_nodes[c_index].z
             print(f"starting point number {graph.starting_point}")
-            start_time = time.time()
+            # start_time = time.time()
             while exit_flag:
                 if tries > 10:
                     break
@@ -455,10 +455,8 @@ if __name__ == '__main__':
                                            graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * DEFAULT
                     graph.total_min_time += graph.calc_height_distance()
 
-            end_time = time.time()
-            average_of_run += (end_time - start_time)
+            # average_of_run += (end_time - start_time)
             print(f"Graph total time is: {graph.total_min_time}")
-            print(f"Finished running in {end_time - start_time} seconds")
             create_3d_graph(X, Y, Z)
             X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
             graph.total_min_time = 0
