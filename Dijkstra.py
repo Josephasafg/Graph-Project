@@ -79,6 +79,7 @@ def dijkstra_planning(sx, sy, gx, gy, ox, oy, reso, rr):
         for i, _ in enumerate(motion):
             node = Node(current.x + motion[i][0], current.y + motion[i][1],
                         current.cost + motion[i][2], c_id)
+            print(motion[i][2])
             n_id = calc_index(node, xw, minx, miny)
 
             if not verify_node(node, obmap, minx, miny, maxx, maxy):
@@ -103,10 +104,12 @@ def calc_final_path(ngoal, closedset, reso):
     # generate final course
     rx, ry = [ngoal.x * reso], [ngoal.y * reso]
     pind = ngoal.pind
+
     while pind != -1:
         n = closedset[pind]
         rx.append(n.x * reso)
         ry.append(n.y * reso)
+        print(f"COST IS: {n.cost}")
         pind = n.pind
 
     return rx, ry
@@ -200,16 +203,17 @@ def sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y,
     sample_y.append(goal_tuple[1])
     return sample_x, sample_y
 
+
 def main():
     print(__file__ + " start!!")
     yaml_file = open('floors.yaml', 'r')
     coordinates_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
     # start and goal position
     floor = 1
-    sx = coordinates_dict['Building']['Floors'][str(floor)]['start_x']
-    sy = coordinates_dict['Building']['Floors'][str(floor)]['start_y']
-    gx = coordinates_dict['Building']['Floors'][str(floor)]['goal_x']
-    gy = coordinates_dict['Building']['Floors'][str(floor)]['goal_y']
+    sx = coordinates_dict['Building']['BUILDING_8_HIT']['Floors'][str(floor)]['start_x'][0]
+    sy = coordinates_dict['Building']['BUILDING_8_HIT']['Floors'][str(floor)]['start_y'][0]
+    gx = coordinates_dict['Building']['BUILDING_8_HIT']['Floors'][str(floor)]['goal_x'][1]
+    gy = coordinates_dict['Building']['BUILDING_8_HIT']['Floors'][str(floor)]['goal_y'][1]
     grid_size = 1.0  # [m]
     robot_size = 1.0  # [m]
 
