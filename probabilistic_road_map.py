@@ -42,10 +42,11 @@ def find_min_time(time_list):
 @timer
 def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_graph, random_graph_size):
     result_tuple_list = list()
-    total_time_list = list()
+    total_distance_list = list()
     goal_list_tuple = list()
     obkdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
     algorithms = _get_algorithm_function(algorithm_name)
+    start_node = None
 
     for index in range(len(data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'])):
         goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
@@ -62,24 +63,29 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         #     plt.plot(sample_x, sample_y, ".b")
         road_map = generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_size)
 
-        result_x, result_y, total_time, return_code = algorithms(data_graph.starting_point, goal_tuple, sample_x, sample_y, road_map)
+        start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
+        goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
+
+        result_x, result_y, total_distance, return_code = algorithms(start_node,
+                                                                     goal_node, sample_x, sample_y, road_map)
         result_tuple_list.append((result_x, result_y, return_code))
-        total_time_list.append(total_time)
+        total_distance_list.append(total_distance)
         goal_list_tuple.append(goal_tuple)
         # print(f"result x:{len(result_x)}, y:{len(result_y)}")
 
-    min_index, min_time = find_min_time(total_time_list)
+    min_index, min_distance = find_min_time(total_distance_list)
     data_graph.goal_point = goal_list_tuple[min_index]
+
+    total_time_to_escape = start_node.calculate_time_to_escape(weight_on_sub_path(min_distance))
+    print(f"Total time to escape.\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
+
     return result_tuple_list[min_index][0], result_tuple_list[min_index][1],\
-        min_index, min_time, result_tuple_list[min_index][2]
+        min_index, min_distance, result_tuple_list[min_index][2]
 
 
-def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
-    start_node = Node(start_tuple[0], start_tuple[1], 0.0, -1)
-    goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
+def a_star_planning(start_node, goal_node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
-    total_time = 0
     break_flag = 0
     while True:
         if not open_set:
@@ -106,7 +112,6 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
             neighbour_id = road_map[current_id][i]
             dx = sample_x[neighbour_id] - current.x
             dy = sample_y[neighbour_id] - current.y
-            # todo dont add time to node, switch to distance
             distance = math.sqrt(dx ** 2 + dy ** 2)
             node = Node(sample_x[neighbour_id], sample_y[neighbour_id], distance, current_id)
 
@@ -133,14 +138,12 @@ def a_star_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
     for value in total:
         total_distance += value
     print(f"total distance (meters): {total_distance}")
-    print(f"Total time in minutes: {weight_on_sub_path(total_distance)}")
+    print(f"Total time in minutes per person: {weight_on_sub_path(total_distance)}")
+
     return result_x, result_y, total_distance, break_flag
 
 
-def dijkstra_planning(start_tuple, goal_tuple, sample_x, sample_y, road_map):
-    start_node = Node(start_tuple[0], start_tuple[1], 0.0, -1)
-    goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
-
+def dijkstra_planning(start_node, goal_node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
 
@@ -418,7 +421,6 @@ if __name__ == '__main__':
         exit_flag = True
         tries = 0
         graph_size = randomize_dynamic_graph_size()
-        print(f"current random size is: {graph_size}")
         graph.randomize_graph_selection()
         graph.randomize_floor_selection()
         graph.prioritize_starting_points(graph_size)
@@ -458,7 +460,7 @@ if __name__ == '__main__':
                     graph.total_min_time += graph.calc_height_distance()
 
             # average_of_run += (end_time - start_time)
-            print(f"Graph total time is: {graph.total_min_time}")
+            print(f"Graph total distance is: {graph.total_min_time}")
             create_3d_graph(X, Y, Z)
             X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
             graph.total_min_time = 0

@@ -15,20 +15,20 @@ class Graph:
         self.starting_nodes = list()
         self.model_name = model_name
 
-    def randomize_start_points(self, dynamic_size):
-        amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_x'])
-        result = random.randint(0, amount_of_options - 1)
-        start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]\
-            * dynamic_size
-        start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]\
-            * dynamic_size
-        start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]\
-            * dynamic_size
-        del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
-        del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
-        del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
-        self.starting_point = start_x, start_y, start_z
+    # def randomize_start_points(self, dynamic_size):
+    #     amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
+    #                             ['start_x'])
+    #     result = random.randint(0, amount_of_options - 1)
+    #     start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]\
+    #         * dynamic_size
+    #     start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]\
+    #         * dynamic_size
+    #     start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]\
+    #         * dynamic_size
+    #     del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
+    #     del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
+    #     del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
+    #     self.starting_point = start_x, start_y, start_z
 
     def prioritize_starting_points(self, dynamic_size):
         amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
