@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+from Utilities import dijkstra_utilities
 from Utilities import mapping_utility_methods
 from Utilities.KDTree import KDTree
 from Graph import Graph
@@ -11,7 +12,7 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # parameter
 TOTAL_TIME = 0
-ALGORITHM = "a_star"
+ALGORITHM = "dijkstra"
 X = list()
 Y = list()
 Z = list()
@@ -19,10 +20,12 @@ SHOW_ANIMATION = True
 
 
 def _get_algorithm_function(algorithm_name):
-    if algorithm_name == 'dijkstra':
-        return dijkstra_planning
-    elif algorithm_name == 'a_star':
-        return a_star_planning
+    if algorithm_name == 'prm_dijkstra':
+        return prm_dijkstra
+    elif algorithm_name == 'prm_a_star':
+        return prm_a_star
+    elif algorithm_name == 'dijkstra':
+        return dijkstra
     else:
         raise ValueError("This algorithm can't be found!")
 
@@ -32,10 +35,10 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     result_tuple_list = list()
     total_distance_list = list()
     goal_list_tuple = list()
-    obkdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
     algorithms = _get_algorithm_function(algorithm_name)
-    start_node = None
 
+
+    start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
     for index in range(len(data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'])):
         goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
                       ['goal_x'][index] * random_graph_size,
@@ -44,21 +47,24 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
                       data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
                       ['goal_z'][index] * random_graph_size)
 
-        sample_x, sample_y = mapping_utility_methods.sample_points\
-            (data_graph.starting_point, goal_tuple, robot_radius, obstacle_x,
-                obstacle_y, obkdtree, random_graph_size)
 
-        # if SHOW_ANIMATION:
-        #     plt.plot(sample_x, sample_y, ".b")
-
-        road_map = mapping_utility_methods.generate_roadmap(sample_x, sample_y, robot_radius,
-                                                            obkdtree, random_graph_size)
-
-        start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
         goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
 
-        result_x, result_y, total_distance, return_code = algorithms(start_node,
-                                                                     goal_node, sample_x, sample_y, road_map)
+        if algorithm_name == 'dijkstra':
+            result_x, result_y, total_distance, return_code = algorithms(start_node, goal_node,
+                                                                         obstacle_x, obstacle_y)
+        else:
+            obkdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
+            sample_x, sample_y = mapping_utility_methods.sample_points\
+                (data_graph.starting_point, goal_tuple, robot_radius, obstacle_x,
+                    obstacle_y, obkdtree, random_graph_size)
+
+            road_map = mapping_utility_methods.generate_roadmap(sample_x, sample_y, robot_radius,
+                                                                obkdtree, random_graph_size)
+
+            result_x, result_y, total_distance, return_code = algorithms(start_node,
+                                                                         goal_node, sample_x, sample_y, road_map)
+
         result_tuple_list.append((result_x, result_y, return_code))
         total_distance_list.append(total_distance)
         goal_list_tuple.append(goal_tuple)
@@ -74,7 +80,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         min_index, min_distance, result_tuple_list[min_index][2]
 
 
-def a_star_planning(start_node, goal_node, sample_x, sample_y, road_map):
+def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
     break_flag = 0
@@ -135,7 +141,7 @@ def a_star_planning(start_node, goal_node, sample_x, sample_y, road_map):
     return result_x, result_y, total_distance, break_flag
 
 
-def dijkstra_planning(start_node, goal_node, sample_x, sample_y, road_map):
+def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
 
@@ -165,7 +171,6 @@ def dijkstra_planning(start_node, goal_node, sample_x, sample_y, road_map):
             neighbour_id = road_map[current_id][i]
             distance_x = sample_x[neighbour_id] - current.x
             distance_y = sample_y[neighbour_id] - current.y
-            # total_time = weight_on_sub_path(math.sqrt(distance_x**2 + distance_y**2))
             distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
 
             node = Node(sample_x[neighbour_id], sample_y[neighbour_id], distance, current_id)
@@ -199,6 +204,71 @@ def dijkstra_planning(start_node, goal_node, sample_x, sample_y, road_map):
 
     return result_x, result_y, amount_of_total, flag
 
+
+def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
+    grid_resolution = 1.0
+    robot_radius = 1.0
+    # obstacle_x = [iox / grid_resolution for iox in obstacle_x]
+    # obstacle_y = [ioy / grid_resolution for ioy in obstacle_y]
+
+    obmap, minx, miny, maxx, maxy, xw, yw = dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y,
+                                                                                 grid_resolution, robot_radius)
+
+    motion = dijkstra_utilities.get_motion_model()
+
+    open_set, closed_set = dict(), dict()
+    open_set[dijkstra_utilities.calc_index(start_node, xw, minx, miny)] = start_node
+
+    flag = 0
+    while True:
+        if not open_set:
+            print("Cannot find path")
+            flag = 1
+            break
+
+        c_id = min(open_set, key=lambda o: open_set[o].cost)
+        current = open_set[c_id]
+
+        if current.x == goal_node.x and current.y == goal_node.y:
+            print("Find goal")
+            goal_node.pind = current.pind
+            goal_node.cost = current.cost
+            break
+
+        # Remove the item from the open set
+        open_set.pop(c_id)
+        # Add it to the closed set
+        closed_set[c_id] = current
+
+        # expand search grid based on motion model
+        for i, _ in enumerate(motion):
+            # current.cost + motion[i][2]
+            # distance_x = motion[i][0] - current.x
+            # distance_y = motion[i][1] - current.y
+            # distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
+            # TODO: distance is longer, usually 4 times longer. this calculation is better. Try to check if consistent
+            node = Node(current.x + motion[i][0], current.y + motion[i][1], current.cost + motion[i][2], c_id)
+            node_id = dijkstra_utilities.calc_index(node, xw, minx, miny)
+
+            if not dijkstra_utilities.verify_node(node, obmap, minx, miny, maxx, maxy):
+                continue
+
+            if node_id in closed_set:
+                continue
+            # Otherwise if it is already in the open set
+            if node_id in open_set:
+                if open_set[node_id].cost > node.cost:
+                    open_set[node_id].cost = node.cost
+                    open_set[node_id].pind = c_id
+            else:
+                open_set[node_id] = node
+
+    result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
+
+    print(f"total distance (meters): {amount_of_total}")
+    print(f"total time in minutes: {mapping_utility_methods.weight_on_sub_path(amount_of_total)}")
+
+    return result_x, result_y, amount_of_total, flag
 
 
 def main(data_graph, algorithm_name, random_graph_size):
@@ -257,6 +327,7 @@ if __name__ == '__main__':
         exit_flag = True
         tries = 0
         graph_size = randomize_dynamic_graph_size()
+        # graph_size = 1.0
         graph.randomize_graph_selection()
         graph.randomize_floor_selection()
         graph.prioritize_starting_points(graph_size)
@@ -267,9 +338,9 @@ if __name__ == '__main__':
             graph.current_floor = current_floor  # todo put this somewhere else
             graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
                                    graph.starting_nodes[c_index].z
-            print(f"starting point number {graph.starting_point}")
             # start_time = time.time()
             while exit_flag:
+                print(f"starting point number {graph.starting_point}")
                 if tries > 10:
                     break
                 exit_flag = main(graph, ALGORITHM, graph_size)
@@ -291,7 +362,7 @@ if __name__ == '__main__':
                 if graph.current_floor < 1:
                     break
                 else:
-                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.5 * graph_size), \
+                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.0 * graph_size), \
                                            graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * graph_size
                     graph.total_min_time += graph.calc_height_distance()
 
