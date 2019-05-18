@@ -297,15 +297,15 @@ def outline_obstacles_demo_building_3(obstacle_x, obstacle_y, dynamic_size):
         obstacle_x.append(6 * dynamic_size)
 
     # outline exit/enter 1
-    for i in arange(3 * dynamic_size, 7 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(11 * dynamic_size)
-    for i in arange(3 * dynamic_size, 7 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(16 * dynamic_size)
     for i in arange(11 * dynamic_size, 17 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(3 * dynamic_size)
+        obstacle_y.append(6 * dynamic_size)
 
     # outline exit/enter 2
     for i in arange(3 * dynamic_size, 7 * dynamic_size):
@@ -359,7 +359,7 @@ def outline_obstacles_demo_building_3(obstacle_x, obstacle_y, dynamic_size):
 
 def outline_obstacles_demo_building_4(obstacle_x, obstacle_y, dynamic_size):
     #  outline of room
-    for i in arange(0, 20* dynamic_size):
+    for i in arange(0, 20 * dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
     for i in arange(40 * dynamic_size, 60 * dynamic_size):
@@ -435,15 +435,15 @@ def outline_obstacles_demo_building_4(obstacle_x, obstacle_y, dynamic_size):
         obstacle_y.append(20 * dynamic_size)
 
     # outline exit/enter 1
-    for i in arange(3 * dynamic_size, 7 * dynamic_size):
+    for i in arange(5 * dynamic_size, 9 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(11 * dynamic_size)
-    for i in arange(3 * dynamic_size, 7 * dynamic_size):
+    for i in arange(5 * dynamic_size, 9 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(16 * dynamic_size)
     for i in arange(11 * dynamic_size, 17 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(3 * dynamic_size)
+        obstacle_y.append(5 * dynamic_size)
 
     # outline exit/enter 2
     for i in arange(54 * dynamic_size, 58 * dynamic_size):
@@ -722,11 +722,11 @@ def outline_obstacles_demo_building_6(obstacle_x, obstacle_y, dynamic_size):
     # outline exit/enter 1 top left
     for i in arange(2 * dynamic_size, 6 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(22 * dynamic_size)
+        obstacle_y.append(24 * dynamic_size)
     for i in arange(2 * dynamic_size, 6 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(25 * dynamic_size)
-    for i in arange(22 * dynamic_size, 26 * dynamic_size):
+        obstacle_y.append(28 * dynamic_size)
+    for i in arange(24 * dynamic_size, 28 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(2 * dynamic_size)
 
@@ -1400,13 +1400,22 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
     # stairs bottom left
     for i in arange(16 * dynamic_size, 21 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(3 * dynamic_size)
-    for i in arange(3 * dynamic_size, 9 * dynamic_size):
+        obstacle_y.append(6 * dynamic_size)
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_x.append(16 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(3 * dynamic_size, 9 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_x.append(21 * dynamic_size)
         obstacle_y.append(i)
+    # for i in arange(16 * dynamic_size, 21 * dynamic_size):
+    #     obstacle_x.append(i)
+    #     obstacle_y.append(3 * dynamic_size)
+    # for i in arange(3 * dynamic_size, 9 * dynamic_size):
+    #     obstacle_x.append(16 * dynamic_size)
+    #     obstacle_y.append(i)
+    # for i in arange(3 * dynamic_size, 9 * dynamic_size):
+    #     obstacle_x.append(21 * dynamic_size)
+    #     obstacle_y.append(i)
     # elevator
     for i in arange(25 * dynamic_size, 35 * dynamic_size):
         obstacle_x.append(i)
@@ -1515,11 +1524,11 @@ def outline_obstacles_floor_two_and_three(obstacle_x, obstacle_y, dynamic_size):
     # stairs bottom left
     for i in arange(16 * dynamic_size, 21 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(5 * dynamic_size)
-    for i in arange(5 * dynamic_size, 9 * dynamic_size):
+        obstacle_y.append(6 * dynamic_size)
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_x.append(16 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(5 * dynamic_size, 9 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_x.append(21 * dynamic_size)
         obstacle_y.append(i)
     # bottom elevator
