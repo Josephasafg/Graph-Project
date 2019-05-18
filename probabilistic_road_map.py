@@ -322,16 +322,16 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'BUILDING_8_HIT')
+    graph = Graph('floors.yaml')
     amount = 5
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
         tries = 0
-        # graph_size = randomize_dynamic_graph_size()
+        graph_size = randomize_dynamic_graph_size()
 
-        graph_size = 1.0
-        # graph.randomize_graph_selection()
+        # graph_size = 1.0
+        graph.randomize_graph_selection()
         graph.randomize_floor_selection()
         graph.prioritize_starting_points(graph_size)
         print(f"Building {graph.model_name}")
