@@ -23,7 +23,7 @@ Building:
         goal_x: [55.0, 55.0, 55.0, 55.0, 55.0]
         goal_y: [15.0, 15.0, 15.0, 15.0, 15.0]
         goal_z: [0.0, 10.0, 20.0, 30.0, 40.0]
-  OUTLINE_OBSTACLES_DEMO_BUILDING_3: # edit exits points
+  OUTLINE_OBSTACLES_DEMO_BUILDING_3:
     Floors:
         start_x: [30.0, 5.0, 30.0, 5.0, 30.0, 5.0, 30.0, 5.0]
         start_y: [45.0, 15.0, 45.0, 15.0, 45.0, 15.0, 45.0, 15.0]
@@ -31,7 +31,7 @@ Building:
         goal_x: [13.0, 51.0, 13.0, 51.0, 13.0, 51.0, 13.0, 51.0]
         goal_y: [8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0]
         goal_z: [0.0, 0.0, 12.0, 12.0, 24.0, 24.0, 36.0, 36.0]
-  OUTLINE_OBSTACLES_DEMO_BUILDING_4: # change exit frame
+  OUTLINE_OBSTACLES_DEMO_BUILDING_4:
     Floors:
         start_x: [40.0, 20.0, 10.0, 40.0, 20.0, 10.0, 40.0, 20.0, 10.0, 40.0, 20.0, 10.0]
         start_y: [32.0, 25.0, 50.0, 32.0, 25.0, 50.0, 32.0, 25.0, 50.0, 32.0, 25.0, 50.0]
