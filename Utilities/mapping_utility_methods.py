@@ -39,13 +39,13 @@ def _get_building_model(model_name, floor_number=''):
 
 
 def _get_floor_function_building_8_hit(i_floor_number):
-    if i_floor_number == 1:
+    if i_floor_number == 0.0:
         return building_models.outline_obstacles_floor_one
-    elif i_floor_number == 2:
+    elif i_floor_number == 60.0:
         return building_models.outline_obstacles_floor_two_and_three
-    elif i_floor_number == 3:
+    elif i_floor_number == 120.0:
         return building_models.outline_obstacles_floor_two_and_three
-    elif i_floor_number == 4:
+    elif i_floor_number == 180.0:
         return building_models.outline_obstacles_floor_four
     else:
         raise ValueError(i_floor_number)

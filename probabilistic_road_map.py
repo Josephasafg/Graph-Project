@@ -12,7 +12,7 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # parameter
 TOTAL_TIME = 0
-ALGORITHM = "dijkstra"
+ALGORITHM = "prm_dijkstra"
 X = list()
 Y = list()
 Z = list()
@@ -37,16 +37,15 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     goal_list_tuple = list()
     algorithms = _get_algorithm_function(algorithm_name)
 
-
     start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
-    for index in range(len(data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'])):
-        goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
+    my_indexes = data_graph.get_element_indexes(data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'])
+    for index in my_indexes:
+        goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors']
                       ['goal_x'][index] * random_graph_size,
-                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
+                      data_graph.coordinate['Building'][data_graph.model_name]['Floors']
                       ['goal_y'][index] * random_graph_size,
-                      data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]
+                      data_graph.coordinate['Building'][data_graph.model_name]['Floors']
                       ['goal_z'][index] * random_graph_size)
-
 
         goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
 
@@ -200,7 +199,8 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
     for value in total:
         amount_of_total += value
     print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {mapping_utility_methods.weight_on_sub_path(amount_of_total)}")
+    print(f"total time in minutes: {mapping_utility_methods.weight_on_sub_path(amount_of_total)}\n")
+    print(f"=================================================================================")
 
     return result_x, result_y, amount_of_total, flag
 
@@ -289,10 +289,8 @@ def main(data_graph, algorithm_name, random_graph_size):
     if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
         plt.plot(data_graph.starting_point[0], data_graph.starting_point[1], "^r")
-        plt.plot(graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x']
-                 [min_index] * random_graph_size,
-                 graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y']
-                 [min_index] * random_graph_size, "^g")
+        plt.plot(data_graph.goal_point[0] * random_graph_size,
+                 data_graph.goal_point[1] * random_graph_size, "^g")
         plt.grid(True)
         plt.axis("equal")
 
@@ -300,7 +298,8 @@ def main(data_graph, algorithm_name, random_graph_size):
 
     #   todo change to floor's actual height
     for i in range(len(result_x)):
-        Z.append(float((60 * random_graph_size) * (data_graph.current_floor-1)))
+        Z.append(float(graph.get_lower_floor_height()))
+        # Z.append(float((60 * random_graph_size) * (data_graph.current_floor-1)))
 
     X.extend(result_x)
     Y.extend(result_y)
@@ -311,9 +310,9 @@ def main(data_graph, algorithm_name, random_graph_size):
     if return_code != 0:
         return False
 
-    data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_x'][min_index] * random_graph_size, \
-        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_y'][min_index] * random_graph_size,\
-        data_graph.coordinate['Building'][data_graph.model_name]['Floors'][str(data_graph.current_floor)]['goal_z'][min_index] * random_graph_size
+    # data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_x'][min_index] * random_graph_size, \
+    #     data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_y'][min_index] * random_graph_size,\
+    #     data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'][min_index] * random_graph_size
 
     return True
 
@@ -326,11 +325,14 @@ if __name__ == '__main__':
     for i in range(amount):
         exit_flag = True
         tries = 0
-        graph_size = randomize_dynamic_graph_size()
-        # graph_size = 1.0
+        # graph_size = randomize_dynamic_graph_size()
+
+        graph_size = 1.0
         graph.randomize_graph_selection()
         graph.randomize_floor_selection()
         graph.prioritize_starting_points(graph_size)
+        print(f"Building {graph.model_name}")
+        graph.list_of_height = list(graph.get_height_no_duplicates())
 
         current_floor = graph.current_floor
         for c_index in range(len(graph.starting_nodes)):
@@ -341,12 +343,14 @@ if __name__ == '__main__':
             # start_time = time.time()
             while exit_flag:
                 print(f"starting point number {graph.starting_point}")
+                print(f"***********************************************")
                 if tries > 10:
                     break
                 exit_flag = main(graph, ALGORITHM, graph_size)
 
                 if not exit_flag:
                     print(f'Returned from floor {graph.current_floor} unsuccessfully')
+                    print(f"***********************************************")
                     tries += 1
                     amount_of_plots += 1
                     exit_flag = True
@@ -354,16 +358,19 @@ if __name__ == '__main__':
                 else:
                     print(f'Returned successfully from floor {graph.current_floor}')
                     tries = 1
-                    if c_index == len(graph.starting_nodes) - 1 or graph.current_floor > 1:
-                        graph.current_floor -= 1
+                    if c_index == len(graph.starting_nodes) - 1 or graph.current_floor > 0.0:
+                        del graph.list_of_height[0]
+                        if not graph.list_of_height:
+                            break
+                        graph.current_floor = graph.list_of_height[0]
                     else:
                         break
 
-                if graph.current_floor < 1:
+                if graph.current_floor < 0:
                     break
                 else:
-                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (3.0 * graph_size), \
-                                           graph.coordinate['Building'][graph.model_name]['Floors'][str(graph.current_floor)]['start_z'][0] * graph_size
+                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (4.0 * graph_size), \
+                                           graph.current_floor * graph_size
                     graph.total_min_time += graph.calc_height_distance()
 
             # average_of_run += (end_time - start_time)

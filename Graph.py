@@ -1,6 +1,7 @@
 import random
 import yaml
 import math
+import collections
 from Node import Node
 
 
@@ -14,32 +15,27 @@ class Graph:
         self.total_min_time = 0
         self.starting_nodes = list()
         self.model_name = model_name
+        self.list_of_height = list()
 
-    # def randomize_start_points(self, dynamic_size):
-    #     amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-    #                             ['start_x'])
-    #     result = random.randint(0, amount_of_options - 1)
-    #     start_x = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]\
-    #         * dynamic_size
-    #     start_y = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]\
-    #         * dynamic_size
-    #     start_z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]\
-    #         * dynamic_size
-    #     del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_x'][result]
-    #     del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_y'][result]
-    #     del self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][result]
-    #     self.starting_point = start_x, start_y, start_z
+    def get_element_indexes(self, my_list):
+        return filter(lambda a: my_list[a] == self.current_floor, range(0, len(my_list)))
+
+    def get_height_no_duplicates(self):
+        temp_list = list(set(self.coordinate['Building'][self.model_name]['Floors']['goal_z']))
+        temp_list.sort(reverse=True)
+
+        clean_list = [x for x in temp_list if not x > self.current_floor]
+        return clean_list
 
     def prioritize_starting_points(self, dynamic_size):
-        amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_x'])
-        for index in range(amount_of_options):
+        # amount_of_options = self.coordinate['Building'][self.model_name]['Floors']['start_z'].count(self.current_floor)
+        current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
+        my_list_indexes = self.get_element_indexes(current_floor_list)
+        for index in my_list_indexes:
             priority = random.randint(0, 1000)
-            current_node = Node(self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_x'][index] * dynamic_size,
-                                self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]
-                                ['start_y'][index] * dynamic_size)
-            current_node.z = self.coordinate['Building'][self.model_name]['Floors'][str(self.current_floor)]['start_z'][index] * dynamic_size
+            current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+                                self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+            current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
             current_node.priority = priority
             self.starting_nodes.append(current_node)
         self.sort_starting_point()
@@ -49,14 +45,13 @@ class Graph:
 
     def randomize_graph_selection(self):
         random_key = random.choice(list(self.coordinate['Building']))
-        # del self.coordinate['Building'][random_key]
         self.model_name = random_key
 
     def delete_current_model(self):
         del self.coordinate['Building'][self.model_name]
 
     def randomize_floor_selection(self):
-        floor_number = random.choice(list(self.coordinate['Building'][self.model_name]['Floors']))
+        floor_number = random.choice(list(self.coordinate['Building'][self.model_name]['Floors']['start_z']))
         self.current_floor = int(floor_number)
 
     @staticmethod
@@ -73,14 +68,11 @@ class Graph:
         total_distance = math.sqrt(height_distance_x + height_distance_y + height_distance_z)
         return total_distance/250
 
-    # def randomize_goal_points(self, floor_number):
-    #     amount_of_options = len(self.coordinate['Building']['Floors'][str(floor_number)]['goal_x'])
-    #     result = random.randint(0, amount_of_options - 1)
-    #     goal_x = self.coordinate['Building']['Floors'][str(floor_number)]['goal_x'][result]
-    #     goal_y = self.coordinate['Building']['Floors'][str(floor_number)]['goal_y'][result]
-    #     del self.coordinate['Building']['Floors'][str(floor_number)]['goal_x'][result]
-    #     del self.coordinate['Building']['Floors'][str(floor_number)]['goal_y'][result]
-    #     self.goal_point = goal_x, goal_y
+    def get_lower_floor_height(self):
+        if self.current_floor == 0.0:
+            return 0
+        return self.list_of_height[1]
+
 
     @staticmethod
     def find_min_in_list(minimum_list):
