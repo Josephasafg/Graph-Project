@@ -136,6 +136,7 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
         total_distance += value
     print(f"total distance (meters): {total_distance}")
     print(f"Total time in minutes per person: {mapping_utility_methods.weight_on_sub_path(total_distance)}")
+    print(f"=================================================================================")
 
     return result_x, result_y, total_distance, break_flag
 
@@ -267,6 +268,7 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
 
     print(f"total distance (meters): {amount_of_total}")
     print(f"total time in minutes: {mapping_utility_methods.weight_on_sub_path(amount_of_total)}")
+    print(f"=================================================================================")
 
     return result_x, result_y, amount_of_total, flag
 
@@ -297,8 +299,9 @@ def main(data_graph, algorithm_name, random_graph_size):
     assert result_x, 'Cannot find path'
 
     #   todo change to floor's actual height
+    lower_height = float(graph.get_lower_floor_height())
     for i in range(len(result_x)):
-        Z.append(float(graph.get_lower_floor_height()))
+        Z.append(lower_height)
         # Z.append(float((60 * random_graph_size) * (data_graph.current_floor-1)))
 
     X.extend(result_x)
@@ -319,8 +322,8 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
-    amount = 2
+    graph = Graph('floors.yaml', 'BUILDING_8_HIT')
+    amount = 5
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
@@ -328,7 +331,7 @@ if __name__ == '__main__':
         # graph_size = randomize_dynamic_graph_size()
 
         graph_size = 1.0
-        graph.randomize_graph_selection()
+        # graph.randomize_graph_selection()
         graph.randomize_floor_selection()
         graph.prioritize_starting_points(graph_size)
         print(f"Building {graph.model_name}")
@@ -359,7 +362,10 @@ if __name__ == '__main__':
                     print(f'Returned successfully from floor {graph.current_floor}')
                     tries = 1
                     if c_index == len(graph.starting_nodes) - 1 or graph.current_floor > 0.0:
+                        if not graph.list_of_height:
+                            break
                         del graph.list_of_height[0]
+
                         if not graph.list_of_height:
                             break
                         graph.current_floor = graph.list_of_height[0]
