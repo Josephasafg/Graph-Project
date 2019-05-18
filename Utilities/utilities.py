@@ -1,5 +1,5 @@
-from random import uniform
+from random import randint
 
 
 def randomize_dynamic_graph_size():
-    return uniform(0.5, 3.0)
+    return randint(1, 3)

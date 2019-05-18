@@ -1515,11 +1515,11 @@ def outline_obstacles_floor_two_and_three(obstacle_x, obstacle_y, dynamic_size):
     # stairs bottom left
     for i in arange(16 * dynamic_size, 21 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(3 * dynamic_size)
-    for i in arange(3 * dynamic_size, 9 * dynamic_size):
+        obstacle_y.append(5 * dynamic_size)
+    for i in arange(5 * dynamic_size, 9 * dynamic_size):
         obstacle_x.append(16 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(3 * dynamic_size, 9 * dynamic_size):
+    for i in arange(5 * dynamic_size, 9 * dynamic_size):
         obstacle_x.append(21 * dynamic_size)
         obstacle_y.append(i)
     # bottom elevator
