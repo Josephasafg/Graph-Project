@@ -72,6 +72,8 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     min_index, min_distance = mapping_utility_methods.find_min_time(total_distance_list)
     data_graph.goal_point = goal_list_tuple[min_index]
 
+    print(f"My goal is: {data_graph.goal_point}")
+
     total_time_to_escape = start_node.calculate_time_to_escape(mapping_utility_methods.weight_on_sub_path(min_distance))
     print(f"Total time to escape.\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
 
@@ -287,12 +289,11 @@ def main(data_graph, algorithm_name, random_graph_size):
                                                                                 random_graph_size)
 
     data_graph.total_min_time += current_min_time
-    # if SHOW_ANIMATION and return_code == 0:
     if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
         plt.plot(data_graph.starting_point[0], data_graph.starting_point[1], "^r")
-        plt.plot(data_graph.goal_point[0] * random_graph_size,
-                 data_graph.goal_point[1] * random_graph_size, "^g")
+        plt.plot(data_graph.goal_point[0],
+                 data_graph.goal_point[1], "^g")
         plt.grid(True)
         plt.axis("equal")
 
