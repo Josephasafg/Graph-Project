@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Utilities import dijkstra_utilities
 from Utilities import mapping_utility_methods
-from Utilities.KDTree import KDTree
-from Graph import Graph
+from Graph_Objects.KDTree import KDTree
+from Graph_Objects.Graph import Graph
 from Utilities.timer_decorator import timer
 from Utilities.timer_decorator import calculate_average_time
-from Node import Node
+from Graph_Objects.Node import Node
 from Utilities.utilities import randomize_dynamic_graph_size
 
 # parameter

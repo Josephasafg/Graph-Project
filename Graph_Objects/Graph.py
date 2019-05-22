@@ -1,8 +1,7 @@
 import random
 import yaml
 import math
-import collections
-from Node import Node
+from Graph_Objects.Node import Node
 
 
 class Graph:

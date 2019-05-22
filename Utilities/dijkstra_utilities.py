@@ -1,14 +1,7 @@
-import matplotlib.pyplot as plt
 import math
 from numpy import arange
 import numpy as np
-import time
 import random
-import yaml
-from Graph import Graph
-from Node import Node
-from Utilities.KDTree import KDTree
-
 
 show_animation = True
 

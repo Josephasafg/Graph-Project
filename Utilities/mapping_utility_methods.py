@@ -2,9 +2,8 @@ import math
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-from Utilities.KDTree import KDTree
+from Graph_Objects.KDTree import KDTree
 from Utilities import building_models
-from mpl_toolkits.mplot3d import Axes3D
 
 N_SAMPLE = 500
 MAX_EDGE_LEN = 30.0
