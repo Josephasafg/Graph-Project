@@ -299,7 +299,6 @@ def main(data_graph, algorithm_name, random_graph_size):
 
     assert result_x, 'Cannot find path'
 
-    #   todo change to floor's actual height
     lower_height = float(graph.get_lower_floor_height())
     for i in range(len(result_x)):
         Z.append(lower_height)

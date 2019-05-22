@@ -68,7 +68,6 @@ class Graph:
         return total_distance/250
 
     def get_lower_floor_height(self):
-
         if not self.list_of_height:
             return 0
         elif self.list_of_height[0] == 0:
