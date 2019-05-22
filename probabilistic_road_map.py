@@ -39,6 +39,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
 
     start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
     my_indexes = data_graph.get_element_indexes(data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'])
+
     for index in my_indexes:
         goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors']
                       ['goal_x'][index] * random_graph_size,
@@ -67,7 +68,6 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         result_tuple_list.append((result_x, result_y, return_code))
         total_distance_list.append(total_distance)
         goal_list_tuple.append(goal_tuple)
-        # print(f"result x:{len(result_x)}, y:{len(result_y)}")
 
     min_index, min_distance = mapping_utility_methods.find_min_time(total_distance_list)
     data_graph.goal_point = goal_list_tuple[min_index]
@@ -324,7 +324,7 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount = 5
+    amount = 100
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
@@ -333,10 +333,13 @@ if __name__ == '__main__':
 
         # graph_size = 1.0
         graph.randomize_graph_selection()
+        print(f"Building {graph.model_name}")
+
         graph.randomize_floor_selection()
         graph.prioritize_starting_points(graph_size)
-        print(f"Building {graph.model_name}")
+
         graph.list_of_height = list(graph.get_height_no_duplicates())
+        working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
         current_floor = graph.current_floor
         for c_index in range(len(graph.starting_nodes)):
@@ -344,7 +347,7 @@ if __name__ == '__main__':
             graph.current_floor = current_floor  # todo put this somewhere else
             graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
                                    graph.starting_nodes[c_index].z
-            # start_time = time.time()
+
             while exit_flag:
                 print(f"starting point number {graph.starting_point}")
                 print(f"***********************************************")
@@ -380,13 +383,12 @@ if __name__ == '__main__':
                                            graph.current_floor * graph_size
                     graph.total_min_time += graph.calc_height_distance()
 
-            # average_of_run += (end_time - start_time)
+            graph.list_of_height = list(working_height_set)
             print(f"Graph total distance is: {graph.total_min_time}")
             mapping_utility_methods.create_3d_graph(X, Y, Z)
             X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
-        # graph.delete_current_model()
     average_of_run /= amount
     calculate_average_time(amount_of_plots)
     print(f"Finished Experiment on {ALGORITHM} algorithm. Average is: {average_of_run}")

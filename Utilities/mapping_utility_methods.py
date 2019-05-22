@@ -81,13 +81,13 @@ def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree, random
     dx = goal_x - start_x
     dy = goal_y - start_y
     yaw = math.atan2(goal_y - start_y, goal_x - start_x)
-    d = math.sqrt(dx**2 + dy**2)
+    total_distance = math.sqrt(dx**2 + dy**2)
 
-    if d >= (MAX_EDGE_LEN * random_graph_size):
+    if total_distance >= (MAX_EDGE_LEN * random_graph_size):
         return True
 
     D = robot_radius
-    nstep = round(d / D)
+    nstep = round(total_distance / D)
 
     for i in range(nstep):
         idxs, dist = okdtree.search(np.array([x, y]).reshape(2, 1))
