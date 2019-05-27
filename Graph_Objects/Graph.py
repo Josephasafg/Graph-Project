@@ -30,14 +30,12 @@ class Graph:
     def minimum_from_fire(node, fire_list):
         distance_list = list()
         for fire in fire_list:
-            distance_x = (fire.x - node.x) **2
+            distance_x = (fire.x - node.x) ** 2
             distance_y = (fire.y - node.y) ** 2
             distance_z = (fire.z - node.z) ** 2
             distance = math.sqrt(distance_x + distance_y + distance_z)
             distance_list.append(distance)
         return node, min(distance_list)
-
-    # range(len(self.coordinate['Building'][self.model_name]['Floors']['start_x']))
 
     def create_fire_node_list(self, dynamic_size):
         fire_list = list()
@@ -70,18 +68,17 @@ class Graph:
             list_of_tuple_distance.append(min_distance_node_tuple)
         self.starting_nodes = self.sort_and_extract_starting_nodes_from_tuple_list(list_of_tuple_distance)
 
-    def prioritize_starting_points(self, dynamic_size):
-        # amount_of_options = self.coordinate['Building'][self.model_name]['Floors']['start_z'].count(self.current_floor)
-        current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
-        my_list_indexes = self.get_element_indexes(current_floor_list)
-        for index in my_list_indexes:
-            priority = random.randint(0, 1000)
-            current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
-                                self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
-            current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
-            current_node.priority = priority
-            self.starting_nodes.append(current_node)
-        self.sort_starting_point()
+    # def prioritize_starting_points(self, dynamic_size):
+    #     current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
+    #     my_list_indexes = self.get_element_indexes(current_floor_list)
+    #     for index in my_list_indexes:
+    #         priority = random.randint(0, 1000)
+    #         current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+    #                             self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+    #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
+    #         current_node.priority = priority
+    #         self.starting_nodes.append(current_node)
+    #     self.sort_starting_point()
 
     def sort_starting_point(self):
         self.starting_nodes.sort(key=lambda current_point: current_point.priority, reverse=True)
@@ -117,7 +114,6 @@ class Graph:
         elif self.list_of_height[0] == 0:
             return 0
         return self.list_of_height[1]
-
 
     @staticmethod
     def find_min_in_list(minimum_list):
