@@ -6,7 +6,7 @@ from Graph_Objects.KDTree import KDTree
 from Utilities import building_models
 from mpl_toolkits.mplot3d import Axes3D
 
-N_SAMPLE = 500
+N_SAMPLE = 200
 MAX_EDGE_LEN = 30.0
 N_KNN = 10  # number of edge from one sampled point
 
@@ -115,8 +115,7 @@ def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_si
 
     road_map = []
     nsample = len(sample_x)
-    skdtree = KDTree(np.vstack((sample_x, sample_y)).T)
-
+    skdtree = KDTree(np.vstack((sample_x, sample_y)).T) # this is our heuristic nodes
     for (i, ix, iy) in zip(range(nsample), sample_x, sample_y):
 
         index, dists = skdtree.search(

@@ -26,6 +26,50 @@ class Graph:
         clean_list = [x for x in temp_list if not x > self.current_floor]
         return clean_list
 
+    @staticmethod
+    def minimum_from_fire(node, fire_list):
+        distance_list = list()
+        for fire in fire_list:
+            distance_x = (fire.x - node.x) **2
+            distance_y = (fire.y - node.y) ** 2
+            distance_z = (fire.z - node.z) ** 2
+            distance = math.sqrt(distance_x + distance_y + distance_z)
+            distance_list.append(distance)
+        return node, min(distance_list)
+
+    # range(len(self.coordinate['Building'][self.model_name]['Floors']['start_x']))
+
+    def create_fire_node_list(self, dynamic_size):
+        fire_list = list()
+        for fire_index in range(len(self.coordinate['Building'][self.model_name]['FIRE']['start_x'])):
+            fire_node = Node(self.coordinate['Building'][self.model_name]['FIRE']['start_x'][fire_index] * dynamic_size,
+                             self.coordinate['Building'][self.model_name]['FIRE']['start_y'][fire_index] * dynamic_size)
+            fire_node.z = self.coordinate['Building'][self.model_name]['FIRE']['start_z'][fire_index] * dynamic_size
+            fire_list.append(fire_node)
+        return fire_list
+
+    @staticmethod
+    def sort_and_extract_starting_nodes_from_tuple_list(list_of_tuple_distance):
+        sorted_node_list = list()
+        sorted_starting_list = sorted(list_of_tuple_distance, key=lambda tup: tup[1])
+        for node in sorted_starting_list:
+            sorted_node_list.append(node[0])
+
+        return sorted_node_list
+
+    def prioritize_by_fire(self, dynamic_size):
+        fire_list = self.create_fire_node_list(dynamic_size)
+
+        list_of_tuple_distance = list()
+        for start_index in range(len(self.coordinate['Building'][self.model_name]['Floors']['start_x'])):
+            node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][start_index] * dynamic_size,
+                        self.coordinate['Building'][self.model_name]['Floors']['start_y'][start_index] * dynamic_size)
+            node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][start_index] * dynamic_size
+
+            min_distance_node_tuple = self.minimum_from_fire(node, fire_list)  # type: tuple
+            list_of_tuple_distance.append(min_distance_node_tuple)
+        self.starting_nodes = self.sort_and_extract_starting_nodes_from_tuple_list(list_of_tuple_distance)
+
     def prioritize_starting_points(self, dynamic_size):
         # amount_of_options = self.coordinate['Building'][self.model_name]['Floors']['start_z'].count(self.current_floor)
         current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
