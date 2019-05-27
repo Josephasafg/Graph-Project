@@ -312,32 +312,23 @@ def main(data_graph, algorithm_name, random_graph_size):
     if return_code != 0:
         return False
 
-    # data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_x'][min_index] * random_graph_size, \
-    #     data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_y'][min_index] * random_graph_size,\
-    #     data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'][min_index] * random_graph_size
-
     return True
 
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'BUILDING_8_HIT')
-    amount = 100
+    graph = Graph('floors.yaml')
+    amount = 2
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
         tries = 0
-        # graph_size = randomize_dynamic_graph_size()
+        graph_size = randomize_dynamic_graph_size()
 
-        graph_size = 1.0
-        # graph.randomize_graph_selection()
+        # graph_size = 1.0
+        graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
         graph.prioritize_by_fire(graph_size)
-        # graph.randomize_floor_selection()
-        # graph.prioritize_starting_points(graph_size)
-
-
-        # current_floor = graph.current_floor
         for c_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
             graph.current_floor = graph.starting_nodes[c_index].z
