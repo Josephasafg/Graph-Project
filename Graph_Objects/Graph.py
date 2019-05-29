@@ -16,8 +16,8 @@ class Graph:
         self.model_name = model_name
         self.list_of_height = list()
 
-    def get_element_indexes(self, my_list):
-        return filter(lambda a: my_list[a] == self.current_floor, range(0, len(my_list)))
+    def get_element_indexes(self, my_list, size):
+        return filter(lambda a: my_list[a]*size == self.current_floor, range(0, len(my_list)))
 
     def get_height_no_duplicates(self):
         temp_list = list(set(self.coordinate['Building'][self.model_name]['Floors']['goal_z']))

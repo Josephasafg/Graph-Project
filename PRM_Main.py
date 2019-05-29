@@ -38,7 +38,8 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     algorithms = _get_algorithm_function(algorithm_name)
 
     start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
-    my_indexes = data_graph.get_element_indexes(data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'])
+    my_indexes = data_graph.get_element_indexes(
+        data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'], random_graph_size)
 
     for index in my_indexes:
         goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors']
@@ -69,13 +70,16 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         total_distance_list.append(total_distance)
         goal_list_tuple.append(goal_tuple)
 
-    min_index, min_distance = mapping_utility_methods.find_min_time(total_distance_list)
-    data_graph.goal_point = goal_list_tuple[min_index]
+    try:
+        min_index, min_distance = mapping_utility_methods.find_min_time(total_distance_list)
+        data_graph.goal_point = goal_list_tuple[min_index]
 
-    print(f"My goal is: {data_graph.goal_point}")
+        print(f"My goal is: {data_graph.goal_point}")
 
-    total_time_to_escape = start_node.calculate_time_to_escape(mapping_utility_methods.weight_on_sub_path(min_distance))
-    print(f"Total time to escape.\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
+        total_time_to_escape = start_node.calculate_time_to_escape(mapping_utility_methods.weight_on_sub_path(min_distance))
+        print(f"Total time to escape.\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
+    except ValueError as ve:
+        raise ValueError(ve)
 
     return result_tuple_list[min_index][0], result_tuple_list[min_index][1],\
         min_index, min_distance, result_tuple_list[min_index][2]
@@ -211,8 +215,6 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
 def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
     grid_resolution = 1.0
     robot_radius = 1.0
-    # obstacle_x = [iox / grid_resolution for iox in obstacle_x]
-    # obstacle_y = [ioy / grid_resolution for ioy in obstacle_y]
 
     obmap, minx, miny, maxx, maxy, xw, yw = dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y,
                                                                                  grid_resolution, robot_radius)
@@ -245,11 +247,6 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
 
         # expand search grid based on motion model
         for i, _ in enumerate(motion):
-            # current.cost + motion[i][2]
-            # distance_x = motion[i][0] - current.x
-            # distance_y = motion[i][1] - current.y
-            # distance = math.sqrt(distance_x ** 2 + distance_y ** 2)
-            # TODO: distance is longer, usually 4 times longer. this calculation is better. Try to check if consistent
             node = Node(current.x + motion[i][0], current.y + motion[i][1], current.cost + motion[i][2], c_id)
             node_id = dijkstra_utilities.calc_index(node, xw, minx, miny)
 
@@ -276,12 +273,11 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
 
 
 def main(data_graph, algorithm_name, random_graph_size):
-    # print(__file__ + " start!!")
     robot_size = 1.0 * random_graph_size
 
     obstacle_x, obstacle_y = list(), list()
 
-    current_floor = mapping_utility_methods._get_building_model(data_graph.model_name, data_graph.current_floor)
+    current_floor = mapping_utility_methods._get_building_model(data_graph.model_name, data_graph.current_floor/random_graph_size)
     obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y, random_graph_size)
 
     result_x, result_y, min_index, current_min_time, return_code = prm_planning(obstacle_x, obstacle_y, robot_size,
@@ -300,7 +296,7 @@ def main(data_graph, algorithm_name, random_graph_size):
     assert result_x, 'Cannot find path'
 
     lower_height = float(graph.get_lower_floor_height())
-    for i in range(len(result_x)):
+    for _ in range(len(result_x)):
         Z.append(lower_height)
 
     X.extend(result_x)
@@ -325,7 +321,7 @@ if __name__ == '__main__':
         tries = 0
         graph_size = randomize_dynamic_graph_size()
 
-        # graph_size = 1.0
+        # graph_size = 3.0
         graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
         graph.prioritize_by_fire(graph_size)
@@ -363,7 +359,7 @@ if __name__ == '__main__':
 
                         if not graph.list_of_height:
                             break
-                        graph.current_floor = graph.list_of_height[0]
+                        graph.current_floor = (graph.list_of_height[0] * graph_size)
                     else:
                         break
 
@@ -371,7 +367,7 @@ if __name__ == '__main__':
                     break
                 else:
                     graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (4.0 * graph_size), \
-                                           graph.current_floor * graph_size
+                                           graph.current_floor
                     graph.total_min_time += graph.calc_height_distance()
 
             graph.list_of_height = list(working_height_set)

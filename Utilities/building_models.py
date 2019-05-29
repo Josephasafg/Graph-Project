@@ -1722,23 +1722,6 @@ def outline_obstacles_floor_four(obstacle_x, obstacle_y, dynamic_size):
     for i in arange(10 * dynamic_size, 16 * dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(25.0 * dynamic_size)
-    # for i in arange(6, 11):
-    #     obstacle_x.append(i)
-    #     obstacle_y.append(30.0)
-    # for i in arange(30, 51):
-    #     obstacle_x.append(11.0)
-    #     obstacle_y.append(i)
-
-    # # exhibit
-    # for i in arange(6, 12):
-    #     obstacle_x.append(i)
-    #     obstacle_y.append(26.0)
-    # for i in arange(26, 30):
-    #     obstacle_x.append(6.0)
-    #     obstacle_y.append(i)
-    # for i in arange(26, 30):
-    #     obstacle_x.append(11.0)
-    #     obstacle_y.append(i)
 
     # benches - top
     for i in arange(20 * dynamic_size, 33 * dynamic_size):
