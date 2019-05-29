@@ -302,7 +302,6 @@ def main(data_graph, algorithm_name, random_graph_size):
     lower_height = float(graph.get_lower_floor_height())
     for i in range(len(result_x)):
         Z.append(lower_height)
-        # Z.append(float((60 * random_graph_size) * (data_graph.current_floor-1)))
 
     X.extend(result_x)
     Y.extend(result_y)
@@ -313,17 +312,13 @@ def main(data_graph, algorithm_name, random_graph_size):
     if return_code != 0:
         return False
 
-    # data_graph.goal_point = data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_x'][min_index] * random_graph_size, \
-    #     data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_y'][min_index] * random_graph_size,\
-    #     data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'][min_index] * random_graph_size
-
     return True
 
 
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount = 100
+    amount = 2
     amount_of_plots = 0
     for i in range(amount):
         exit_flag = True
@@ -333,17 +328,14 @@ if __name__ == '__main__':
         # graph_size = 1.0
         graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
-
-        graph.randomize_floor_selection()
-        graph.prioritize_starting_points(graph_size)
-
-        graph.list_of_height = list(graph.get_height_no_duplicates())
-        working_height_set = sorted(set(graph.list_of_height), reverse=True)
-
-        current_floor = graph.current_floor
+        graph.prioritize_by_fire(graph_size)
         for c_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
-            graph.current_floor = current_floor  # todo put this somewhere else
+            graph.current_floor = graph.starting_nodes[c_index].z
+            print(f"Current floor is: {graph.current_floor}")
+            graph.list_of_height = list(graph.get_height_no_duplicates())
+            working_height_set = sorted(set(graph.list_of_height), reverse=True)
+
             graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
                                    graph.starting_nodes[c_index].z
 
