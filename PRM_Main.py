@@ -37,7 +37,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     goal_list_tuple = list()
     algorithms = _get_algorithm_function(algorithm_name)
 
-    start_node = Node(data_graph.starting_point[0], data_graph.starting_point[1], 0.0, -1, True)
+    start_node = data_graph.starting_point
     my_indexes = data_graph.get_element_indexes(
         data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'], random_graph_size)
 
@@ -57,7 +57,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         else:
             obkdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
             sample_x, sample_y = mapping_utility_methods.sample_points\
-                (data_graph.starting_point, goal_tuple, robot_radius, obstacle_x,
+                (start_node, goal_tuple, robot_radius, obstacle_x,
                     obstacle_y, obkdtree, random_graph_size)
 
             road_map = mapping_utility_methods.generate_roadmap(sample_x, sample_y, robot_radius,
@@ -287,7 +287,7 @@ def main(data_graph, algorithm_name, random_graph_size):
     data_graph.total_min_time += current_min_time
     if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
-        plt.plot(data_graph.starting_point[0], data_graph.starting_point[1], "^r")
+        plt.plot(data_graph.starting_point.x, data_graph.starting_point.y, "^r")
         plt.plot(data_graph.goal_point[0],
                  data_graph.goal_point[1], "^g")
         plt.grid(True)
@@ -332,8 +332,8 @@ if __name__ == '__main__':
             graph.list_of_height = list(graph.get_height_no_duplicates())
             working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
-            graph.starting_point = graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, \
-                                   graph.starting_nodes[c_index].z
+            graph.starting_point = Node(graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, 0.0, -1, True)
+            graph.starting_point.z = graph.starting_nodes[c_index].z
 
             while exit_flag:
                 print(f"starting point number {graph.starting_point}")
@@ -366,8 +366,9 @@ if __name__ == '__main__':
                 if graph.current_floor < 0:
                     break
                 else:
-                    graph.starting_point = graph.goal_point[0], graph.goal_point[1] - (4.0 * graph_size), \
-                                           graph.current_floor
+                    graph.starting_point.x = graph.goal_point[0]
+                    graph.starting_point.y = graph.goal_point[1] - (4.0 * graph_size)
+                    graph.starting_point.z = graph.current_floor
                     graph.total_min_time += graph.calc_height_distance()
 
             graph.list_of_height = list(working_height_set)

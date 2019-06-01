@@ -14,7 +14,7 @@ class Node:
             self.capacity = self.get_node_capacity()
 
     def __str__(self):
-        return str(self.x) + "," + str(self.y) + "," + str(self.cost) + "," + str(self.pind)
+        return f"({str(self.x)}, {str(self.y)}, {str(self.z)})"
 
     def calculate_time_to_escape(self, escape_time_per_person):
         return escape_time_per_person * self.capacity
