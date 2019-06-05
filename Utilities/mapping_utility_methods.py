@@ -164,8 +164,8 @@ def sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y,
             sample_x.append(random_x)
             sample_y.append(random_y)
 
-    sample_x.append(start_tuple[0])
-    sample_y.append(start_tuple[1])
+    sample_x.append(start_tuple.x)
+    sample_y.append(start_tuple.y)
     sample_x.append(goal_tuple[0])
     sample_y.append(goal_tuple[1])
     return sample_x, sample_y

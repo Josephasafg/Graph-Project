@@ -8,7 +8,7 @@ class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
         current_file = open(yaml_file, 'r')
         self.coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
-        self.starting_point = tuple()
+        self.starting_point = None
         self.goal_point = tuple()
         self.current_floor = floor_number
         self.total_min_time = 0
@@ -16,8 +16,8 @@ class Graph:
         self.model_name = model_name
         self.list_of_height = list()
 
-    def get_element_indexes(self, my_list):
-        return filter(lambda a: my_list[a] == self.current_floor, range(0, len(my_list)))
+    def get_element_indexes(self, my_list, size):
+        return filter(lambda a: my_list[a]*size == self.current_floor, range(0, len(my_list)))
 
     def get_height_no_duplicates(self):
         temp_list = list(set(self.coordinate['Building'][self.model_name]['Floors']['goal_z']))
@@ -102,9 +102,9 @@ class Graph:
         return x_list, y_list, z_list
 
     def calc_height_distance(self):
-        height_distance_x = (self.goal_point[0] - self.starting_point[0])**2
-        height_distance_y = (self.goal_point[1] - self.starting_point[1]) ** 2
-        height_distance_z = (self.goal_point[2] - self.starting_point[2]) ** 2
+        height_distance_x = (self.goal_point[0] - self.starting_point.x)**2
+        height_distance_y = (self.goal_point[1] - self.starting_point.y) ** 2
+        height_distance_z = (self.goal_point[2] - self.starting_point.z) ** 2
         total_distance = math.sqrt(height_distance_x + height_distance_y + height_distance_z)
         return total_distance/250
 
