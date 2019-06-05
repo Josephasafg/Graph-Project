@@ -7,14 +7,34 @@ from Graph_Objects.Node import Node
 class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
         current_file = open(yaml_file, 'r')
-        self.coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
+        self.__coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
         self.starting_point = None
         self.goal_point = tuple()
-        self.current_floor = floor_number
+        self.__current_floor = floor_number
         self.total_min_time = 0
         self.starting_nodes = list()
-        self.model_name = model_name
+        self.__model_name = model_name
         self.list_of_height = list()
+
+    @property
+    def coordinate(self):
+        return self.__coordinate
+
+    @property
+    def current_floor(self):
+        return self.__current_floor
+
+    @current_floor.setter
+    def current_floor(self, value):
+        self.__current_floor = value
+
+    @property
+    def model_name(self):
+        return self.__model_name
+
+    @model_name.setter
+    def model_name(self, value):
+        self.__model_name = value
 
     def get_element_indexes(self, my_list, size):
         return filter(lambda a: my_list[a]*size == self.current_floor, range(0, len(my_list)))
