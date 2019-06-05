@@ -72,7 +72,9 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
 
     try:
         min_index, min_distance = mapping_utility_methods.find_min_time(total_distance_list)
-        data_graph.goal_point = goal_list_tuple[min_index]
+        data_graph.goal_point = Node(goal_list_tuple[min_index][0], goal_list_tuple[min_index][1], 0.0, -1)
+        data_graph.goal_point.z = goal_list_tuple[min_index][2]
+        # data_graph.goal_point = goal_list_tuple[min_index]
 
         print(f"My goal is: {data_graph.goal_point}")
 
@@ -288,8 +290,8 @@ def main(data_graph, algorithm_name, random_graph_size):
     if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
         plt.plot(data_graph.starting_point.x, data_graph.starting_point.y, "^r")
-        plt.plot(data_graph.goal_point[0],
-                 data_graph.goal_point[1], "^g")
+        plt.plot(data_graph.goal_point.x,
+                 data_graph.goal_point.y, "^g")
         plt.grid(True)
         plt.axis("equal")
 
@@ -366,8 +368,8 @@ if __name__ == '__main__':
                 if graph.current_floor < 0:
                     break
                 else:
-                    graph.starting_point.x = graph.goal_point[0]
-                    graph.starting_point.y = graph.goal_point[1] - (4.0 * graph_size)
+                    graph.starting_point.x = graph.goal_point.x
+                    graph.starting_point.y = graph.goal_point.y - (4.0 * graph_size)
                     graph.starting_point.z = graph.current_floor
                     graph.total_min_time += graph.calc_height_distance()
 

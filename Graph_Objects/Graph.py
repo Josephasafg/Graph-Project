@@ -9,7 +9,7 @@ class Graph:
         current_file = open(yaml_file, 'r')
         self.__coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
         self.starting_point = None
-        self.goal_point = tuple()
+        self.goal_point = None
         self.__current_floor = floor_number
         self.total_min_time = 0
         self.starting_nodes = list()
@@ -93,8 +93,8 @@ class Graph:
     #     my_list_indexes = self.get_element_indexes(current_floor_list)
     #     for index in my_list_indexes:
     #         priority = random.randint(0, 1000)
-    #         current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
-    #                             self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+    #       current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+    #                           self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
     #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
     #         current_node.priority = priority
     #         self.starting_nodes.append(current_node)
@@ -122,9 +122,9 @@ class Graph:
         return x_list, y_list, z_list
 
     def calc_height_distance(self):
-        height_distance_x = (self.goal_point[0] - self.starting_point.x)**2
-        height_distance_y = (self.goal_point[1] - self.starting_point.y) ** 2
-        height_distance_z = (self.goal_point[2] - self.starting_point.z) ** 2
+        height_distance_x = (self.goal_point.x - self.starting_point.x)**2
+        height_distance_y = (self.goal_point.y - self.starting_point.y) ** 2
+        height_distance_z = (self.goal_point.z - self.starting_point.z) ** 2
         total_distance = math.sqrt(height_distance_x + height_distance_y + height_distance_z)
         return total_distance/250
 
