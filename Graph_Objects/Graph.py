@@ -7,14 +7,34 @@ from Graph_Objects.Node import Node
 class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
         current_file = open(yaml_file, 'r')
-        self.coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
+        self.__coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
         self.starting_point = None
-        self.goal_point = tuple()
-        self.current_floor = floor_number
+        self.goal_point = None
+        self.__current_floor = floor_number
         self.total_min_time = 0
         self.starting_nodes = list()
-        self.model_name = model_name
+        self.__model_name = model_name
         self.list_of_height = list()
+
+    @property
+    def coordinate(self):
+        return self.__coordinate
+
+    @property
+    def current_floor(self):
+        return self.__current_floor
+
+    @current_floor.setter
+    def current_floor(self, value):
+        self.__current_floor = value
+
+    @property
+    def model_name(self):
+        return self.__model_name
+
+    @model_name.setter
+    def model_name(self, value):
+        self.__model_name = value
 
     def get_element_indexes(self, my_list, size):
         return filter(lambda a: my_list[a]*size == self.current_floor, range(0, len(my_list)))
@@ -73,8 +93,8 @@ class Graph:
     #     my_list_indexes = self.get_element_indexes(current_floor_list)
     #     for index in my_list_indexes:
     #         priority = random.randint(0, 1000)
-    #         current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
-    #                             self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+    #       current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+    #                           self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
     #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
     #         current_node.priority = priority
     #         self.starting_nodes.append(current_node)
@@ -102,9 +122,9 @@ class Graph:
         return x_list, y_list, z_list
 
     def calc_height_distance(self):
-        height_distance_x = (self.goal_point[0] - self.starting_point.x)**2
-        height_distance_y = (self.goal_point[1] - self.starting_point.y) ** 2
-        height_distance_z = (self.goal_point[2] - self.starting_point.z) ** 2
+        height_distance_x = (self.goal_point.x - self.starting_point.x)**2
+        height_distance_y = (self.goal_point.y - self.starting_point.y) ** 2
+        height_distance_z = (self.goal_point.z - self.starting_point.z) ** 2
         total_distance = math.sqrt(height_distance_x + height_distance_y + height_distance_z)
         return total_distance/250
 

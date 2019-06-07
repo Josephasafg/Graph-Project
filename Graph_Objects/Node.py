@@ -3,15 +3,59 @@ import random
 
 class Node:
     def __init__(self, x, y, cost=0.0, pind=-1, capacity=False):
-        self.x = x
-        self.y = y
-        self.z = 0
-        self.cost = cost
-        self.pind = pind
+        self.__x = x
+        self.__y = y
+        self.__z = 0
+        self._cost = cost
+        self._pind = pind
         self.priority = 0
 
         if capacity:
-            self.capacity = self.get_node_capacity()
+            self.__capacity = self.get_node_capacity()
+
+    @property
+    def x(self):
+        return self.__x
+
+    @x.setter
+    def x(self, value):
+        self.__x = value
+
+    @property
+    def y(self):
+        return self.__y
+
+    @y.setter
+    def y(self, value):
+        self.__y = value
+
+    @property
+    def z(self):
+        return self.__z
+
+    @z.setter
+    def z(self, value):
+        self.__z = value
+
+    @property
+    def cost(self):
+        return self._cost
+
+    @cost.setter
+    def cost(self, value):
+        self._cost = value
+
+    @property
+    def capacity(self):
+        return self.__capacity
+
+    @property
+    def pind(self):
+        return self._pind
+
+    @pind.setter
+    def pind(self, value):
+        self._pind = value
 
     def __str__(self):
         return f"({str(self.x)}, {str(self.y)}, {str(self.z)})"
