@@ -157,8 +157,3 @@ class Graph:
             min_list.append((x, y, square_result))
         x, y = self.find_min_in_list(min_list)
         return x, y
-
-
-
-
-
