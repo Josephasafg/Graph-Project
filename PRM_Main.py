@@ -317,9 +317,9 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount = 2
+    amount_of_graphs = 2
     amount_of_plots = 0
-    for i in range(amount):
+    for i in range(amount_of_graphs):
         exit_flag = True
         tries = 0
         graph_size = randomize_dynamic_graph_size()
@@ -328,15 +328,15 @@ if __name__ == '__main__':
         graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
         graph.prioritize_by_fire(graph_size)
-        for c_index in range(len(graph.starting_nodes)):
+        for current_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
-            graph.current_floor = graph.starting_nodes[c_index].z
+            graph.current_floor = graph.starting_nodes[current_index].z
             print(f"Current floor is: {graph.current_floor}")
             graph.list_of_height = list(graph.get_height_no_duplicates())
             working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
-            graph.starting_point = Node(graph.starting_nodes[c_index].x, graph.starting_nodes[c_index].y, 0.0, -1, True)
-            graph.starting_point.z = graph.starting_nodes[c_index].z
+            graph.starting_point = Node(graph.starting_nodes[current_index].x, graph.starting_nodes[current_index].y, 0.0, -1, True)
+            graph.starting_point.z = graph.starting_nodes[current_index].z
 
             while exit_flag:
                 print(f"starting point number {graph.starting_point}")
@@ -355,13 +355,13 @@ if __name__ == '__main__':
                 else:
                     print(f'Returned successfully from floor {graph.current_floor}')
                     tries = 1
-                    if c_index == len(graph.starting_nodes) - 1 or graph.current_floor > 0.0:
+                    if (current_index == len(graph.starting_nodes) - 1) or (graph.current_floor > 0.0):
                         if not graph.list_of_height:
                             break
-                        del graph.list_of_height[0]
-
-                        if not graph.list_of_height:
-                            break
+                        else:
+                            del graph.list_of_height[0]
+                            if not graph.list_of_height:
+                                break
                         graph.current_floor = (graph.list_of_height[0] * graph_size)
                     else:
                         break
@@ -380,7 +380,6 @@ if __name__ == '__main__':
             X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
-    average_of_run /= amount
+    average_of_run /= amount_of_graphs
     calculate_average_time(amount_of_plots)
-    print(f"Finished Experiment on {ALGORITHM} algorithm. Average is: {average_of_run}")
     exit(0)
