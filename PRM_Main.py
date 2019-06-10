@@ -14,9 +14,9 @@ from Utilities.utilities import randomize_dynamic_graph_size
 # global parameters
 TOTAL_TIME = 0
 RUNNING_ALGORITHM = "prm_dijkstra"
-X = list()
-Y = list()
-Z = list()
+X_LIST = list()
+Y_LIST = list()
+Z_LIST = list()
 SHOW_ANIMATION = True
 
 
@@ -297,10 +297,10 @@ def main(data_graph, algorithm_name, random_graph_size):
 
     lower_height = float(graph.get_lower_floor_height())
     for _ in range(len(result_x)):
-        Z.append(lower_height)
+        Z_LIST.append(lower_height)
 
-    X.extend(result_x)
-    Y.extend(result_y)
+    X_LIST.extend(result_x)
+    Y_LIST.extend(result_y)
     if SHOW_ANIMATION:
         plt.plot(result_x, result_y, "-r")
         plt.show()
@@ -373,8 +373,8 @@ if __name__ == '__main__':
 
             graph.list_of_height = list(working_height_set)
             print(f"Graph total distance is: {graph.total_min_time}")
-            mapping_utility_methods.create_3d_graph(X, Y, Z)
-            X, Y, Z = graph.clear_x_y_z_lists(X, Y, Z)
+            mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
+            X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
     average_of_run /= amount_of_graphs

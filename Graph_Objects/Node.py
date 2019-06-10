@@ -8,10 +8,18 @@ class Node:
         self.__z = 0
         self._cost = cost
         self._pind = pind
-        self.priority = 0
+        self.__priority = 0
 
         if capacity:
             self.__capacity = self.get_node_capacity()
+
+    @property
+    def priority(self):
+        return self.__priority
+
+    @priority.setter
+    def priority(self, value):
+        self.__priority = value
 
     @property
     def x(self):
