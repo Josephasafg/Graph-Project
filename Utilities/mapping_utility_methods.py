@@ -71,32 +71,31 @@ def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree, random
     if total_distance >= (MAX_EDGE_LEN * random_graph_size):
         return True
 
-    D = robot_radius
-    nstep = round(total_distance / D)
+    node_step = round(total_distance / robot_radius)
 
-    for i in range(nstep):
-        idxs, dist = okdtree.search(np.array([x, y]).reshape(2, 1))
+    for i in range(node_step):
+        indexes, dist = okdtree.search(np.array([x, y]).reshape(2, 1))
         if dist[0] <= robot_radius:
             return True  # collision
-        x += D * math.cos(yaw)
-        y += D * math.sin(yaw)
+        x += robot_radius * math.cos(yaw)
+        y += robot_radius * math.sin(yaw)
 
     # goal point check
-    idxs, dist = okdtree.search(np.array([goal_x, goal_y]).reshape(2, 1))
+    indexes, dist = okdtree.search(np.array([goal_x, goal_y]).reshape(2, 1))
     if dist[0] <= robot_radius:
         return True  # collision
 
     return False  # OK
 
 
-def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_size):
+def generate_roadmap(sample_x, sample_y, robot_radius, obstacle_kdtree, random_graph_size):
     road_map = []
-    nsample = len(sample_x)
-    skdtree = KDTree(np.vstack((sample_x, sample_y)).T) # this is our heuristic nodes
-    for (i, ix, iy) in zip(range(nsample), sample_x, sample_y):
+    n_sample = len(sample_x)
+    skdtree = KDTree(np.vstack((sample_x, sample_y)).T)  # this is our heuristic nodes
+    for (i, ix, iy) in zip(range(n_sample), sample_x, sample_y):
 
         index, dists = skdtree.search(
-            np.array([ix, iy]).reshape(2, 1), k=nsample)
+            np.array([ix, iy]).reshape(2, 1), k=n_sample)
         inds = index[0]
         edge_id = []
 
@@ -104,7 +103,7 @@ def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_si
             nx = sample_x[inds[ii]]
             ny = sample_y[inds[ii]]
 
-            if not is_collision(ix, iy, nx, ny, robot_radius, obkdtree, random_graph_size):
+            if not is_collision(ix, iy, nx, ny, robot_radius, obstacle_kdtree, random_graph_size):
                 edge_id.append(inds[ii])
 
             if len(edge_id) >= N_KNN:
@@ -115,8 +114,7 @@ def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_si
     return road_map
 
 
-def plot_road_map(road_map, sample_x, sample_y):  # pragma: no cover
-
+def plot_road_map(road_map, sample_x, sample_y):
     for i, _ in enumerate(road_map):
         for ii in range(len(road_map[i])):
             ind = road_map[i][ii]

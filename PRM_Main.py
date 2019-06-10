@@ -220,7 +220,7 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
     obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y,
                                                                                         grid_resolution, robot_radius)
 
-    motion = dijkstra_utilities.get_motion_model()
+    motion_model = dijkstra_utilities.get_motion_model()
 
     open_set, closed_set = dict(), dict()
     open_set[dijkstra_utilities.calc_index(start_node, x_width, min_x, min_y)] = start_node
@@ -246,8 +246,9 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
         # Add it to the closed set
         closed_set[c_id] = current
 
-        for i, _ in enumerate(motion):
-            node = Node(current.x + motion[i][0], current.y + motion[i][1], current.cost + motion[i][2], c_id)
+        for i, _ in enumerate(motion_model):
+            node = Node(current.x + motion_model[i][0], current.y + motion_model[i][1],
+                        current.cost + motion_model[i][2], c_id)
             node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
 
             if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
