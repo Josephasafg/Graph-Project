@@ -179,8 +179,8 @@ class Graph:
         min_list = list()
         for x, y in zip(self.coordinate['Building'][self.model_name]['Floors'][str(floor_number)]['goal_x'],
                         self.coordinate['Building'][self.model_name]['Floors'][str(floor_number)]['goal_y']):
-            distance_x = abs(self.starting_point[0] - x)**2
-            distance_y = abs(self.starting_point[1] - y)**2
+            distance_x = abs(self.starting_point.x - x)**2
+            distance_y = abs(self.starting_point.y - y)**2
             square_result = math.sqrt(distance_x + distance_y)
             min_list.append((x, y, square_result))
         x, y = self.find_min_in_list(min_list)
