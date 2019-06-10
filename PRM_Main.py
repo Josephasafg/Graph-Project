@@ -11,9 +11,9 @@ from Utilities.time_utilities import calculate_average_time
 from Graph_Objects.Node import Node
 from Utilities.utilities import randomize_dynamic_graph_size
 
-# parameter
+# global parameters
 TOTAL_TIME = 0
-ALGORITHM = "prm_dijkstra"
+RUNNING_ALGORITHM = "prm_dijkstra"
 X = list()
 Y = list()
 Z = list()
@@ -340,7 +340,7 @@ if __name__ == '__main__':
                 print(f"***********************************************")
                 if tries > 10:
                     break
-                exit_flag = main(graph, ALGORITHM, graph_size)
+                exit_flag = main(graph, RUNNING_ALGORITHM, graph_size)
 
                 if not exit_flag:
                     print(f'Returned from floor {graph.current_floor} unsuccessfully')
