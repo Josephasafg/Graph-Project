@@ -142,9 +142,7 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
     total_distance = 0
     for value in total:
         total_distance += value
-    print(f"total distance (meters): {total_distance}")
-    print(f"Total time in minutes per person: {utilities.weight_on_sub_path(total_distance)}")
-    print(f"=================================================================================")
+    utilities.print_total_time_distance(total_distance)
 
     return result_x, result_y, total_distance, break_flag
 
@@ -206,9 +204,8 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
     amount_of_total = 0
     for value in total:
         amount_of_total += value
-    print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {utilities.weight_on_sub_path(amount_of_total)}\n")
-    print(f"=================================================================================")
+
+    utilities.print_total_time_distance(amount_of_total)
 
     return result_x, result_y, amount_of_total, flag
 
@@ -265,10 +262,7 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
                 open_set[node_id] = node
 
     result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
-
-    print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {utilities.weight_on_sub_path(amount_of_total)}")
-    print(f"=================================================================================")
+    utilities.print_total_time_distance(amount_of_total)
 
     return result_x, result_y, amount_of_total, flag
 

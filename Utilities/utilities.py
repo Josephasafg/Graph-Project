@@ -3,6 +3,12 @@ from random import randint
 from random import uniform
 
 
+def print_total_time_distance(amount_of_total):
+    print(f"total distance (meters): {amount_of_total}")
+    print(f"total time in minutes: {weight_on_sub_path(amount_of_total)}")
+    print(f"=================================================================================")
+
+
 def randomize_dynamic_graph_size():
     return randint(1, 3)
 
