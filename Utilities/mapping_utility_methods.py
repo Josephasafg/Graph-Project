@@ -105,14 +105,6 @@ def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree, random
 
 
 def generate_roadmap(sample_x, sample_y, robot_radius, obkdtree, random_graph_size):
-    """
-    Road map generation
-    sample_x: [m] x positions of sampled points
-    sample_y: [m] y positions of sampled points
-    robot_radius: Robot Radius[m]
-    obkdtree: KDTree object of obstacles
-    """
-
     road_map = []
     nsample = len(sample_x)
     skdtree = KDTree(np.vstack((sample_x, sample_y)).T) # this is our heuristic nodes

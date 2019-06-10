@@ -2,20 +2,11 @@ import scipy.spatial
 
 
 class KDTree:
-    """
-    Nearest neighbor search class with KDTree
-    """
-
     def __init__(self, data):
         # store kd-tree
         self.tree = scipy.spatial.cKDTree(data)
 
     def search(self, inp, k=1):
-        """
-        Search NN
-        inp: input data, single frame or multi frame
-        """
-
         if len(inp.shape) >= 2:  # multi input
             index = []
             dist = []
@@ -31,9 +22,5 @@ class KDTree:
         return index, dist
 
     def search_in_distance(self, inp, r):
-        """
-        find points with in a distance r
-        """
-
         index = self.tree.query_ball_point(inp, r)
         return index

@@ -11,7 +11,6 @@ def calculate_average_time(tries):
 
 
 def timer(func):
-    """Print the runtime of the decorated function"""
     @functools.wraps(func)
     def wrapper_timer(*args, **kwargs):
         start_time = time.perf_counter()    # 1
