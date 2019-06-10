@@ -56,13 +56,13 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
             result_x, result_y, total_distance, return_code = algorithms(start_node, goal_node,
                                                                          obstacle_x, obstacle_y)
         else:
-            obkdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
+            obstacle_kdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
             sample_x, sample_y = mapping_utility_methods.sample_points\
-                (start_node, goal_tuple, robot_radius, obstacle_x,
-                    obstacle_y, obkdtree, random_graph_size)
+                (start_node, goal_node, robot_radius, obstacle_x,
+                    obstacle_y, obstacle_kdtree, random_graph_size)
 
             road_map = mapping_utility_methods.generate_roadmap(sample_x, sample_y, robot_radius,
-                                                                obkdtree, random_graph_size)
+                                                                obstacle_kdtree, random_graph_size)
 
             result_x, result_y, total_distance, return_code = algorithms(start_node,
                                                                          goal_node, sample_x, sample_y, road_map)
@@ -113,7 +113,6 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
         # Add it to the closed set
         closed_set[current_id] = current
 
-        # expand search grid based on motion model
         for i in range(len(road_map[current_id])):
             neighbour_id = road_map[current_id][i]
             dx = sample_x[neighbour_id] - current.x
@@ -175,7 +174,6 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
         # Add it to the closed set
         closed_set[current_id] = current
 
-        # expand search grid based on motion model
         for i in range(len(road_map[current_id])):
             neighbour_id = road_map[current_id][i]
             distance_x = sample_x[neighbour_id] - current.x
@@ -186,7 +184,7 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
 
             if neighbour_id in closed_set:
                 continue
-            # Otherwise if it is already in the open set
+
             if neighbour_id in open_set:
                 if open_set[neighbour_id].cost > node.cost:
                     open_set[neighbour_id].cost = node.cost
@@ -219,13 +217,13 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
     grid_resolution = 1.0
     robot_radius = 1.0
 
-    obmap, minx, miny, maxx, maxy, xw, yw = dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y,
-                                                                                 grid_resolution, robot_radius)
+    obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y,
+                                                                                        grid_resolution, robot_radius)
 
     motion = dijkstra_utilities.get_motion_model()
 
     open_set, closed_set = dict(), dict()
-    open_set[dijkstra_utilities.calc_index(start_node, xw, minx, miny)] = start_node
+    open_set[dijkstra_utilities.calc_index(start_node, x_width, min_x, min_y)] = start_node
 
     flag = 0
     while True:
@@ -248,17 +246,16 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
         # Add it to the closed set
         closed_set[c_id] = current
 
-        # expand search grid based on motion model
         for i, _ in enumerate(motion):
             node = Node(current.x + motion[i][0], current.y + motion[i][1], current.cost + motion[i][2], c_id)
-            node_id = dijkstra_utilities.calc_index(node, xw, minx, miny)
+            node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
 
-            if not dijkstra_utilities.verify_node(node, obmap, minx, miny, maxx, maxy):
+            if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
                 continue
 
             if node_id in closed_set:
                 continue
-            # Otherwise if it is already in the open set
+            
             if node_id in open_set:
                 if open_set[node_id].cost > node.cost:
                     open_set[node_id].cost = node.cost

@@ -125,7 +125,7 @@ def plot_road_map(road_map, sample_x, sample_y):  # pragma: no cover
                      [sample_y[i], sample_y[ind]], "-k")
 
 
-def sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y, obkdtree, random_graph_size):
+def sample_points(start_node, goal_node, robot_radius, obstacle_x, obstacle_y, obkdtree, random_graph_size):
     max_x = max(obstacle_x)
     max_y = max(obstacle_y)
     min_x = min(obstacle_x)
@@ -141,8 +141,8 @@ def sample_points(start_tuple, goal_tuple, robot_radius, obstacle_x, obstacle_y,
             sample_x.append(random_x)
             sample_y.append(random_y)
 
-    sample_x.append(start_tuple.x)
-    sample_y.append(start_tuple.y)
-    sample_x.append(goal_tuple[0])
-    sample_y.append(goal_tuple[1])
+    sample_x.append(start_node.x)
+    sample_y.append(start_node.y)
+    sample_x.append(goal_node.x)
+    sample_y.append(goal_node.y)
     return sample_x, sample_y
