@@ -2,7 +2,7 @@ import random
 
 
 class Node:
-    def __init__(self, x, y, cost=0.0, pind=-1, capacity=False):
+    def __init__(self, x=0, y=0, cost=0.0, pind=-1, capacity=False):
         self.__x = x
         self.__y = y
         self.__z = 0

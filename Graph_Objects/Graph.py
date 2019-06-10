@@ -8,13 +8,53 @@ class Graph:
     def __init__(self, yaml_file, model_name=None, floor_number=-1):
         current_file = open(yaml_file, 'r')
         self.__coordinate = yaml.load(current_file, Loader=yaml.FullLoader)
-        self.starting_point = None
-        self.goal_point = None
+        self.__starting_point = Node()
+        self.__goal_point = Node()
         self.__current_floor = floor_number
-        self.total_min_time = 0
-        self.starting_nodes = list()
+        self.__total_min_time = 0
+        self.__starting_nodes = list()
         self.__model_name = model_name
-        self.list_of_height = list()
+        self.__list_of_height = list()
+
+    @property
+    def list_of_height(self):
+        return self.__list_of_height
+
+    @list_of_height.setter
+    def list_of_height(self, value):
+        self.__list_of_height = value
+
+    @property
+    def starting_nodes(self):
+        return self.__starting_nodes
+
+    @starting_nodes.setter
+    def starting_nodes(self, value):
+        self.__starting_nodes = value
+
+    @property
+    def total_min_time(self):
+        return self.__total_min_time
+
+    @total_min_time.setter
+    def total_min_time(self, value):
+        self.__total_min_time = value
+
+    @property
+    def starting_point(self):
+        return self.__starting_point
+
+    @starting_point.setter
+    def starting_point(self, value):
+        self.__starting_point = value
+
+    @property
+    def goal_point(self):
+        return self.__goal_point
+
+    @goal_point.setter
+    def goal_point(self, value):
+        self.__goal_point = value
 
     @property
     def coordinate(self):
@@ -88,18 +128,6 @@ class Graph:
             list_of_tuple_distance.append(min_distance_node_tuple)
         self.starting_nodes = self.sort_and_extract_starting_nodes_from_tuple_list(list_of_tuple_distance)
 
-    # def prioritize_starting_points(self, dynamic_size):
-    #     current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
-    #     my_list_indexes = self.get_element_indexes(current_floor_list)
-    #     for index in my_list_indexes:
-    #         priority = random.randint(0, 1000)
-    #       current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
-    #                           self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
-    #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
-    #         current_node.priority = priority
-    #         self.starting_nodes.append(current_node)
-    #     self.sort_starting_point()
-
     def sort_starting_point(self):
         self.starting_nodes.sort(key=lambda current_point: current_point.priority, reverse=True)
 
@@ -129,11 +157,11 @@ class Graph:
         return total_distance/250
 
     def get_lower_floor_height(self):
-        if not self.list_of_height:
-            return 0
-        elif self.list_of_height[0] == 0:
-            return 0
-        return self.list_of_height[1]
+        if (not self.list_of_height) or (self.list_of_height[0] == 0):
+            return_value = 0
+        else:
+            return_value = self.list_of_height[1]
+        return return_value
 
     @staticmethod
     def find_min_in_list(minimum_list):
@@ -157,3 +185,16 @@ class Graph:
             min_list.append((x, y, square_result))
         x, y = self.find_min_in_list(min_list)
         return x, y
+
+    """May need for future use"""
+    # def prioritize_starting_points(self, dynamic_size):
+    #     current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
+    #     my_list_indexes = self.get_element_indexes(current_floor_list)
+    #     for index in my_list_indexes:
+    #         priority = random.randint(0, 1000)
+    #       current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+    #                           self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+    #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
+    #         current_node.priority = priority
+    #         self.starting_nodes.append(current_node)
+    #     self.sort_starting_point()

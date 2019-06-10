@@ -1,12 +1,13 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+from Utilities import utilities
 from Utilities import dijkstra_utilities
 from Utilities import mapping_utility_methods
 from Graph_Objects.KDTree import KDTree
 from Graph_Objects.Graph import Graph
-from Utilities.timer_decorator import timer
-from Utilities.timer_decorator import calculate_average_time
+from Utilities.time_utilities import timer
+from Utilities.time_utilities import calculate_average_time
 from Graph_Objects.Node import Node
 from Utilities.utilities import randomize_dynamic_graph_size
 
@@ -71,14 +72,14 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         goal_list_tuple.append(goal_tuple)
 
     try:
-        min_index, min_distance = mapping_utility_methods.find_min_time(total_distance_list)
+        min_index, min_distance = utilities.find_min_time(total_distance_list)
         data_graph.goal_point = Node(goal_list_tuple[min_index][0], goal_list_tuple[min_index][1], 0.0, -1)
         data_graph.goal_point.z = goal_list_tuple[min_index][2]
         # data_graph.goal_point = goal_list_tuple[min_index]
 
         print(f"My goal is: {data_graph.goal_point}")
 
-        total_time_to_escape = start_node.calculate_time_to_escape(mapping_utility_methods.weight_on_sub_path(min_distance))
+        total_time_to_escape = start_node.calculate_time_to_escape(utilities.weight_on_sub_path(min_distance))
         print(f"Total time to escape.\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
     except ValueError as ve:
         raise ValueError(ve)
@@ -98,7 +99,7 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
             break
 
         current_id = min(open_set, key=lambda o: open_set[o].cost +
-                         mapping_utility_methods.calc_heuristic(goal_node, open_set[o]))
+                         utilities.calc_heuristic(goal_node, open_set[o]))
         current = open_set[current_id]
 
         if current_id == (len(road_map) - 1):
@@ -143,7 +144,7 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
     for value in total:
         total_distance += value
     print(f"total distance (meters): {total_distance}")
-    print(f"Total time in minutes per person: {mapping_utility_methods.weight_on_sub_path(total_distance)}")
+    print(f"Total time in minutes per person: {utilities.weight_on_sub_path(total_distance)}")
     print(f"=================================================================================")
 
     return result_x, result_y, total_distance, break_flag
@@ -208,7 +209,7 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
     for value in total:
         amount_of_total += value
     print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {mapping_utility_methods.weight_on_sub_path(amount_of_total)}\n")
+    print(f"total time in minutes: {utilities.weight_on_sub_path(amount_of_total)}\n")
     print(f"=================================================================================")
 
     return result_x, result_y, amount_of_total, flag
@@ -268,7 +269,7 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
     result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
 
     print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {mapping_utility_methods.weight_on_sub_path(amount_of_total)}")
+    print(f"total time in minutes: {utilities.weight_on_sub_path(amount_of_total)}")
     print(f"=================================================================================")
 
     return result_x, result_y, amount_of_total, flag

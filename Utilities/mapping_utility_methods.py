@@ -51,10 +51,6 @@ def _get_floor_function_building_8_hit(i_floor_number):
         raise ValueError(i_floor_number)
 
 
-def find_min_time(time_list):
-    return time_list.index(min(time_list)), min(time_list)
-
-
 def create_3d_graph(x, y, z):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -62,17 +58,6 @@ def create_3d_graph(x, y, z):
     ax.plot(x, y, z)
     ax.scatter(x, y, z, zdir='z', lw=2, c='r', marker='*')
     plt.show()
-
-
-#   400 meters per minute = 24 KMH
-def weight_on_sub_path(distance, average_speed=250.0):
-    return distance / average_speed
-
-
-def calc_heuristic(n1, n2):
-    factored_weight = 1.0
-    distance = factored_weight * math.sqrt((n1.x - n2.x)**2 + (n1.y - n2.y)**2)
-    return distance
 
 
 def is_collision(start_x, start_y, goal_x, goal_y, robot_radius, okdtree, random_graph_size):
