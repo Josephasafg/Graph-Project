@@ -187,14 +187,14 @@ class Graph:
         return x, y
 
     """May need for future use"""
-    # def prioritize_starting_points(self, dynamic_size):
-    #     current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
-    #     my_list_indexes = self.get_element_indexes(current_floor_list)
-    #     for index in my_list_indexes:
-    #         priority = random.randint(0, 1000)
-    #       current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
-    #                           self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
-    #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
-    #         current_node.priority = priority
-    #         self.starting_nodes.append(current_node)
-    #     self.sort_starting_point()
+    def prioritize_starting_points(self, dynamic_size):
+        current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
+        my_list_indexes = self.get_element_indexes(current_floor_list, dynamic_size)
+        for index in my_list_indexes:
+            priority = random.randint(0, 1000)
+            current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+                                self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+            current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
+            current_node.priority = priority
+            self.starting_nodes.append(current_node)
+        self.sort_starting_point()
