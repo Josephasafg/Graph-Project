@@ -308,15 +308,15 @@ def outline_obstacles_demo_building_3(obstacle_x, obstacle_y, dynamic_size):
         obstacle_y.append(6 * dynamic_size)
 
     # outline exit/enter 2
-    for i in arange(3 * dynamic_size, 7 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(49 * dynamic_size)
-    for i in arange(3 * dynamic_size, 7 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(54 * dynamic_size)
     for i in arange(49 * dynamic_size, 54 * dynamic_size):
         obstacle_x.append(i)
-        obstacle_y.append(3 * dynamic_size)
+        obstacle_y.append(6 * dynamic_size)
 
     # outline middle left
     for i in arange(0, 7 * dynamic_size):

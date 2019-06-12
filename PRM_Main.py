@@ -13,7 +13,7 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_dijkstra"
+RUNNING_ALGORITHM = "prm_a_star"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -308,7 +308,7 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
+    graph = Graph('floors.yaml', 'OUTLINE_OBSTACLES_DEMO_BUILDING_3')
     amount_of_graphs = 2
     amount_of_plots = 0
     for i in range(amount_of_graphs):
@@ -317,9 +317,11 @@ if __name__ == '__main__':
         graph_size = randomize_dynamic_graph_size()
 
         # graph_size = 3.0
-        graph.randomize_graph_selection()
+        # graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
-        graph.prioritize_by_fire(graph_size)
+        graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
+
+        # graph.prioritize_by_fire(graph_size)
         for current_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
             graph.current_floor = graph.starting_nodes[current_index].z

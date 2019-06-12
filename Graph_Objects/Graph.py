@@ -186,11 +186,15 @@ class Graph:
         x, y = self.find_min_in_list(min_list)
         return x, y
 
-    """May need for future use"""
+    def get_prioritized_points(self, dynamic_size, algorithm):
+        if algorithm == 'prm_a_star':
+            self.prioritize_by_fire(dynamic_size)
+        else:
+            self.prioritize_starting_points(dynamic_size)
+
     def prioritize_starting_points(self, dynamic_size):
-        current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
-        my_list_indexes = self.get_element_indexes(current_floor_list, dynamic_size)
-        for index in my_list_indexes:
+        amount_of_options = len(self.coordinate['Building'][self.model_name]['Floors']['start_x'])
+        for index in range(amount_of_options):
             priority = random.randint(0, 1000)
             current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
                                 self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
@@ -198,3 +202,16 @@ class Graph:
             current_node.priority = priority
             self.starting_nodes.append(current_node)
         self.sort_starting_point()
+
+    """May need for future use"""
+    # def prioritize_starting_points(self, dynamic_size):
+    #     current_floor_list = self.coordinate['Building'][self.model_name]['Floors']['start_z']
+    #     my_list_indexes = self.get_element_indexes(current_floor_list, dynamic_size)
+    #     for index in my_list_indexes:
+    #         priority = random.randint(0, 1000)
+    #         current_node = Node(self.coordinate['Building'][self.model_name]['Floors']['start_x'][index] * dynamic_size,
+    #                             self.coordinate['Building'][self.model_name]['Floors']['start_y'][index] * dynamic_size)
+    #         current_node.z = self.coordinate['Building'][self.model_name]['Floors']['start_z'][index] * dynamic_size
+    #         current_node.priority = priority
+    #         self.starting_nodes.append(current_node)
+    #     self.sort_starting_point()
