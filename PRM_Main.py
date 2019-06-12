@@ -317,11 +317,10 @@ if __name__ == '__main__':
         graph_size = randomize_dynamic_graph_size()
 
         # graph_size = 3.0
-        # graph.randomize_graph_selection()
+        graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
-        # graph.prioritize_by_fire(graph_size)
         for current_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
             graph.current_floor = graph.starting_nodes[current_index].z
