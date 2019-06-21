@@ -13,7 +13,7 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_a_star"
+RUNNING_ALGORITHM = "prm_dijkstra"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -272,7 +272,8 @@ def main(data_graph, algorithm_name, random_graph_size):
 
     obstacle_x, obstacle_y = list(), list()
 
-    current_floor = mapping_utility_methods._get_building_model(data_graph.model_name, data_graph.current_floor/random_graph_size)
+    current_floor = mapping_utility_methods._get_building_model(data_graph.model_name,
+                                                                round(data_graph.current_floor/random_graph_size))
     obstacle_x, obstacle_y = current_floor(obstacle_x, obstacle_y, random_graph_size)
 
     result_x, result_y, min_index, current_min_time, return_code = prm_planning(obstacle_x, obstacle_y, robot_size,
@@ -308,16 +309,16 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
+    graph = Graph('floors.yaml', 'BUILDING_8_HIT', 180.0)
     amount_of_graphs = 2
     amount_of_plots = 0
     for i in range(amount_of_graphs):
         exit_flag = True
         tries = 0
-        graph_size = randomize_dynamic_graph_size()
+        # graph_size = randomize_dynamic_graph_size()
 
-        # graph_size = 3.0
-        graph.randomize_graph_selection()
+        graph_size = 1 / 3
+        # graph.randomize_graph_selection()
         print(f"Building {graph.model_name}")
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
@@ -325,7 +326,7 @@ if __name__ == '__main__':
             amount_of_plots += 1
             graph.current_floor = graph.starting_nodes[current_index].z
             print(f"Current floor is: {graph.current_floor}")
-            graph.list_of_height = list(graph.get_height_no_duplicates())
+            graph.list_of_height = list(graph.get_height_no_duplicates(graph_size))
             working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
             graph.starting_point = Node(graph.starting_nodes[current_index].x, graph.starting_nodes[current_index].y, 0.0, -1, True)
@@ -355,7 +356,7 @@ if __name__ == '__main__':
                             del graph.list_of_height[0]
                             if not graph.list_of_height:
                                 break
-                        graph.current_floor = (graph.list_of_height[0] * graph_size)
+                        graph.current_floor = graph.list_of_height[0]
                     else:
                         break
 

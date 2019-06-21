@@ -1,3 +1,4 @@
+import math
 from numpy import arange
 
 
@@ -1369,42 +1370,42 @@ def outline_obstacles_floor_one_other(obstacle_x, obstacle_y, dynamic_size):
 
 def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
     # Room outline
-    for i in arange(60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(60.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(35 * dynamic_size):
+    for i in arange(0, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * dynamic_size)
-    for i in arange(45 * dynamic_size, 61 * dynamic_size):
+    for i in arange(45 * dynamic_size, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * dynamic_size)
 
-    for i in arange(10 * dynamic_size):
+    for i in arange(0, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(0)
         obstacle_y.append(i)
-    for i in arange(18 * dynamic_size, 61 * dynamic_size):
+    for i in arange(18 * dynamic_size, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # bottom left class
-    for i in arange(11 * dynamic_size):
+    for i in arange(0, 11 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(8.0 * dynamic_size)
-    for i in arange(7 * dynamic_size):
+    for i in arange(0, 7 * dynamic_size, dynamic_size):
         obstacle_x.append(10.0 * dynamic_size)
         obstacle_y.append(i)
 
     # stairs bottom left
-    for i in arange(16 * dynamic_size, 21 * dynamic_size):
+    for i in arange(16 * dynamic_size, 21 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(6 * dynamic_size)
-    for i in arange(6 * dynamic_size, 10 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(16 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(6 * dynamic_size, 10 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(21 * dynamic_size)
         obstacle_y.append(i)
     # for i in arange(16 * dynamic_size, 21 * dynamic_size):
@@ -1417,21 +1418,21 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
     #     obstacle_x.append(21 * dynamic_size)
     #     obstacle_y.append(i)
     # elevator
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(3.0 * dynamic_size)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(25 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(34 * dynamic_size)
         obstacle_y.append(i)
 
     # bottom right class
-    for i in arange(50 * dynamic_size, 60 * dynamic_size):
+    for i in arange(50 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(10.0 * dynamic_size)
-    for i in arange(7 * dynamic_size):
+    for i in arange(0, 7 * dynamic_size, dynamic_size):
         obstacle_x.append(50.0 * dynamic_size)
         obstacle_y.append(i)
 
@@ -1439,33 +1440,33 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
     # for i in arange(47, 50):
     #     obstacle_x.append(i)
     #     obstacle_y.append(7)
-    for i in arange(8 * dynamic_size):
+    for i in arange(0, 8 * dynamic_size, dynamic_size):
         obstacle_x.append(47 * dynamic_size)
         obstacle_y.append(i)
 
     # mid left class
-    for i in arange(10 * dynamic_size):
+    for i in arange(0, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(40.0 * dynamic_size)
-    for i in arange(10 * dynamic_size):
+    for i in arange(0, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(55.0 * dynamic_size)
-    for i in arange(40 * dynamic_size, 52 * dynamic_size):
+    for i in arange(40 * dynamic_size, 52 * dynamic_size, dynamic_size):
         obstacle_x.append(10 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(10 * dynamic_size):
+    for i in arange(0, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(48 * dynamic_size)
 
     # # top left stairs
         # middle stairs
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(10.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(16.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(10 * dynamic_size, 16 * dynamic_size):
+    for i in arange(10 * dynamic_size, 16 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(25.0 * dynamic_size)
     # for i in arange(20, 33):
@@ -1479,13 +1480,13 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
     #     obstacle_y.append(i)
 
     # right class
-    for i in arange(25 * dynamic_size, 45 * dynamic_size):
+    for i in arange(25 * dynamic_size, 45 * dynamic_size, dynamic_size):
         obstacle_x.append(50 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(11 * dynamic_size):
+    for i in arange(0, 11 * dynamic_size, dynamic_size):
         obstacle_x.append((60 - i) * dynamic_size)
         obstacle_y.append(25.0 * dynamic_size)
-    for i in arange(11 * dynamic_size):
+    for i in arange(0, 11 * dynamic_size, dynamic_size):
         obstacle_x.append((60 - i) * dynamic_size)
         obstacle_y.append(45.0 * dynamic_size)
 
@@ -1494,125 +1495,125 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
 
 def outline_obstacles_floor_two_and_three(obstacle_x, obstacle_y, dynamic_size):
     #   Room outline
-    for i in arange(60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(60.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(61 * dynamic_size):
+    for i in arange(0, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * dynamic_size)
-    for i in arange(61 * dynamic_size):
+    for i in arange(0, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # two classes bottom left
-    for i in arange(10 * dynamic_size):
+    for i in arange(0, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(10.0 * dynamic_size)
-    for i in arange(11 * dynamic_size):
+    for i in arange(0, 11 * dynamic_size, dynamic_size):
         obstacle_x.append(10.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(11 * dynamic_size):
+    for i in arange(0, 11 * dynamic_size, dynamic_size):
         obstacle_x.append(15.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(11 * dynamic_size, 15 * dynamic_size):
+    for i in arange(11 * dynamic_size, 15 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(10.0 * dynamic_size)
 
     # stairs bottom left
-    for i in arange(16 * dynamic_size, 21 * dynamic_size):
+    for i in arange(16 * dynamic_size, 21 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(6 * dynamic_size)
-    for i in arange(6 * dynamic_size, 10 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(16 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(6 * dynamic_size, 10 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size, dynamic_size):
         obstacle_x.append(21 * dynamic_size)
         obstacle_y.append(i)
     # bottom elevator
-    for i in arange(28 * dynamic_size, 34 * dynamic_size):
+    for i in arange(28 * dynamic_size, 34 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(3 * dynamic_size)
-    for i in arange(4 * dynamic_size):
+    for i in arange(4 * dynamic_size, dynamic_size):
         obstacle_x.append(28 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(34 * dynamic_size)
         obstacle_y.append(i)
 
     # toilets
-    for i in arange(42 * dynamic_size, 53 * dynamic_size):
+    for i in arange(42 * dynamic_size, 53 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(8.0 * dynamic_size)
-    for i in arange(8 * dynamic_size):
+    for i in arange(0, 8 * dynamic_size, dynamic_size):
         obstacle_x.append(42 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(9 * dynamic_size):
+    for i in arange(0, 9 * dynamic_size, dynamic_size):
         obstacle_x.append(53 * dynamic_size)
         obstacle_y.append(i)
 
     # faculty offices
-    for i in arange(56 * dynamic_size, 60 * dynamic_size):
+    for i in arange(56 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(8.0 * dynamic_size)
-    for i in arange(8 * dynamic_size):
+    for i in arange(0, 8 * dynamic_size, dynamic_size):
         obstacle_x.append(56.0 * dynamic_size)
         obstacle_y.append(i)
 
     # big class number 1
-    for i in arange(45 * dynamic_size, 60 * dynamic_size):
+    for i in arange(45 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(20.0 * dynamic_size)
-    for i in arange(45 * dynamic_size, 60 * dynamic_size):
+    for i in arange(45 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(35.0 * dynamic_size)
-    for i in arange(20 * dynamic_size, 33 * dynamic_size):
+    for i in arange(20 * dynamic_size, 33 * dynamic_size, dynamic_size):
         obstacle_x.append(45.0 * dynamic_size)
         obstacle_y.append(i)
 
     # big class number 2
-    for i in arange(45 * dynamic_size, 60 * dynamic_size):
+    for i in arange(45 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(37.0 * dynamic_size)
-    for i in arange(45 * dynamic_size, 60 * dynamic_size):
+    for i in arange(45 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(52.0 * dynamic_size)
-    for i in arange(37 * dynamic_size, 45 * dynamic_size):
+    for i in arange(37 * dynamic_size, 45 * dynamic_size, dynamic_size):
         obstacle_x.append(45.0 * dynamic_size)
         obstacle_y.append(i)
 
     # benches
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(57 * dynamic_size)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(25 * dynamic_size)
         obstacle_y.append((60 - i) * dynamic_size)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(35 * dynamic_size)
         obstacle_y.append((60 - i) * dynamic_size)
 
     # balcony
-    for i in arange(55 * dynamic_size, 60 * dynamic_size):
+    for i in arange(55 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(5.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(5 * dynamic_size):
+    for i in arange(0, 5 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(55.0 * dynamic_size)
-    for i in arange(5 * dynamic_size):
+    for i in arange(0, 5 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * dynamic_size)
 
     # middle stairs
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(10.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(16.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(10 * dynamic_size, 16 * dynamic_size):
+    for i in arange(10 * dynamic_size, 16 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(25.0 * dynamic_size)
 
@@ -1621,117 +1622,117 @@ def outline_obstacles_floor_two_and_three(obstacle_x, obstacle_y, dynamic_size):
 
 def outline_obstacles_floor_four(obstacle_x, obstacle_y, dynamic_size):
     #  outline of room
-    for i in arange(0, 60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(60.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(61 * dynamic_size):
+    for i in arange(0, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * dynamic_size)
-    for i in arange(61 * dynamic_size):
+    for i in arange(0, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # stairs bottom left
-    for i in arange(16 * dynamic_size, 21 * dynamic_size):
+    for i in arange(16 * dynamic_size, 21 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(3 * dynamic_size)
-    for i in arange(3 * dynamic_size, 9 * dynamic_size):
+    for i in arange(3 * dynamic_size, 9 * dynamic_size, dynamic_size):
         obstacle_x.append(16 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(3 * dynamic_size, 9 * dynamic_size):
+    for i in arange(3 * dynamic_size, 9 * dynamic_size, dynamic_size):
         obstacle_x.append(21 * dynamic_size)
         obstacle_y.append(i)
 
     # Lecture hall
-    for i in arange(35 * dynamic_size, 60 * dynamic_size):
+    for i in arange(35 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(20.0 * dynamic_size)
-    for i in arange(35 * dynamic_size, 60 * dynamic_size):
+    for i in arange(35 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(45.0 * dynamic_size)
-    for i in arange(20 * dynamic_size, 25 * dynamic_size):
+    for i in arange(20 * dynamic_size, 25 * dynamic_size, dynamic_size):
         obstacle_x.append(35 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(29 * dynamic_size, 42 * dynamic_size):
+    for i in arange(29 * dynamic_size, 42 * dynamic_size, dynamic_size):
         obstacle_x.append(35 * dynamic_size)
         obstacle_y.append(i)
 
     # small room under hall
-    for i in arange(57 * dynamic_size, 60 * dynamic_size):
+    for i in arange(57 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(15.0 * dynamic_size)
-    for i in arange(57 * dynamic_size, 60 * dynamic_size):
+    for i in arange(57 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(10.0 * dynamic_size)
-    for i in arange(10 * dynamic_size, 15 * dynamic_size):
+    for i in arange(10 * dynamic_size, 15 * dynamic_size, dynamic_size):
         obstacle_x.append(57.0 * dynamic_size)
         obstacle_y.append(i)
 
     # toilets
-    for i in arange(46 * dynamic_size, 56 * dynamic_size):
+    for i in arange(46 * dynamic_size, 56 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(7.0 * dynamic_size)
-    for i in arange(8 * dynamic_size):
+    for i in arange(0, 8 * dynamic_size, dynamic_size):
         obstacle_x.append(46.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(8 * dynamic_size):
+    for i in arange(0, 8 * dynamic_size, dynamic_size):
         obstacle_x.append(56.0 * dynamic_size)
         obstacle_y.append(i)
 
     # elevator
-    for i in arange(26 * dynamic_size, 38 * dynamic_size):
+    for i in arange(26 * dynamic_size, 38 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(3.0 * dynamic_size)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(26 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(38 * dynamic_size)
         obstacle_y.append(i)
 
     # faculty offices
-    for i in arange(6 * dynamic_size):
+    for i in arange(0, 6 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(20.0 * dynamic_size)
-    for i in arange(21 * dynamic_size):
+    for i in arange(0, 21 * dynamic_size, dynamic_size):
         obstacle_x.append(6.0 * dynamic_size)
         obstacle_y.append(i)
 
     # more offices
-    for i in arange(6 * dynamic_size):
+    for i in arange(0, 6 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(50.0 * dynamic_size)
-    for i in arange(9 * dynamic_size):
+    for i in arange(0, 9 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(30.0 * dynamic_size)
-    for i in arange(30 * dynamic_size, 51 * dynamic_size):
+    for i in arange(30 * dynamic_size, 51 * dynamic_size, dynamic_size):
         obstacle_x.append(9.0 * dynamic_size)
         obstacle_y.append(i)
 
     # stairs near offices
         # middle stairs
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(10.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(25 * dynamic_size, 35 * dynamic_size):
+    for i in arange(25 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_x.append(16.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(10 * dynamic_size, 16 * dynamic_size):
+    for i in arange(10 * dynamic_size, 16 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(25.0 * dynamic_size)
 
     # benches - top
-    for i in arange(20 * dynamic_size, 33 * dynamic_size):
+    for i in arange(20 * dynamic_size, 33 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(57.0 * dynamic_size)
-    for i in arange(4 * dynamic_size):
+    for i in arange(0, 4 * dynamic_size, dynamic_size):
         obstacle_x.append(20 * dynamic_size)
         obstacle_y.append((60 - i) * dynamic_size)
-        for i in arange(4 * dynamic_size):
-            obstacle_x.append(33 * dynamic_size)
-            obstacle_y.append((60 - i) * dynamic_size)
+    for i in arange(4 * dynamic_size, dynamic_size):
+        obstacle_x.append(33 * dynamic_size)
+        obstacle_y.append((60 - i) * dynamic_size)
 
     return obstacle_x, obstacle_y

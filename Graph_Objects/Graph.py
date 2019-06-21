@@ -79,11 +79,11 @@ class Graph:
     def get_element_indexes(self, my_list, size):
         return filter(lambda a: my_list[a]*size == self.current_floor, range(0, len(my_list)))
 
-    def get_height_no_duplicates(self):
+    def get_height_no_duplicates(self, size):
         temp_list = list(set(self.coordinate['Building'][self.model_name]['Floors']['goal_z']))
         temp_list.sort(reverse=True)
 
-        clean_list = [x for x in temp_list if not x > self.current_floor]
+        clean_list = [x * size for x in temp_list if not x * size > self.current_floor]
         return clean_list
 
     @staticmethod
