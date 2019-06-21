@@ -5,9 +5,9 @@ global_list = list()
 global_list.append(0.0)
 
 
-def calculate_average_time(tries):
-    print(f"Total amount of runs: {tries} - ")
-    print(f"Average of entire run per floor is: {global_list[0] / tries} seconds\n")
+def calculate_average_time(tries: int, item: str):
+    print(f"Total amount of {item}: {tries}")
+    print(f"Average time it took for the algorithm to run for one {item} is: {global_list[0] / tries} seconds\n")
 
 
 def timer(func):
