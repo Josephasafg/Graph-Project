@@ -309,7 +309,7 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'BUILDING_8_HIT', 180.0)
+    graph = Graph('floors.yaml', 'OUTLINE_OBSTACLES_DEMO_BUILDING_10')
     amount_of_graphs = 2
     amount_of_plots = 0
     for i in range(amount_of_graphs):
