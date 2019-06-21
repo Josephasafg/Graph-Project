@@ -4,76 +4,76 @@ from numpy import arange
 
 def outline_obstacles_demo_building_1(obstacle_x, obstacle_y, dynamic_size):
     #  outline of room
-    for i in arange(0, 60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(0.0)
-    for i in arange(60 * dynamic_size):
+    for i in arange(0, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(60.0 * dynamic_size)
         obstacle_y.append(i)
-    for i in arange(61 * dynamic_size):
+    for i in arange(0, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(60.0 * dynamic_size)
-    for i in arange(61 * dynamic_size):
+    for i in arange(0, 61 * dynamic_size, dynamic_size):
         obstacle_x.append(0.0)
         obstacle_y.append(i)
 
     # outline obstacle top left
-    for i in arange(0, 6 * dynamic_size):
+    for i in arange(0, 6 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(40 * dynamic_size)
-    for i in arange(40 * dynamic_size, 60 * dynamic_size):
+    for i in arange(40 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(6 * dynamic_size)
 
     # outline exit/enter 1
-    for i in arange(6 * dynamic_size, 10 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(4 * dynamic_size)
-    for i in arange(6 * dynamic_size, 10 * dynamic_size):
+    for i in arange(6 * dynamic_size, 10 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(8 * dynamic_size)
-    for i in arange(4 * dynamic_size, 8 * dynamic_size):
+    for i in arange(4 * dynamic_size, 8 * dynamic_size, dynamic_size):
         obstacle_y.append(6 * dynamic_size)
         obstacle_x.append(i)
 
     # outline obst
-    for i in arange(11 * dynamic_size, 17 * dynamic_size):
+    for i in arange(11 * dynamic_size, 17 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(22 * dynamic_size)
-    for i in arange(0 * dynamic_size, 22 * dynamic_size):
+    for i in arange(0 * dynamic_size, 22 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(11 * dynamic_size)
-    for i in arange(0 * dynamic_size, 22 * dynamic_size):
+    for i in arange(0 * dynamic_size, 22 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(16 * dynamic_size)
 
     # outline obst
-    for i in arange(30 * dynamic_size, 45 * dynamic_size):
+    for i in arange(30 * dynamic_size, 45 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(40 * dynamic_size)
-    for i in arange(40 * dynamic_size, 60 * dynamic_size):
+    for i in arange(40 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(30 * dynamic_size)
-    for i in arange(40 * dynamic_size, 60 * dynamic_size):
+    for i in arange(40 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(45 * dynamic_size)
 
     # outline obst
-    for i in arange(40 * dynamic_size, 60 * dynamic_size):
+    for i in arange(40 * dynamic_size, 60 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(20 * dynamic_size)
-    for i in arange(0, 20 * dynamic_size):
+    for i in arange(0, 20 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(40 * dynamic_size)
 
     # outline exit/enter 2
-    for i in arange(30 * dynamic_size, 35 * dynamic_size):
+    for i in arange(30 * dynamic_size, 35 * dynamic_size, dynamic_size):
         obstacle_y.append(i)
         obstacle_x.append(40 * dynamic_size)
-    for i in arange(40 * dynamic_size, 43 * dynamic_size):
+    for i in arange(40 * dynamic_size, 43 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(30 * dynamic_size)
-    for i in arange(40 * dynamic_size, 43 * dynamic_size):
+    for i in arange(40 * dynamic_size, 43 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(35 * dynamic_size)
 
