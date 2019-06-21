@@ -5,12 +5,15 @@ from random import uniform
 
 def print_total_time_distance(amount_of_total):
     print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {weight_on_sub_path(amount_of_total)}")
-    print(f"=================================================================================")
+    print(f"total time in minutes: {weight_on_sub_path(amount_of_total)}\n")
+    # print(f"============================================================")
 
 
 def randomize_dynamic_graph_size():
-    return randint(1, 3)
+    small_sizes = [1/3, 1/2, 1/6]
+    choose_random_index = randint(0, 2)
+    return small_sizes[choose_random_index]
+    # return randint(1, 3)
 
 
 def find_min_time(time_list):

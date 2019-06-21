@@ -42,6 +42,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
     my_indexes = data_graph.get_element_indexes(
         data_graph.coordinate['Building'][data_graph.model_name]['Floors']['goal_z'], random_graph_size)
 
+    nodes_to_check = 1
     for index in my_indexes:
         goal_tuple = (data_graph.coordinate['Building'][data_graph.model_name]['Floors']
                       ['goal_x'][index] * random_graph_size,
@@ -49,6 +50,8 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
                       ['goal_y'][index] * random_graph_size,
                       data_graph.coordinate['Building'][data_graph.model_name]['Floors']
                       ['goal_z'][index] * random_graph_size)
+        print(f"Checking exit #{nodes_to_check}.\n")
+        nodes_to_check += 1
 
         goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
 
@@ -77,10 +80,10 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         data_graph.goal_point.z = goal_list_tuple[min_index][2]
         # data_graph.goal_point = goal_list_tuple[min_index]
 
-        print(f"My goal is: {data_graph.goal_point}")
+        print(f"Closest exit point is: {data_graph.goal_point}")
 
         total_time_to_escape = start_node.calculate_time_to_escape(utilities.weight_on_sub_path(min_distance))
-        print(f"Total time to escape.\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
+        print(f"Total time to escape per capacity-\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
     except ValueError as ve:
         raise ValueError(ve)
 
@@ -162,9 +165,10 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
         current = open_set[current_id]
 
         if current_id == (len(road_map) - 1):
-            print("Goal is found!")
             goal_node.pind = current.pind
             goal_node.cost = current.cost
+            goal_node.z = start_node.z
+            print(f"Exit point is found! {goal_node}")
             break
 
         # Remove the item from the open set
@@ -309,23 +313,23 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'OUTLINE_OBSTACLES_DEMO_BUILDING_1')
+    graph = Graph('floors.yaml', 'BUILDING_8_HIT')
     amount_of_graphs = 2
     amount_of_plots = 0
     for i in range(amount_of_graphs):
         exit_flag = True
         tries = 0
-        # graph_size = randomize_dynamic_graph_size()
+        graph_size = randomize_dynamic_graph_size()
 
-        graph_size = 1 / 3
+        # graph_size = 1 / 3
         # graph.randomize_graph_selection()
-        print(f"Building {graph.model_name}")
+        print(f"Current building being evaluated - {graph.model_name}")
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
         for current_index in range(len(graph.starting_nodes)):
             amount_of_plots += 1
             graph.current_floor = graph.starting_nodes[current_index].z
-            print(f"Current floor is: {graph.current_floor}")
+            print(f"Current floor height is: {graph.current_floor} meters")
             graph.list_of_height = list(graph.get_height_no_duplicates(graph_size))
             working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
@@ -333,21 +337,22 @@ if __name__ == '__main__':
             graph.starting_point.z = graph.starting_nodes[current_index].z
 
             while exit_flag:
-                print(f"starting point number {graph.starting_point}")
-                print(f"***********************************************")
+                print(f"***********************************************************")
+                print(f"Starting point number {graph.starting_point}")
                 if tries > 10:
                     break
                 exit_flag = main(graph, RUNNING_ALGORITHM, graph_size)
 
                 if not exit_flag:
                     print(f'Returned from floor {graph.current_floor} unsuccessfully')
-                    print(f"***********************************************")
+                    print(f"***********************************************************")
                     tries += 1
                     amount_of_plots += 1
                     exit_flag = True
                     continue
                 else:
-                    print(f'Returned successfully from floor {graph.current_floor}')
+                    print(f"***********************************************************")
+                    print(f'Returned successfully from floor (height) - {graph.current_floor} meters')
                     tries = 1
                     if (current_index == len(graph.starting_nodes) - 1) or (graph.current_floor > 0.0):
                         if not graph.list_of_height:
@@ -369,7 +374,10 @@ if __name__ == '__main__':
                     graph.total_min_time += graph.calc_height_distance()
 
             graph.list_of_height = list(working_height_set)
-            print(f"Graph total distance is: {graph.total_min_time}")
+            print(f"Total time to escape building in minutes per {graph.starting_point.capacity} people: "
+                  f"{graph.total_min_time} minutes")
+            print("---------------------------------------------------------")
+            print("Evaluating a new building...\n")
             mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
             X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
