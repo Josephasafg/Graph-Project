@@ -284,6 +284,7 @@ def main(data_graph, algorithm_name, random_graph_size):
                                                                                 algorithm_name, data_graph,
                                                                                 random_graph_size)
 
+    #  current_min_time needs to be min distance
     data_graph.total_min_time += current_min_time
     if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
@@ -317,6 +318,7 @@ if __name__ == '__main__':
     amount_of_graphs = 2
     amount_of_plots = 0
     for i in range(amount_of_graphs):
+        print("Evaluating a new building...\n")
         exit_flag = True
         tries = 0
         graph_size = randomize_dynamic_graph_size()
@@ -327,6 +329,7 @@ if __name__ == '__main__':
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
         for current_index in range(len(graph.starting_nodes)):
+            print(f"Evaluating a new starting point for building {graph.model_name}...\n")
             amount_of_plots += 1
             graph.current_floor = graph.starting_nodes[current_index].z
             print(f"Current floor height is: {graph.current_floor} meters")
@@ -374,14 +377,16 @@ if __name__ == '__main__':
                     graph.total_min_time += graph.calc_height_distance()
 
             graph.list_of_height = list(working_height_set)
-            print(f"Total time to escape building in minutes per {graph.starting_point.capacity} people: "
-                  f"{graph.total_min_time} minutes")
+            print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
+                  f"people: {graph.total_min_time} minutes")
             print("---------------------------------------------------------")
-            print("Evaluating a new building...\n")
             mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
             X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
     average_of_run /= amount_of_graphs
+    print("Average Time per one floor - ")
     calculate_average_time(amount_of_plots)
+    print("Average Time per one Building - ")
+    calculate_average_time(amount_of_graphs)
     exit(0)

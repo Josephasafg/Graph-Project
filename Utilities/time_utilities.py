@@ -7,7 +7,7 @@ global_list.append(0.0)
 
 def calculate_average_time(tries):
     print(f"Total amount of runs: {tries} - ")
-    print(f"Average of entire run per floor is: {global_list[0] / tries} seconds")
+    print(f"Average of entire run per floor is: {global_list[0] / tries} seconds\n")
 
 
 def timer(func):
