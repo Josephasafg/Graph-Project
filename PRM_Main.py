@@ -93,7 +93,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         min_index, total_time_to_escape, result_tuple_list[min_index][2]
 
 
-def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
+def prm_a_star(start_node: Node, goal_node: Node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
     break_flag = 0
@@ -152,7 +152,7 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
     return result_x, result_y, total_distance, break_flag
 
 
-def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
+def prm_dijkstra(start_node: Node, goal_node: Node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
 
@@ -216,7 +216,7 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
     return result_x, result_y, amount_of_total, flag
 
 
-def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
+def dijkstra(start_node: Node, goal_node: Node, obstacle_x, obstacle_y):
     grid_resolution = 2.0
     robot_radius = 1.0
 
