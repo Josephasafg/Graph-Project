@@ -26,39 +26,49 @@ def calc_final_path(goal_node, closed_set):
 
 
 def verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
-    if node.x < min_x:
+    point_x = calc_position(node.x, 2.0, min_x)
+    point_y = calc_position(node.y, 2.0, min_y)
+    if point_x < min_x:
         return False
-    elif node.y < min_y:
+    elif point_y < min_y:
         return False
-    elif node.x > max_x:
+    elif point_x > max_x:
         return False
-    elif node.y > max_y:
+    elif point_y > max_y:
         return False
 
-    if obstacle_map[int(node.x)][int(node.y)]:
-        return False
+    try:
+        if obstacle_map[int(node.x)][int(node.y)]:
+            return False
+    except IndexError:
+        return True
 
     return True
 
 
-def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
-    min_x = int(min(ox))
-    min_y = int(min(oy))
-    max_x = int(max(ox))
-    max_y = int(max(oy))
+def calc_position(i_x: int, reso: float, min_p):
+    pos = i_x * reso + min_p
+    return pos
 
-    x_width = max_x - min_x + 1
-    y_width = max_y - min_y + 1
+
+def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
+    min_x = round(min(ox))
+    min_y = round(min(oy))
+    max_x = round(max(ox))
+    max_y = round(max(oy))
+
+    x_width = round((max_x - min_x) / grid_resolution)
+    y_width = round((max_y - min_y) / grid_resolution)
 
     # obstacle map generation
-    obstacle_map = [[False for _ in arange(0, y_width, 0.1)] for _ in arange(0, x_width, 0.1)]
-    for ix in arange(x_width):
-        x = ix + min_x
-        for iy in arange(y_width):
-            y = iy + min_y
+    obstacle_map = [[False for _ in arange(y_width)] for _ in arange(x_width)]
+    for ix in arange(int(x_width)):
+        x = calc_position(ix, grid_resolution, min_x)
+        for iy in arange(int(y_width)):
+            y = calc_position(iy, grid_resolution, min_y)
             for iox, ioy in zip(ox, oy):
                 d = math.sqrt((iox - x)**2 + (ioy - y)**2)
-                if d <= robot_radius / grid_resolution:
+                if d <= robot_radius:
                     obstacle_map[ix][iy] = True
                     break
 
@@ -67,6 +77,10 @@ def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
 
 def calc_index(node, x_width, x_min, y_min):
     return (node.y - y_min) * x_width + (node.x - x_min)
+
+
+def calc_xyindex(position: int, minp: int, reso: float):
+    return round((position - minp)/reso)
 
 
 def get_motion_model():

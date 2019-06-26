@@ -1425,10 +1425,6 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
         obstacle_x.append(50.0 * dynamic_size)
         obstacle_y.append(i)
 
-    # toilet near bottom right class
-    # for i in arange(47, 50):
-    #     obstacle_x.append(i)
-    #     obstacle_y.append(7)
     for i in arange(0, 8 * dynamic_size, dynamic_size):
         obstacle_x.append(47 * dynamic_size)
         obstacle_y.append(i)
@@ -1458,15 +1454,6 @@ def outline_obstacles_floor_one(obstacle_x, obstacle_y, dynamic_size):
     for i in arange(10 * dynamic_size, 16 * dynamic_size, dynamic_size):
         obstacle_x.append(i)
         obstacle_y.append(25.0 * dynamic_size)
-    # for i in arange(20, 33):
-    #     obstacle_x.append(20.0)
-    #     obstacle_y.append(i)
-    # for i in arange(20, 25):
-    #     obstacle_x.append(i)
-    #     obstacle_y.append(20)
-    # for i in arange(20, 33):
-    #     obstacle_x.append(25)
-    #     obstacle_y.append(i)
 
     # right class
     for i in arange(25 * dynamic_size, 45 * dynamic_size, dynamic_size):

@@ -17,7 +17,7 @@ RUNNING_ALGORITHM = "prm_dijkstra"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
-SHOW_ANIMATION = True
+SHOW_ANIMATION = False
 
 
 def _get_algorithm_function(algorithm_name):
@@ -83,12 +83,14 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         print(f"Closest exit point is: {data_graph.goal_point}")
 
         total_time_to_escape = start_node.calculate_time_to_escape(utilities.weight_on_sub_path(min_distance))
-        print(f"Total time to escape per capacity-\nCapacity: {start_node.capacity}\nTime: {total_time_to_escape} minutes\n")
+        print(f"Total time to escape per capacity-\nCapacity: {start_node.capacity}\n"
+              f"Time: {total_time_to_escape} minutes\n"
+              f"Distance: {min_distance}")
     except ValueError as ve:
         raise ValueError(ve)
 
     return result_tuple_list[min_index][0], result_tuple_list[min_index][1],\
-        min_index, min_distance, result_tuple_list[min_index][2]
+        min_index, total_time_to_escape, result_tuple_list[min_index][2]
 
 
 def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
@@ -215,14 +217,13 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
 
 
 def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
-    grid_resolution = 1.0
+    grid_resolution = 2.0
     robot_radius = 1.0
 
-    obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y,
-                                                                                        grid_resolution, robot_radius)
+    obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = \
+        dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y, grid_resolution, robot_radius)
 
     motion_model = dijkstra_utilities.get_motion_model()
-
     open_set, closed_set = dict(), dict()
     open_set[dijkstra_utilities.calc_index(start_node, x_width, min_x, min_y)] = start_node
 
@@ -252,18 +253,17 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
                         current.cost + motion_model[i][2], c_id)
             node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
 
-            if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
-                continue
-
             if node_id in closed_set:
                 continue
+
+            if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
+                continue
             
-            if node_id in open_set:
-                if open_set[node_id].cost > node.cost:
-                    open_set[node_id].cost = node.cost
-                    open_set[node_id].pind = c_id
-            else:
+            if node_id not in open_set:
                 open_set[node_id] = node
+            else:
+                if open_set[node_id].cost >= node.cost:
+                    open_set[node_id] = node
 
     result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
     utilities.print_total_time_distance(amount_of_total)
@@ -284,7 +284,6 @@ def main(data_graph, algorithm_name, random_graph_size):
                                                                                 algorithm_name, data_graph,
                                                                                 random_graph_size)
 
-    #  current_min_time needs to be min distance
     data_graph.total_min_time += current_min_time
     if SHOW_ANIMATION:
         plt.plot(obstacle_x, obstacle_y, ".k")
@@ -314,17 +313,17 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml', 'BUILDING_8_HIT')
-    amount_of_graphs = 2
+    graph = Graph('floors.yaml')
+    amount_of_graphs = 50
     amount_of_plots = 0
     for i in range(amount_of_graphs):
-        print("Evaluating a new building...\n")
+        print(f"{i+1} Evaluating a new building...\n")
         exit_flag = True
         tries = 0
         graph_size = randomize_dynamic_graph_size()
 
-        # graph_size = 1 / 3
-        # graph.randomize_graph_selection()
+        # graph_size = 1
+        graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
@@ -384,9 +383,10 @@ if __name__ == '__main__':
             X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
-    average_of_run /= amount_of_graphs
-    print("Average Time per one floor - ")
-    calculate_average_time(amount_of_plots)
-    print("Average Time per one Building - ")
-    calculate_average_time(amount_of_graphs)
+    # average_of_run /= amount_of_graphs
+    print("Average Time per one floor:")
+    calculate_average_time(amount_of_plots, "Floors")
+    print("Average Time per one Building:")
+    calculate_average_time(amount_of_graphs, 'Buildings')
+    calculate_average_time(1, 'Everything')
     exit(0)
