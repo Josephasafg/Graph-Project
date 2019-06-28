@@ -13,7 +13,7 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_dijkstra"
+RUNNING_ALGORITHM = "dijkstra"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -217,7 +217,7 @@ def prm_dijkstra(start_node: Node, goal_node: Node, sample_x, sample_y, road_map
 
 
 def dijkstra(start_node: Node, goal_node: Node, obstacle_x, obstacle_y):
-    grid_resolution = 2.0
+    grid_resolution = 1.0
     robot_radius = 1.0
 
     obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = \
@@ -314,15 +314,15 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount_of_graphs = 50
+    amount_of_graphs = 1
     amount_of_plots = 0
     for i in range(amount_of_graphs):
         print(f"{i+1} Evaluating a new building...\n")
         exit_flag = True
         tries = 0
-        graph_size = randomize_dynamic_graph_size()
+        # graph_size = randomize_dynamic_graph_size()
 
-        # graph_size = 1
+        graph_size = 1
         graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
