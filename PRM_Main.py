@@ -13,11 +13,11 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_dijkstra"
+RUNNING_ALGORITHM = "prm_a_star"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
-SHOW_ANIMATION = False
+SHOW_ANIMATION = True
 
 
 def _get_algorithm_function(algorithm_name):
@@ -56,6 +56,8 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
 
         if algorithm_name == 'dijkstra':
+            # dijkstra = Dijkstra(obstacle_x, obstacle_x, 1/3, 1/3)
+            # result_x, result_y, total_distance, return_code = dijkstra.planning(start_node.x, start_node.x, goal_node.x, goal_node.y)
             result_x, result_y, total_distance, return_code = algorithms(start_node, goal_node,
                                                                          obstacle_x, obstacle_y)
         else:
@@ -93,7 +95,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         min_index, total_time_to_escape, result_tuple_list[min_index][2]
 
 
-def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
+def prm_a_star(start_node: Node, goal_node: Node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
     break_flag = 0
@@ -152,7 +154,7 @@ def prm_a_star(start_node, goal_node, sample_x, sample_y, road_map):
     return result_x, result_y, total_distance, break_flag
 
 
-def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
+def prm_dijkstra(start_node: Node, goal_node: Node, sample_x, sample_y, road_map):
     open_set, closed_set = dict(), dict()
     open_set[len(road_map) - 2] = start_node
 
@@ -216,8 +218,8 @@ def prm_dijkstra(start_node, goal_node, sample_x, sample_y, road_map):
     return result_x, result_y, amount_of_total, flag
 
 
-def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
-    grid_resolution = 2.0
+def dijkstra(start_node: Node, goal_node: Node, obstacle_x, obstacle_y):
+    grid_resolution = 1.0
     robot_radius = 1.0
 
     obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = \
@@ -249,8 +251,8 @@ def dijkstra(start_node, goal_node, obstacle_x, obstacle_y):
         closed_set[c_id] = current
 
         for i, _ in enumerate(motion_model):
-            node = Node(current.x + motion_model[i][0], current.y + motion_model[i][1],
-                        current.cost + motion_model[i][2], c_id)
+            node = Node((current.x + motion_model[i][0]) * 1/3, (current.y + motion_model[i][1]) * 1/3,
+                        (current.cost + motion_model[i][2]) * 1/3, c_id)
             node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
 
             if node_id in closed_set:
@@ -314,7 +316,7 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount_of_graphs = 50
+    amount_of_graphs = 1
     amount_of_plots = 0
     for i in range(amount_of_graphs):
         print(f"{i+1} Evaluating a new building...\n")
@@ -322,7 +324,7 @@ if __name__ == '__main__':
         tries = 0
         graph_size = randomize_dynamic_graph_size()
 
-        # graph_size = 1
+
         graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
         graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
@@ -388,5 +390,5 @@ if __name__ == '__main__':
     calculate_average_time(amount_of_plots, "Floors")
     print("Average Time per one Building:")
     calculate_average_time(amount_of_graphs, 'Buildings')
-    calculate_average_time(1, 'Everything')
+    calculate_average_time(1, 'All buildings')
     exit(0)

@@ -26,8 +26,8 @@ def calc_final_path(goal_node, closed_set):
 
 
 def verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
-    point_x = calc_position(node.x, 2.0, min_x)
-    point_y = calc_position(node.y, 2.0, min_y)
+    point_x = calc_position(node.x, 1.0, min_x)
+    point_y = calc_position(node.y, 1.0, min_y)
     if point_x < min_x:
         return False
     elif point_y < min_y:
