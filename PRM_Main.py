@@ -13,11 +13,11 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_a_star"
+RUNNING_ALGORITHM = "a_star"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
-SHOW_ANIMATION = True
+SHOW_ANIMATION = False
 
 
 def _get_algorithm_function(algorithm_name):
@@ -27,6 +27,8 @@ def _get_algorithm_function(algorithm_name):
         return prm_a_star
     elif algorithm_name == 'dijkstra':
         return dijkstra
+    elif algorithm_name == 'a_star':
+        return a_star
     else:
         raise ValueError("This algorithm can't be found!")
 
@@ -55,7 +57,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
 
         goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
 
-        if algorithm_name == 'dijkstra':
+        if algorithm_name == 'dijkstra' or algorithm_name == 'a_star':
             # dijkstra = Dijkstra(obstacle_x, obstacle_x, 1/3, 1/3)
             # result_x, result_y, total_distance, return_code = dijkstra.planning(start_node.x, start_node.x, goal_node.x, goal_node.y)
             result_x, result_y, total_distance, return_code = algorithms(start_node, goal_node,
@@ -273,6 +275,60 @@ def dijkstra(start_node: Node, goal_node: Node, obstacle_x, obstacle_y):
     return result_x, result_y, amount_of_total, flag
 
 
+def a_star(start_node: Node, goal_node: Node, obstacle_x, obstacle_y):
+    grid_resolution = 1.0
+    robot_radius = 1.0
+
+    obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = \
+        dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y, grid_resolution, robot_radius)
+
+    motion_model = dijkstra_utilities.get_motion_model()
+    open_set, closed_set = dict(), dict()
+    open_set[dijkstra_utilities.calc_index(start_node, x_width, min_x, min_y)] = start_node
+
+    flag = 0
+    while True:
+        if len(open_set) == 0:
+            print("Open set is empty... Couldn't find goal")
+            flag = 1
+            break
+        c_id = min(open_set, key=lambda o: open_set[o].cost + utilities.calc_heuristic(goal_node, open_set[o]))
+        current = open_set[c_id]
+
+        if current.x == goal_node.x and current.y == goal_node.y:
+            print("Found goal")
+            goal_node.pind = current.pind
+            goal_node.cost = current.cost
+            break
+
+        del open_set[c_id]
+        closed_set[c_id] = current
+
+        for i, _ in enumerate(motion_model):
+            node = Node(current.x + motion_model[i][0],
+                        current.y + motion_model[i][1],
+                        current.cost + motion_model[i][2], c_id)
+            node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
+
+            if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
+                continue
+
+            if node_id in closed_set:
+                continue
+
+            if node_id not in open_set:
+                open_set[node_id] = node  # discovered a new node
+            else:
+                if open_set[node_id].cost > node.cost:
+                    # This path is the best until now. record it
+                    open_set[node_id] = node
+
+    result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
+    utilities.print_total_time_distance(amount_of_total)
+
+    return result_x, result_y, amount_of_total, flag
+
+
 def main(data_graph, algorithm_name, random_graph_size):
     robot_size = 1.0 * random_graph_size
 
@@ -316,14 +372,14 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('floors.yaml')
-    amount_of_graphs = 1
+    amount_of_graphs = 100
     amount_of_plots = 0
     for i in range(amount_of_graphs):
         print(f"{i+1} Evaluating a new building...\n")
         exit_flag = True
         tries = 0
+        # graph_size = 1
         graph_size = randomize_dynamic_graph_size()
-
 
         graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
