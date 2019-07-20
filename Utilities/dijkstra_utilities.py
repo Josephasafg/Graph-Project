@@ -25,30 +25,34 @@ def calc_final_path(goal_node, closed_set):
     return result_x, result_y, total_cost
 
 
-def verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
-    point_x = calc_position(node.x, 1.0, min_x)
-    point_y = calc_position(node.y, 1.0, min_y)
+def verify_node(node, obstacle_map, min_x, min_y, max_x, max_y, grid_resolution):
+    point_x = calc_position(node.x, grid_resolution, min_x)
+    point_y = calc_position(node.y, grid_resolution, min_y)
     if point_x < min_x:
         return False
     elif point_y < min_y:
         return False
-    elif point_x > max_x:
+    elif point_x >= max_x:
         return False
-    elif point_y > max_y:
+    elif point_y >= max_y:
         return False
 
     try:
         if obstacle_map[int(node.x)][int(node.y)]:
             return False
-    except IndexError:
-        return True
+    except IndexError as e:
+        print(e)
 
     return True
 
 
-def calc_position(i_x: int, reso: float, min_p):
-    pos = i_x * reso + min_p
+def calc_position(index: int, reso: float, min_p):
+    pos = index * reso + min_p
     return pos
+
+
+def calc_xyindex(position, min_pos, reso):
+    return round((position - min_pos) / reso)
 
 
 def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
@@ -61,7 +65,8 @@ def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
     y_width = round((max_y - min_y) / grid_resolution)
 
     # obstacle map generation
-    obstacle_map = [[False for _ in arange(y_width)] for _ in arange(x_width)]
+    obstacle_map = [[False for _ in arange(y_width)]
+                    for _ in arange(x_width)]
     for ix in arange(int(x_width)):
         x = calc_position(ix, grid_resolution, min_x)
         for iy in arange(int(y_width)):
@@ -69,7 +74,7 @@ def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
             for iox, ioy in zip(ox, oy):
                 d = math.sqrt((iox - x)**2 + (ioy - y)**2)
                 if d <= robot_radius:
-                    obstacle_map[ix][iy] = True
+                    obstacle_map[int(ix)][int(iy)] = True
                     break
 
     return obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width
