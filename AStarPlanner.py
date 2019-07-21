@@ -1,4 +1,5 @@
 import math
+from Graph_Objects.Node import Node
 import matplotlib.pyplot as plt
 from numpy import arange
 from Utilities.utilities import print_total_time_distance
@@ -23,21 +24,21 @@ class AStarPlanner:
         self.calc_obstacle_map(ox, oy)
         self.motion = self.get_motion_model()
 
-    class Node:
-        def __init__(self, x, y, cost, pind):
-            self.x = x  # index of grid
-            self.y = y  # index of grid
-            self.cost = cost
-            self.pind = pind
-
-        def __str__(self):
-            return str(self.x) + "," + str(self.y) + "," + str(self.cost) + "," + str(self.pind)
+    # class Node:
+    #     def __init__(self, x, y, cost, pind):
+    #         self.x = x  # index of grid
+    #         self.y = y  # index of grid
+    #         self.cost = cost
+    #         self.pind = pind
+    #
+    #     def __str__(self):
+    #         return str(self.x) + "," + str(self.y) + "," + str(self.cost) + "," + str(self.pind)
 
     def planning(self, sx, sy, gx, gy):
 
-        nstart = self.Node(self.calc_xyindex(sx, self.minx),
+        nstart = Node(self.calc_xyindex(sx, self.minx),
                            self.calc_xyindex(sy, self.miny), 0.0, -1)
-        ngoal = self.Node(self.calc_xyindex(gx, self.minx),
+        ngoal = Node(self.calc_xyindex(gx, self.minx),
                           self.calc_xyindex(gy, self.miny), 0.0, -1)
         print(nstart)
         print(ngoal)
@@ -69,9 +70,9 @@ class AStarPlanner:
 
             # expand_grid search grid based on motion model
             for i, _ in enumerate(self.motion):
-                node = self.Node(current.x + self.motion[i][0],
-                                 current.y + self.motion[i][1],
-                                 current.cost + self.motion[i][2], c_id)
+                node = Node(current.x + self.motion[i][0],
+                            current.y + self.motion[i][1],
+                            current.cost + self.motion[i][2], c_id)
                 n_id = self.calc_grid_index(node)
 
 
