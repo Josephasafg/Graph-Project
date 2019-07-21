@@ -1,6 +1,8 @@
 import math
 from Graph_Objects.Node import Node
+from Utilities.dijkstra_utilities import get_motion_model
 import matplotlib.pyplot as plt
+from Utilities.utilities import calc_heuristic
 from numpy import arange
 from Utilities.utilities import print_total_time_distance
 
@@ -9,42 +11,27 @@ show_animation = True
 
 
 class AStarPlanner:
-
-    def __init__(self, ox, oy, reso, rr):
-        """
-        Initialize grid map for a star planning
-        ox: x position list of Obstacles [m]
-        oy: y position list of Obstacles [m]
-        reso: grid resolution [m]
-        rr: robot radius[m]
-        """
-
-        self.reso = reso
+    def __init__(self, ox, oy, grid_resolution, rr):
+        self.grid_resolution = grid_resolution
         self.rr = rr
+        self.obstacle_map = list()
+        self.min_x = 0
+        self.min_y = 0
+        self.max_x = 0
+        self.max_y = 0
+        self.x_width = 0
+        self.y_width = 0
         self.calc_obstacle_map(ox, oy)
-        self.motion = self.get_motion_model()
-
-    # class Node:
-    #     def __init__(self, x, y, cost, pind):
-    #         self.x = x  # index of grid
-    #         self.y = y  # index of grid
-    #         self.cost = cost
-    #         self.pind = pind
-    #
-    #     def __str__(self):
-    #         return str(self.x) + "," + str(self.y) + "," + str(self.cost) + "," + str(self.pind)
-
-    def planning(self, sx, sy, gx, gy):
-
-        nstart = Node(self.calc_xyindex(sx, self.minx),
-                           self.calc_xyindex(sy, self.miny), 0.0, -1)
-        ngoal = Node(self.calc_xyindex(gx, self.minx),
-                          self.calc_xyindex(gy, self.miny), 0.0, -1)
-        print(nstart)
-        print(ngoal)
+        self.motion = get_motion_model()
+        
+    def planning(self, start_x, start_y, goal_x, goal_y):
+        start_node = Node(self.calc_xyindex(start_x, self.min_x),
+                          self.calc_xyindex(start_y, self.min_y), 0.0, -1)
+        goal_node = Node(self.calc_xyindex(goal_x, self.min_x),
+                         self.calc_xyindex(goal_y, self.min_y), 0.0, -1)
 
         open_set, closed_set = dict(), dict()
-        open_set[self.calc_grid_index(nstart)] = nstart
+        open_set[self.calc_grid_index(start_node)] = start_node
 
         flag = 0
         while True:
@@ -53,13 +40,13 @@ class AStarPlanner:
                 print("Open set is empty..")
                 break
 
-            c_id = min(open_set, key=lambda o: open_set[o].cost + self.calc_heuristic(ngoal, open_set[o]))
+            c_id = min(open_set, key=lambda o: open_set[o].cost + calc_heuristic(goal_node, open_set[o]))
             current = open_set[c_id]
 
-            if current.x == ngoal.x and current.y == ngoal.y:
+            if current.x == goal_node.x and current.y == goal_node.y:
                 print("Find goal")
-                ngoal.pind = current.pind
-                ngoal.cost = current.cost
+                goal_node.pind = current.pind
+                goal_node.cost = current.cost
                 break
 
             # Remove the item from the open set
@@ -75,7 +62,6 @@ class AStarPlanner:
                             current.cost + self.motion[i][2], c_id)
                 n_id = self.calc_grid_index(node)
 
-
                 # If the node is not safe, do nothing
                 if not self.verify_node(node):
                     continue
@@ -90,97 +76,77 @@ class AStarPlanner:
                         # This path is the best until now. record it
                         open_set[n_id] = node
 
-        rx, ry, amount_of_total = self.calc_final_path(ngoal, closed_set)
+        rx, ry, amount_of_total = self.calc_final_path(goal_node, closed_set)
         print_total_time_distance(amount_of_total)
 
         return rx, ry, amount_of_total, flag
 
-    def calc_final_path(self, ngoal, closedset):
+    def calc_final_path(self, goal_node, closed_set):
         # generate final course
-        rx, ry = [self.calc_grid_position(ngoal.x, self.minx)], [
-            self.calc_grid_position(ngoal.y, self.miny)]
-        total_cost = ngoal.cost
+        rx, ry = [self.calc_grid_position(goal_node.x, self.min_x)], [
+            self.calc_grid_position(goal_node.y, self.min_y)]
+        total_cost = goal_node.cost
 
-        pind = ngoal.pind
+        pind = goal_node.pind
         while pind != -1:
-            n = closedset[pind]
-            rx.append(self.calc_grid_position(n.x, self.minx))
-            ry.append(self.calc_grid_position(n.y, self.miny))
+            n = closed_set[pind]
+            rx.append(self.calc_grid_position(n.x, self.min_x))
+            ry.append(self.calc_grid_position(n.y, self.min_y))
             total_cost += n.cost
             pind = n.pind
 
         return rx, ry, total_cost
 
-    @staticmethod
-    def calc_heuristic(n1, n2):
-        w = 1.0  # weight of heuristic
-        d = w * math.sqrt((n1.x - n2.x) ** 2 + (n1.y - n2.y) ** 2)
-        return d
-
     def calc_grid_position(self, index, minp):
-        pos = index * self.reso + minp
-        return pos
+        position = index * self.grid_resolution + minp
+        return position
 
     def calc_xyindex(self, position, min_pos):
-        return round((position - min_pos) / self.reso)
+        return round((position - min_pos) / self.grid_resolution)
 
     def calc_grid_index(self, node):
-        return (node.y - self.miny) * self.xwidth + (node.x - self.minx)
+        return (node.y - self.min_y) * self.x_width + (node.x - self.min_x)
 
     def verify_node(self, node):
-        px = self.calc_grid_position(node.x, self.minx)
-        py = self.calc_grid_position(node.y, self.miny)
+        point_x = self.calc_grid_position(node.x, self.min_x)
+        point_y = self.calc_grid_position(node.y, self.min_y)
 
-        if px < self.minx:
+        if point_x < self.min_x:
             return False
-        elif py < self.miny:
+        elif point_y < self.min_y:
             return False
-        elif px >= self.maxx:
+        elif point_x >= self.max_x:
             return False
-        elif py >= self.maxy:
+        elif point_y >= self.max_y:
             return False
 
         # collision check
-        if self.obmap[int(node.x)][int(node.y)]:
+        if self.obstacle_map[int(node.x)][int(node.y)]:
             return False
 
         return True
 
     def calc_obstacle_map(self, ox, oy):
+        self.min_x = round(min(ox))
+        self.min_y = round(min(oy))
+        self.max_x = round(max(ox))
+        self.max_y = round(max(oy))
 
-        self.minx = round(min(ox))
-        self.miny = round(min(oy))
-        self.maxx = round(max(ox))
-        self.maxy = round(max(oy))
-
-        self.xwidth = round((self.maxx - self.minx) / self.reso)
-        self.ywidth = round((self.maxy - self.miny) / self.reso)
+        self.x_width = round((self.max_x - self.min_x) / self.grid_resolution)
+        self.y_width = round((self.max_y - self.min_y) / self.grid_resolution)
 
         # obstacle map generation
-        self.obmap = [[False for _ in arange(self.ywidth)]
-                      for _ in arange(self.xwidth)]
-        for ix in arange(self.xwidth):
-            x = self.calc_grid_position(ix, self.minx)
-            for iy in arange(self.ywidth):
-                y = self.calc_grid_position(iy, self.miny)
+        self.obstacle_map = [[False for _ in arange(self.y_width)]
+                      for _ in arange(self.x_width)]
+        for ix in arange(self.x_width):
+            x = self.calc_grid_position(ix, self.min_x)
+            for iy in arange(self.y_width):
+                y = self.calc_grid_position(iy, self.min_y)
                 for iox, ioy in zip(ox, oy):
                     d = math.sqrt((iox - x) ** 2 + (ioy - y) ** 2)
                     if d <= self.rr:
-                        self.obmap[int(ix)][int(iy)] = True
+                        self.obstacle_map[int(ix)][int(iy)] = True
                         break
-
-    @staticmethod
-    def get_motion_model():
-        motion = [[1, 0, 1],
-                  [0, 1, 1],
-                  [-1, 0, 1],
-                  [0, -1, 1],
-                  [-1, -1, math.sqrt(2)],
-                  [-1, 1, math.sqrt(2)],
-                  [1, -1, math.sqrt(2)],
-                  [1, 1, math.sqrt(2)]]
-
-        return motion
 
 
 def a_star_main(start_node, goal_node, grid_size, robot_radius, ox, oy):

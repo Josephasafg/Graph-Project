@@ -51,10 +51,6 @@ def calc_position(index: int, reso: float, min_p):
     return pos
 
 
-def calc_xyindex(position, min_pos, reso):
-    return round((position - min_pos) / reso)
-
-
 def calc_obstacle_map(ox, oy, grid_resolution, robot_radius):
     min_x = round(min(ox))
     min_y = round(min(oy))

@@ -448,7 +448,7 @@ if __name__ == '__main__':
             print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
                   f"people: {graph.total_min_time} minutes")
             print("---------------------------------------------------------")
-            # mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
+            mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
             X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
