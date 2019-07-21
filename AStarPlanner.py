@@ -1,14 +1,14 @@
 import math
 from Graph_Objects.Node import Node
 from Utilities.dijkstra_utilities import get_motion_model
-import matplotlib.pyplot as plt
+from typing import List
 from Utilities.utilities import calc_heuristic
 from numpy import arange
 from Utilities.utilities import print_total_time_distance
 
 
 class AStarPlanner:
-    def __init__(self, ox, oy, grid_resolution, robot_radius):
+    def __init__(self, obstacle_x, obstacle_y, grid_resolution, robot_radius):
         self.grid_resolution = grid_resolution
         self.robot_radius = robot_radius
         self.obstacle_map = list()
@@ -18,7 +18,7 @@ class AStarPlanner:
         self.max_y = 0
         self.x_width = 0
         self.y_width = 0
-        self.calc_obstacle_map(ox, oy)
+        self.calc_obstacle_map(obstacle_x, obstacle_y)
         self.motion = get_motion_model()
         
     def planning(self, start_x, start_y, goal_x, goal_y):
@@ -125,11 +125,11 @@ class AStarPlanner:
 
         return True
 
-    def calc_obstacle_map(self, ox, oy):
-        self.min_x = round(min(ox))
-        self.min_y = round(min(oy))
-        self.max_x = round(max(ox))
-        self.max_y = round(max(oy))
+    def calc_obstacle_map(self, obstacle_x, obstacle_y):
+        self.min_x = round(min(obstacle_x))
+        self.min_y = round(min(obstacle_y))
+        self.max_x = round(max(obstacle_x))
+        self.max_y = round(max(obstacle_y))
 
         self.x_width = round((self.max_x - self.min_x) / self.grid_resolution)
         self.y_width = round((self.max_y - self.min_y) / self.grid_resolution)
@@ -141,15 +141,16 @@ class AStarPlanner:
             x = self.calc_grid_position(ix, self.min_x)
             for iy in arange(self.y_width):
                 y = self.calc_grid_position(iy, self.min_y)
-                for iox, ioy in zip(ox, oy):
-                    d = math.sqrt((iox - x) ** 2 + (ioy - y) ** 2)
+                for i_obstacle_x, i_obstacle_y in zip(obstacle_x, obstacle_y):
+                    d = math.sqrt((i_obstacle_x - x) ** 2 + (i_obstacle_y - y) ** 2)
                     if d <= self.robot_radius:
                         self.obstacle_map[int(ix)][int(iy)] = True
                         break
 
 
-def a_star_main(start_node, goal_node, grid_size, robot_radius, ox, oy):
-    a_star = AStarPlanner(ox, oy, grid_size, robot_radius)
+def a_star_main(start_node: Node, goal_node: Node, grid_size: float, robot_radius: float,
+                obstacle_x: List, obstacle_y: List):
+    a_star = AStarPlanner(obstacle_x, obstacle_y, grid_size, robot_radius)
     rx, ry, total_amount, return_flag = a_star.planning(start_node.x, start_node.y, goal_node.x, goal_node.y)
 
     return rx, ry, total_amount, return_flag

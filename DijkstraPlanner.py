@@ -1,5 +1,5 @@
 import math
-import matplotlib.pyplot as plt
+from typing import List
 from numpy import arange
 from Graph_Objects.Node import Node
 from Utilities.dijkstra_utilities import get_motion_model
@@ -148,7 +148,8 @@ class DijkstraPlanner:
                         break
 
 
-def dijkstra_main(start_node, goal_node, grid_size, robot_radius, obstacle_x, obstacle_y):
+def dijkstra_main(start_node: Node, goal_node: Node, grid_size: float, robot_radius: float,
+                  obstacle_x: List, obstacle_y: List):
     a_star = DijkstraPlanner(obstacle_x, obstacle_y, grid_size, robot_radius)
     rx, ry, total_amount, return_flag = a_star.planning(start_node.x, start_node.y, goal_node.x, goal_node.y)
 
