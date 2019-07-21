@@ -2,20 +2,19 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from Utilities import utilities
-from Utilities import dijkstra_utilities
+from Planners.AStarPlanner import a_star_main
+from Planners.DijkstraPlanner import dijkstra_main
 from Utilities import mapping_utility_methods
 from Graph_Objects.KDTree import KDTree
 from Graph_Objects.Graph import Graph
 from Utilities.time_utilities import timer
 from Utilities.time_utilities import calculate_average_time
 from Graph_Objects.Node import Node
-import AStarPlanner
-import DijkstraPlanner
 from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "a_star"
+RUNNING_ALGORITHM = "dijkstra"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -28,9 +27,9 @@ def _get_algorithm_function(algorithm_name):
     elif algorithm_name == 'prm_a_star':
         return prm_a_star
     elif algorithm_name == 'dijkstra':
-        return dijkstra
+        return dijkstra_main
     elif algorithm_name == 'a_star':
-        return a_star
+        return a_star_main
     else:
         raise ValueError("This algorithm can't be found!")
 
@@ -59,14 +58,9 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
 
         goal_node = Node(goal_tuple[0], goal_tuple[1], 0.0, -1)
 
-        if algorithm_name == 'a_star':
-            result_x, result_y, total_distance, return_code = AStarPlanner.a_star_main(start_node, goal_node, robot_radius,
-                                                                                       robot_radius,
-                                                                                       obstacle_x, obstacle_y)
-        elif algorithm_name == 'dijkstra':
-            result_x, result_y, total_distance, return_code = DijkstraPlanner.dijkstra_main(start_node, goal_node,
-                                                                                            robot_radius, robot_radius,
-                                                                                            obstacle_x, obstacle_y)
+        if algorithm_name == 'a_star' or algorithm_name == 'dijkstra':
+            result_x, result_y, total_distance, return_code = algorithms(start_node, goal_node, robot_radius,
+                                                                         robot_radius, obstacle_x, obstacle_y)
         else:
             obstacle_kdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
             sample_x, sample_y = mapping_utility_methods.sample_points\
@@ -225,121 +219,6 @@ def prm_dijkstra(start_node: Node, goal_node: Node, sample_x, sample_y, road_map
     return result_x, result_y, amount_of_total, flag
 
 
-def dijkstra(start_node: Node, goal_node: Node, obstacle_x, obstacle_y, size=1.0):
-    grid_resolution = 1.0 * size
-    robot_radius = 1.0 * size
-
-    obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = \
-        dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y, grid_resolution, robot_radius)
-
-    motion_model = dijkstra_utilities.get_motion_model()
-    open_set, closed_set = dict(), dict()
-    open_set[dijkstra_utilities.calc_index(start_node, x_width, min_x, min_y)] = start_node
-
-    flag = 0
-    while True:
-        if not open_set:
-            print("Cannot find path")
-            flag = 1
-            break
-
-        c_id = min(open_set, key=lambda o: open_set[o].cost)
-        current = open_set[c_id]
-
-        if current.x == goal_node.x and current.y == goal_node.y:
-            print("Found goal")
-            goal_node.pind = current.pind
-            goal_node.cost = current.cost
-            break
-
-        # Remove the item from the open set
-        open_set.pop(c_id)
-        # Add it to the closed set
-        closed_set[c_id] = current
-
-        for i, _ in enumerate(motion_model):
-            node = Node((current.x + motion_model[i][0]) * size, (current.y + motion_model[i][1]) * size,
-                        (current.cost + motion_model[i][2]) * size, c_id)
-            node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
-
-            if node_id in closed_set:
-                continue
-
-            if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y):
-                continue
-            
-            if node_id not in open_set:
-                open_set[node_id] = node
-            else:
-                if open_set[node_id].cost >= node.cost:
-                    open_set[node_id] = node
-
-    result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
-    utilities.print_total_time_distance(amount_of_total)
-
-    return result_x, result_y, amount_of_total, flag
-
-
-def a_star(start_node: Node, goal_node: Node, obstacle_x, obstacle_y, size=1.0):
-    grid_resolution = 1.0 * size
-    robot_radius = 1.0 * size
-
-    obstacle_map, min_x, min_y, max_x, max_y, x_width, y_width = \
-        dijkstra_utilities.calc_obstacle_map(obstacle_x, obstacle_y, grid_resolution, robot_radius)
-
-    motion_model = dijkstra_utilities.get_motion_model()
-
-    start_node.x = dijkstra_utilities.calc_xyindex(start_node.x, min_x, grid_resolution)
-    start_node.y = dijkstra_utilities.calc_xyindex(start_node.y, min_y, grid_resolution)
-    goal_node.x = dijkstra_utilities.calc_xyindex(goal_node.x, min_x, grid_resolution)
-    goal_node.y = dijkstra_utilities.calc_xyindex(goal_node.y, min_y, grid_resolution)
-
-    open_set, closed_set = dict(), dict()
-    open_set[dijkstra_utilities.calc_index(start_node, x_width, min_x, min_y)] = start_node
-
-    flag = 0
-    while True:
-        if not open_set:
-            print("Open set is empty... Couldn't find goal")
-            flag = 1
-            break
-        c_id = min(open_set, key=lambda o: open_set[o].cost + utilities.calc_heuristic(goal_node, open_set[o]))
-        current = open_set[c_id]
-
-        if current.x == goal_node.x and current.y == goal_node.y:
-            print("Found goal")
-            goal_node.pind = current.pind
-            goal_node.cost = current.cost
-            break
-
-        open_set.pop(c_id)
-        closed_set[c_id] = current
-
-        for i, _ in enumerate(motion_model):
-            node = Node((current.x + motion_model[i][0]) * size,
-                        (current.y + motion_model[i][1]) * size,
-                        (current.cost + motion_model[i][2]) * size, c_id)
-            node_id = dijkstra_utilities.calc_index(node, x_width, min_x, min_y)
-
-            if not dijkstra_utilities.verify_node(node, obstacle_map, min_x, min_y, max_x, max_y, grid_resolution):
-                continue
-
-            if node_id in closed_set:
-                continue
-
-            if node_id not in open_set:
-                open_set[node_id] = node  # discovered a new node
-            else:
-                if open_set[node_id].cost > node.cost:
-                    # This path is the best until now. record it
-                    open_set[node_id] = node
-
-    result_x, result_y, amount_of_total = dijkstra_utilities.calc_final_path(goal_node, closed_set)
-    utilities.print_total_time_distance(amount_of_total)
-
-    return result_x, result_y, amount_of_total, flag
-
-
 def main(data_graph, algorithm_name, random_graph_size):
     robot_size = 1.0 * random_graph_size
 
@@ -448,11 +327,10 @@ if __name__ == '__main__':
             print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
                   f"people: {graph.total_min_time} minutes")
             print("---------------------------------------------------------")
-            # mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
+            mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
             X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
-    # average_of_run /= amount_of_graphs
     print("Average Time per one floor:")
     calculate_average_time(amount_of_plots, "Floors")
     print("Average Time per one Building:")
