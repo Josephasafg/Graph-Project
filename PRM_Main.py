@@ -2,8 +2,8 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from Utilities import utilities
-from AStarPlanner import a_star_main
-from DijkstraPlanner import dijkstra_main
+from Planners.AStarPlanner import a_star_main
+from Planners.DijkstraPlanner import dijkstra_main
 from Utilities import mapping_utility_methods
 from Graph_Objects.KDTree import KDTree
 from Graph_Objects.Graph import Graph
