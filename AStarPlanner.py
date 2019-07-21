@@ -7,13 +7,10 @@ from numpy import arange
 from Utilities.utilities import print_total_time_distance
 
 
-show_animation = True
-
-
 class AStarPlanner:
-    def __init__(self, ox, oy, grid_resolution, rr):
+    def __init__(self, ox, oy, grid_resolution, robot_radius):
         self.grid_resolution = grid_resolution
-        self.rr = rr
+        self.robot_radius = robot_radius
         self.obstacle_map = list()
         self.min_x = 0
         self.min_y = 0
@@ -120,9 +117,11 @@ class AStarPlanner:
         elif point_y >= self.max_y:
             return False
 
-        # collision check
-        if self.obstacle_map[int(node.x)][int(node.y)]:
-            return False
+        try:
+            if self.obstacle_map[int(node.x)][int(node.y)]:
+                return False
+        except IndexError:
+            print("Did not find index in obstacle map")
 
         return True
 
@@ -137,14 +136,14 @@ class AStarPlanner:
 
         # obstacle map generation
         self.obstacle_map = [[False for _ in arange(self.y_width)]
-                      for _ in arange(self.x_width)]
+                             for _ in arange(self.x_width)]
         for ix in arange(self.x_width):
             x = self.calc_grid_position(ix, self.min_x)
             for iy in arange(self.y_width):
                 y = self.calc_grid_position(iy, self.min_y)
                 for iox, ioy in zip(ox, oy):
                     d = math.sqrt((iox - x) ** 2 + (ioy - y) ** 2)
-                    if d <= self.rr:
+                    if d <= self.robot_radius:
                         self.obstacle_map[int(ix)][int(iy)] = True
                         break
 
