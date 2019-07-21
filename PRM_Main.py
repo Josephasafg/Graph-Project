@@ -331,7 +331,6 @@ if __name__ == '__main__':
             X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
             graph.total_min_time = 0
         graph.starting_nodes.clear()
-    # average_of_run /= amount_of_graphs
     print("Average Time per one floor:")
     calculate_average_time(amount_of_plots, "Floors")
     print("Average Time per one Building:")
