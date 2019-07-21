@@ -10,8 +10,6 @@ from Graph_Objects.Graph import Graph
 from Utilities.time_utilities import timer
 from Utilities.time_utilities import calculate_average_time
 from Graph_Objects.Node import Node
-import AStarPlanner
-import DijkstraPlanner
 from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
