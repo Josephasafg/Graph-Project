@@ -12,16 +12,18 @@ def print_total_time_distance(amount_of_total):
 
 
 def randomize_dynamic_graph_size():
-    # small_sizes = [1/3, 1/2, 1/6, 2/3]
-    medium_sizes = [5/6, 1, 7/6, 4/3, 3/2]
+    small_sizes = [1/3, 1/2, 1/6, 2/3]
+    # medium_sizes = [5/6, 1, 7/6, 4/3, 3/2]
     # large_sizes = [50/60, 60/60, 70/60, 80/60, 90/60]
-    choose_random_index = randint(0, 4)
+    choose_random_index = randint(0, 3)
     # return small_sizes[choose_random_index]
-    return medium_sizes[choose_random_index]
+    return small_sizes[choose_random_index]
     # return randint(1, 3)
 
 
 def find_min_time(time_list: List):
+    if all(item == 0 for item in time_list):
+        return 0, 0
     minimum = min(m for m in time_list if m != 0)
     return time_list.index(minimum), minimum
 
