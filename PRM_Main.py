@@ -10,11 +10,12 @@ from Graph_Objects.Graph import Graph
 from Utilities.time_utilities import timer
 from Utilities.time_utilities import calculate_average_time
 from Graph_Objects.Node import Node
+from colorama import Fore
 from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "dijkstra"
+RUNNING_ALGORITHM = "prm_dijkstra"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -24,7 +25,7 @@ SHOW_ANIMATION = True
 def _get_algorithm_function(algorithm_name):
     if algorithm_name == 'prm_dijkstra':
         return prm_dijkstra
-    elif algorithm_name == 'prm_a_star':
+    elif algorithm_name == 'modified_a_star':
         return prm_a_star
     elif algorithm_name == 'dijkstra':
         return dijkstra_main
@@ -60,7 +61,7 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
 
         if algorithm_name == 'a_star' or algorithm_name == 'dijkstra':
             result_x, result_y, total_distance, return_code = algorithms(start_node, goal_node, robot_radius,
-                                                                         robot_radius, obstacle_x, obstacle_y)
+                                                                         robot_radius, obstacle_x, obstacle_y, random_graph_size)
         else:
             obstacle_kdtree = KDTree(np.vstack((obstacle_x, obstacle_y)).T)
             sample_x, sample_y = mapping_utility_methods.sample_points\
@@ -81,7 +82,6 @@ def prm_planning(obstacle_x, obstacle_y, robot_radius, algorithm_name, data_grap
         min_index, min_distance = utilities.find_min_time(total_distance_list)
         data_graph.goal_point = Node(goal_list_tuple[min_index][0], goal_list_tuple[min_index][1], 0.0, -1)
         data_graph.goal_point.z = goal_list_tuple[min_index][2]
-        # data_graph.goal_point = goal_list_tuple[min_index]
 
         print(f"Closest exit point is: {data_graph.goal_point}")
 
@@ -261,76 +261,80 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
-    graph = Graph('floors.yaml')
-    amount_of_graphs = 50
+    graph = Graph('Utilities/floors.yaml')
+    amount_of_graphs = 1
     amount_of_plots = 0
+    print(f'String run on {RUNNING_ALGORITHM} algorithm:')
     for i in range(amount_of_graphs):
-        print(f"{i+1} Evaluating a new building...\n")
+        print(Fore.BLUE, f"{i+1} Evaluating a new building...\n")
         exit_flag = True
         tries = 0
-        # graph_size = 1 / 6
+        # graph_size = 1.0
         graph_size = randomize_dynamic_graph_size()
 
         graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
-        graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
+        amount_of_graph_runs = graph.coordinate['Building'][graph.model_name]['Run']['Amount']
+        for run_number in range(amount_of_graph_runs):
+            graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
+            print(Fore.GREEN, f"Run number: {run_number+1} for graph: {graph.model_name}")
+            for current_index in range(len(graph.starting_nodes)):
+                print(Fore.MAGENTA, f"Evaluating a new starting point for building {graph.model_name}...\n")
+                amount_of_plots += 1
+                graph.current_floor = graph.starting_nodes[current_index].z
+                print(f"Current floor height is: {graph.current_floor} meters")
+                graph.list_of_height = list(graph.get_height_no_duplicates(graph_size))
+                working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
-        for current_index in range(len(graph.starting_nodes)):
-            print(f"Evaluating a new starting point for building {graph.model_name}...\n")
-            amount_of_plots += 1
-            graph.current_floor = graph.starting_nodes[current_index].z
-            print(f"Current floor height is: {graph.current_floor} meters")
-            graph.list_of_height = list(graph.get_height_no_duplicates(graph_size))
-            working_height_set = sorted(set(graph.list_of_height), reverse=True)
+                graph.starting_point = Node(graph.starting_nodes[current_index].x, graph.starting_nodes[current_index].y,
+                                            0.0, -1, True)
+                graph.starting_point.z = graph.starting_nodes[current_index].z
 
-            graph.starting_point = Node(graph.starting_nodes[current_index].x, graph.starting_nodes[current_index].y, 0.0, -1, True)
-            graph.starting_point.z = graph.starting_nodes[current_index].z
-
-            while exit_flag:
-                print(f"***********************************************************")
-                print(f"Starting point number {graph.starting_point}")
-                if tries > 10:
-                    break
-                exit_flag = main(graph, RUNNING_ALGORITHM, graph_size)
-
-                if not exit_flag:
-                    print(f'Returned from floor {graph.current_floor} unsuccessfully')
+                while exit_flag:
                     print(f"***********************************************************")
-                    tries += 1
-                    amount_of_plots += 1
-                    exit_flag = True
-                    continue
-                else:
-                    print(f"***********************************************************")
-                    print(f'Returned successfully from floor (height) - {graph.current_floor} meters')
-                    tries = 1
-                    if (current_index == len(graph.starting_nodes) - 1) or (graph.current_floor > 0.0):
-                        if not graph.list_of_height:
-                            break
-                        else:
-                            del graph.list_of_height[0]
+                    print(f"Starting point number {graph.starting_point}")
+                    if tries > 10:
+                        break
+                    exit_flag = main(graph, RUNNING_ALGORITHM, graph_size)
+
+                    if not exit_flag:
+                        print(f'Returned from floor {graph.current_floor} unsuccessfully')
+                        print(f"***********************************************************")
+                        tries += 1
+                        amount_of_plots += 1
+                        exit_flag = True
+                        continue
+                    else:
+                        print(f"***********************************************************")
+                        print(f'Returned successfully from floor (height) - {graph.current_floor} meters')
+                        tries = 1
+                        if (current_index == len(graph.starting_nodes) - 1) or (graph.current_floor > 0.0):
                             if not graph.list_of_height:
                                 break
-                        graph.current_floor = graph.list_of_height[0]
-                    else:
+                            else:
+                                del graph.list_of_height[0]
+                                if not graph.list_of_height:
+                                    break
+                            graph.current_floor = graph.list_of_height[0]
+                        else:
+                            break
+
+                    if graph.current_floor < 0:
                         break
+                    else:
+                        graph.starting_point.x = graph.goal_point.x
+                        graph.starting_point.y = graph.goal_point.y - (4.0 * graph_size)
+                        graph.starting_point.z = graph.current_floor
+                        graph.total_min_time += graph.calc_height_distance()
 
-                if graph.current_floor < 0:
-                    break
-                else:
-                    graph.starting_point.x = graph.goal_point.x
-                    graph.starting_point.y = graph.goal_point.y - (4.0 * graph_size)
-                    graph.starting_point.z = graph.current_floor
-                    graph.total_min_time += graph.calc_height_distance()
-
-            graph.list_of_height = list(working_height_set)
-            print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
-                  f"people: {graph.total_min_time} minutes")
-            print("---------------------------------------------------------")
-            mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
-            X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
-            graph.total_min_time = 0
-        graph.starting_nodes.clear()
+                graph.list_of_height = list(working_height_set)
+                print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
+                      f"people: {graph.total_min_time} minutes")
+                print("---------------------------------------------------------")
+                mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
+                X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
+                graph.total_min_time = 0
+            graph.starting_nodes.clear()
     print("Average Time per one floor:")
     calculate_average_time(amount_of_plots, "Floors")
     print("Average Time per one Building:")

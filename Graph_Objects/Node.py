@@ -73,4 +73,5 @@ class Node:
 
     @staticmethod
     def get_node_capacity():
+        # return 24
         return random.randint(1, 50)
