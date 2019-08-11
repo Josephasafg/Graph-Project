@@ -16,10 +16,11 @@ from Utilities.utilities import randomize_dynamic_graph_size
 # global parameters
 TOTAL_TIME = 0
 RUNNING_ALGORITHM = "modified_a_star"
+AMOUNT_OF_GRAPHS = 30
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
-SHOW_ANIMATION = True
+SHOW_ANIMATION = False
 
 
 def _get_algorithm_function(algorithm_name):
@@ -262,12 +263,14 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('Utilities/floors.yaml')
-    amount_of_graphs = 1
+    amount_of_graphs = AMOUNT_OF_GRAPHS
     amount_of_plots = 0
-    amount_of_added_graphs = 0
+    i = -1
     print(f'String run on {RUNNING_ALGORITHM} algorithm:')
-    for i in range(amount_of_graphs):
+    while i < amount_of_graphs:
+        i += 1
         print(Fore.BLUE, f"{i+1} Evaluating a new building...\n")
+
         exit_flag = True
         tries = 0
         # graph_size = 1.0
@@ -276,16 +279,17 @@ if __name__ == '__main__':
         graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
         amount_of_graph_runs = graph.coordinate['Building'][graph.model_name]['Run']['Amount']
-        for run_number in range(amount_of_graph_runs):
+        for run_number in range(1, amount_of_graph_runs + 1):
             graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
-            amount_of_added_graphs += 1
-            print(Fore.GREEN, f"Run number: {run_number+1} for graph: {graph.model_name}")
+            print(Fore.GREEN, f"Run number: {run_number} for graph: {graph.model_name}")
             for current_index in range(len(graph.starting_nodes)):
                 print(Fore.MAGENTA, f"Evaluating a new starting point for building {graph.model_name}...\n")
+
                 amount_of_plots += 1
                 graph.current_floor = graph.starting_nodes[current_index].z
                 print(f"Current floor height is: {graph.current_floor} meters")
+
                 graph.list_of_height = list(graph.get_height_no_duplicates(graph_size))
                 working_height_set = sorted(set(graph.list_of_height), reverse=True)
 
@@ -334,13 +338,16 @@ if __name__ == '__main__':
                 print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
                       f"people: {graph.total_min_time} minutes")
                 print("---------------------------------------------------------")
-                mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
+                # mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
                 X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
                 graph.total_min_time = 0
+
+            if run_number != amount_of_graph_runs:
+                i += 1
             graph.starting_nodes.clear()
     print("Average Time per one floor:")
     calculate_average_time(amount_of_plots, "Floors")
     print("Average Time per one Building:")
-    calculate_average_time(amount_of_graphs + amount_of_added_graphs, 'Buildings')
+    calculate_average_time(AMOUNT_OF_GRAPHS, 'Buildings')
     calculate_average_time(1, 'All buildings')
     exit(0)
