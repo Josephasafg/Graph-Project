@@ -8,7 +8,7 @@ from Utilities.utilities import print_total_time_distance
 
 
 class AStarPlanner:
-    def __init__(self, obstacle_x, obstacle_y, grid_resolution, robot_radius):
+    def __init__(self, obstacle_x, obstacle_y, grid_resolution, robot_radius, size_factor):
         self.grid_resolution = grid_resolution
         self.robot_radius = robot_radius
         self.obstacle_map = list()
@@ -18,7 +18,7 @@ class AStarPlanner:
         self.max_y = 0
         self.x_width = 0
         self.y_width = 0
-        self.calc_obstacle_map(obstacle_x, obstacle_y)
+        self.calc_obstacle_map(obstacle_x, obstacle_y, size_factor)
         self.motion = get_motion_model()
         
     def planning(self, start_x, start_y, goal_x, goal_y):
@@ -125,14 +125,14 @@ class AStarPlanner:
 
         return True
 
-    def calc_obstacle_map(self, obstacle_x, obstacle_y):
+    def calc_obstacle_map(self, obstacle_x, obstacle_y, size_factor):
         self.min_x = round(min(obstacle_x))
         self.min_y = round(min(obstacle_y))
         self.max_x = round(max(obstacle_x))
         self.max_y = round(max(obstacle_y))
 
-        self.x_width = round((self.max_x - self.min_x) / self.grid_resolution)
-        self.y_width = round((self.max_y - self.min_y) / self.grid_resolution)
+        self.x_width = round((self.max_x - self.min_x) / self.grid_resolution) * size_factor
+        self.y_width = round((self.max_y - self.min_y) / self.grid_resolution) * size_factor
 
         # obstacle map generation
         self.obstacle_map = [[False for _ in arange(self.y_width)]
@@ -149,8 +149,8 @@ class AStarPlanner:
 
 
 def a_star_main(start_node: Node, goal_node: Node, grid_size: float, robot_radius: float,
-                obstacle_x: List, obstacle_y: List):
-    a_star = AStarPlanner(obstacle_x, obstacle_y, grid_size, robot_radius)
+                obstacle_x: List, obstacle_y: List, size_factor):
+    a_star = AStarPlanner(obstacle_x, obstacle_y, grid_size, robot_radius, size_factor)
     result_x, result_y, total_amount, return_flag = a_star.planning(start_node.x, start_node.y, goal_node.x, goal_node.y)
 
     return result_x, result_y, total_amount, return_flag

@@ -7,9 +7,9 @@ from Utilities.utilities import print_total_time_distance
 
 
 class DijkstraPlanner:
-    def __init__(self, obstacle_x, obstacle_y, grid_resolution, rr):
+    def __init__(self, obstacle_x, obstacle_y, grid_resolution: float, radius: float, size_factor: float):
         self.grid_resolution = grid_resolution
-        self.rr = rr
+        self.rr = radius
         self.obstacle_map = list()
         self.min_x = 0
         self.min_y = 0
@@ -17,10 +17,10 @@ class DijkstraPlanner:
         self.max_y = 0
         self.x_width = 0
         self.y_width = 0
-        self.calc_obstacle_map(obstacle_x, obstacle_y)
+        self.calc_obstacle_map(obstacle_x, obstacle_y, size_factor)
         self.motion = get_motion_model()
 
-    def planning(self, sx, sy, gx, gy):
+    def planning(self, sx, sy, gx, gy, factor):
         start_node = Node(self.calc_xyindex(sx, self.min_x),
                           self.calc_xyindex(sy, self.min_y), 0.0, -1)
         goal_node = Node(self.calc_xyindex(gx, self.min_x),
@@ -125,14 +125,14 @@ class DijkstraPlanner:
 
         return True
 
-    def calc_obstacle_map(self, obstacle_x, obstacle_y):
+    def calc_obstacle_map(self, obstacle_x, obstacle_y, graph_size_factor):
         self.min_x = round(min(obstacle_x))
         self.min_y = round(min(obstacle_y))
         self.max_x = round(max(obstacle_x))
         self.max_y = round(max(obstacle_y))
 
-        self.x_width = round((self.max_x - self.min_x) / self.grid_resolution)
-        self.y_width = round((self.max_y - self.min_y) / self.grid_resolution)
+        self.x_width = round((self.max_x - self.min_x) / self.grid_resolution) * graph_size_factor
+        self.y_width = round((self.max_y - self.min_y) / self.grid_resolution) * graph_size_factor
 
         # obstacle map generation
         self.obstacle_map = [[False for _ in arange(self.y_width)]
@@ -149,8 +149,8 @@ class DijkstraPlanner:
 
 
 def dijkstra_main(start_node: Node, goal_node: Node, grid_size: float, robot_radius: float,
-                  obstacle_x: List, obstacle_y: List):
-    a_star = DijkstraPlanner(obstacle_x, obstacle_y, grid_size, robot_radius)
-    result_x, result_y, total_amount, return_flag = a_star.planning(start_node.x, start_node.y, goal_node.x, goal_node.y)
+                  obstacle_x: List, obstacle_y: List, size_factor):
+    dijkstra = DijkstraPlanner(obstacle_x, obstacle_y, grid_size, robot_radius, size_factor)
+    result_x, result_y, total_amount, return_flag = dijkstra.planning(start_node.x, start_node.y, goal_node.x, goal_node.y, size_factor)
 
     return result_x, result_y, total_amount, return_flag

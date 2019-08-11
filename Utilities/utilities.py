@@ -22,7 +22,8 @@ def randomize_dynamic_graph_size():
 
 
 def find_min_time(time_list: List):
-    return time_list.index(min(time_list)), min(time_list)
+    minimum = min(m for m in time_list if m != 0)
+    return time_list.index(minimum), minimum
 
 
 #   400 meters per minute = 24 KMH
