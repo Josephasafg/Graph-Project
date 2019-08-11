@@ -15,7 +15,7 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_dijkstra"
+RUNNING_ALGORITHM = "modified_a_star"
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -264,6 +264,7 @@ if __name__ == '__main__':
     graph = Graph('Utilities/floors.yaml')
     amount_of_graphs = 1
     amount_of_plots = 0
+    amount_of_added_graphs = 0
     print(f'String run on {RUNNING_ALGORITHM} algorithm:')
     for i in range(amount_of_graphs):
         print(Fore.BLUE, f"{i+1} Evaluating a new building...\n")
@@ -277,6 +278,8 @@ if __name__ == '__main__':
         amount_of_graph_runs = graph.coordinate['Building'][graph.model_name]['Run']['Amount']
         for run_number in range(amount_of_graph_runs):
             graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
+
+            amount_of_added_graphs += 1
             print(Fore.GREEN, f"Run number: {run_number+1} for graph: {graph.model_name}")
             for current_index in range(len(graph.starting_nodes)):
                 print(Fore.MAGENTA, f"Evaluating a new starting point for building {graph.model_name}...\n")
@@ -338,6 +341,6 @@ if __name__ == '__main__':
     print("Average Time per one floor:")
     calculate_average_time(amount_of_plots, "Floors")
     print("Average Time per one Building:")
-    calculate_average_time(amount_of_graphs, 'Buildings')
+    calculate_average_time(amount_of_graphs + amount_of_added_graphs, 'Buildings')
     calculate_average_time(1, 'All buildings')
     exit(0)
