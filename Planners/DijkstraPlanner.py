@@ -121,7 +121,7 @@ class DijkstraPlanner:
             if self.obstacle_map[int(node.x)][int(node.y)]:
                 return False
         except IndexError:
-            print("Did not find index in obstacle map")
+            pass
 
         return True
 
