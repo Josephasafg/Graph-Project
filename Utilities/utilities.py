@@ -37,3 +37,12 @@ def calc_heuristic(n1: Node, n2: Node):
     factored_weight = 1.0
     distance = factored_weight * math.sqrt((n1.x - n2.x)**2 + (n1.y - n2.y)**2)
     return distance
+
+
+def create_graph_list() -> List:
+    return ['BUILDING_8_HIT', 'OUTLINE_OBSTACLES_DEMO_BUILDING_1',
+            'OUTLINE_OBSTACLES_DEMO_BUILDING_2', 'OUTLINE_OBSTACLES_DEMO_BUILDING_3',
+            'OUTLINE_OBSTACLES_DEMO_BUILDING_4', 'OUTLINE_OBSTACLES_DEMO_BUILDING_5',
+            'OUTLINE_OBSTACLES_DEMO_BUILDING_6', 'OUTLINE_OBSTACLES_DEMO_BUILDING_7',
+            'OUTLINE_OBSTACLES_DEMO_BUILDING_8', 'OUTLINE_OBSTACLES_DEMO_BUILDING_9',
+            'OUTLINE_OBSTACLES_DEMO_BUILDING_10']

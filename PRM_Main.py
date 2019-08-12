@@ -7,15 +7,15 @@ from Planners.DijkstraPlanner import dijkstra_main
 from Utilities import mapping_utility_methods
 from Graph_Objects.KDTree import KDTree
 from Graph_Objects.Graph import Graph
-from Utilities.time_utilities import timer
-from Utilities.time_utilities import calculate_average_time
+from Utilities.time_utilities import timer, calculate_average_time
 from Graph_Objects.Node import Node
 from colorama import Fore
+from itertools import cycle
 from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "modified_a_star"
+RUNNING_ALGORITHM = "prm_dijkstra"
 AMOUNT_OF_GRAPHS = 30
 X_LIST = list()
 Y_LIST = list()
@@ -263,6 +263,8 @@ def main(data_graph, algorithm_name, random_graph_size):
 if __name__ == '__main__':
     average_of_run = 0
     graph = Graph('Utilities/floors.yaml')
+    graph_model_list = utilities.create_graph_list()
+    cycle_graph_model_list = cycle(graph_model_list)
     amount_of_graphs = AMOUNT_OF_GRAPHS
     amount_of_plots = 0
     i = -1
@@ -276,7 +278,8 @@ if __name__ == '__main__':
         # graph_size = 1.0
         graph_size = randomize_dynamic_graph_size()
 
-        graph.randomize_graph_selection()
+        graph.model_name = next(cycle_graph_model_list)
+        # graph.randomize_graph_selection()
         print(f"Current building being evaluated - {graph.model_name}")
         amount_of_graph_runs = graph.coordinate['Building'][graph.model_name]['Run']['Amount']
         for run_number in range(1, amount_of_graph_runs + 1):
