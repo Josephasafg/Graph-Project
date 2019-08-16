@@ -20,7 +20,7 @@ class DijkstraPlanner:
         self.calc_obstacle_map(obstacle_x, obstacle_y, size_factor)
         self.motion = get_motion_model()
 
-    def planning(self, sx, sy, gx, gy, factor):
+    def planning(self, sx, sy, gx, gy):
         start_node = Node(self.calc_xyindex(sx, self.min_x),
                           self.calc_xyindex(sy, self.min_y), 0.0, -1)
         goal_node = Node(self.calc_xyindex(gx, self.min_x),

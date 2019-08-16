@@ -15,8 +15,8 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "prm_dijkstra"
-AMOUNT_OF_GRAPHS = 30
+RUNNING_ALGORITHM = "our_algorithm"
+AMOUNT_OF_GRAPHS = 50
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
@@ -26,7 +26,7 @@ SHOW_ANIMATION = False
 def _get_algorithm_function(algorithm_name):
     if algorithm_name == 'prm_dijkstra':
         return prm_dijkstra
-    elif algorithm_name == 'modified_a_star':
+    elif algorithm_name == 'our_algorithm':
         return prm_a_star
     elif algorithm_name == 'dijkstra':
         return dijkstra_main
@@ -265,18 +265,21 @@ if __name__ == '__main__':
     graph = Graph('Utilities/floors.yaml')
     graph_model_list = utilities.create_graph_list()
     cycle_graph_model_list = cycle(graph_model_list)
+    graph_sizes_cycle = utilities.create_size_cycle()
+
     amount_of_graphs = AMOUNT_OF_GRAPHS
     amount_of_plots = 0
     i = -1
-    print(f'String run on {RUNNING_ALGORITHM} algorithm:')
+    print(Fore.RED, f'Starting run on {RUNNING_ALGORITHM} algorithm:')
     while i < amount_of_graphs:
         i += 1
         print(Fore.BLUE, f"{i+1} Evaluating a new building...\n")
 
         exit_flag = True
         tries = 0
+        graph_size = next(graph_sizes_cycle)
         # graph_size = 1.0
-        graph_size = randomize_dynamic_graph_size()
+        # graph_size = randomize_dynamic_graph_size()
 
         graph.model_name = next(cycle_graph_model_list)
         # graph.randomize_graph_selection()
