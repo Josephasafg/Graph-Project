@@ -1,8 +1,9 @@
 import math
-from typing import List
+from typing import List, Iterator
 from Graph_Objects import Node
 from random import randint
 from random import uniform
+from itertools import cycle
 
 
 def print_total_time_distance(amount_of_total):
@@ -12,13 +13,20 @@ def print_total_time_distance(amount_of_total):
 
 
 def randomize_dynamic_graph_size():
-    small_sizes = [1/3, 1/2, 1/6, 2/3]
-    # medium_sizes = [5/6, 1, 7/6, 4/3, 3/2]
+    # small_sizes = [1/3, 1/2, 1/6, 2/3]flo
+    medium_sizes = [5/6, 1, 7/6, 4/3, 3/2]
     # large_sizes = [50/60, 60/60, 70/60, 80/60, 90/60]
-    choose_random_index = randint(0, 3)
+    large_sizes = [90 / 60, 100 / 60, 110 / 60, 120 / 60, 130 / 60, 140 / 60, 150 / 60, 160 / 60, 170 / 60, 180 / 60]
+    choose_random_index = randint(0, 4)
     # return small_sizes[choose_random_index]
-    return small_sizes[choose_random_index]
+    return medium_sizes[choose_random_index]
     # return randint(1, 3)
+
+
+def create_size_cycle() -> Iterator[float]:
+    medium_sizes = [5 / 6, 1, 7 / 6, 4 / 3, 3 / 2]
+    cycle_list = cycle(medium_sizes)
+    return cycle_list
 
 
 def find_min_time(time_list: List):
