@@ -151,6 +151,6 @@ class DijkstraPlanner:
 def dijkstra_main(start_node: Node, goal_node: Node, grid_size: float, robot_radius: float,
                   obstacle_x: List, obstacle_y: List, size_factor):
     dijkstra = DijkstraPlanner(obstacle_x, obstacle_y, grid_size, robot_radius, size_factor)
-    result_x, result_y, total_amount, return_flag = dijkstra.planning(start_node.x, start_node.y, goal_node.x, goal_node.y, size_factor)
+    result_x, result_y, total_amount, return_flag = dijkstra.planning(start_node.x, start_node.y, goal_node.x, goal_node.y)
 
     return result_x, result_y, total_amount, return_flag
