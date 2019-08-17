@@ -24,8 +24,9 @@ def randomize_dynamic_graph_size():
 
 
 def create_size_cycle() -> Iterator[float]:
-    medium_sizes = [5 / 6, 1, 7 / 6, 4 / 3, 3 / 2]
-    cycle_list = cycle(medium_sizes)
+    large_sizes = [50 / 60, 60 / 60, 70 / 60, 80 / 60, 90 / 60]
+    # medium_sizes = [5 / 6, 1, 7 / 6, 4 / 3, 3 / 2]
+    cycle_list = cycle(large_sizes)
     return cycle_list
 
 

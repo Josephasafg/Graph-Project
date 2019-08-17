@@ -15,8 +15,8 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-RUNNING_ALGORITHM = "our_algorithm"
-AMOUNT_OF_GRAPHS = 50
+RUNNING_ALGORITHM = "a_star"
+AMOUNT_OF_GRAPHS = 100
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
