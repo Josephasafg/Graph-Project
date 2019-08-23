@@ -21,10 +21,10 @@ class DijkstraPlanner:
         self.motion = get_motion_model()
 
     def planning(self, sx, sy, gx, gy):
-        start_node = Node(self.calc_xyindex(sx, self.min_x),
-                          self.calc_xyindex(sy, self.min_y), 0.0, -1)
-        goal_node = Node(self.calc_xyindex(gx, self.min_x),
-                         self.calc_xyindex(gy, self.min_y), 0.0, -1)
+        start_node = Node(self.calc_xyindex(math.floor(sx), self.min_x),
+                          self.calc_xyindex(math.floor(sy), self.min_y), 0.0, -1)
+        goal_node = Node(self.calc_xyindex(math.floor(gx), self.min_x),
+                         self.calc_xyindex(math.floor(gy), self.min_y), 0.0, -1)
 
         open_set, closed_set = dict(), dict()
         open_set[self.calc_grid_index(start_node)] = start_node
@@ -55,7 +55,7 @@ class DijkstraPlanner:
             for i, _ in enumerate(self.motion):
                 node = Node(current.x + self.motion[i][0],
                             current.y + self.motion[i][1],
-                            current.cost + self.motion[i][2], c_id)
+                            (current.cost + self.motion[i][2]), c_id)
                 n_id = self.calc_grid_index(node)
 
                 # If the node is not safe, do nothing

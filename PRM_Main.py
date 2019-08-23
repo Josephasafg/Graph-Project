@@ -1,6 +1,8 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+
+from Graph_Objects.buidling_sizes import Size
 from Utilities import utilities
 from Planners.AStarPlanner import a_star_main
 from Planners.DijkstraPlanner import dijkstra_main
@@ -15,12 +17,13 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
+GRAPH_SIZE = Size.MEDIUM
 RUNNING_ALGORITHM = "our_algorithm"
 AMOUNT_OF_GRAPHS = 50
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
-SHOW_ANIMATION = False
+SHOW_ANIMATION = True
 
 
 def _get_algorithm_function(algorithm_name):
@@ -262,35 +265,36 @@ def main(data_graph, algorithm_name, random_graph_size):
 
 if __name__ == '__main__':
     average_of_run = 0
+    amount_of_plots = 0
+
     graph = Graph('Utilities/floors.yaml')
-    graph_model_list = utilities.create_graph_list()
-    cycle_graph_model_list = cycle(graph_model_list)
-    graph_sizes_cycle = utilities.create_size_cycle()
+    cycle_graph_model_list = utilities.create_graph_list()
+
+    graph_sizes_cycle = utilities.create_size_cycle(GRAPH_SIZE)
 
     amount_of_graphs = AMOUNT_OF_GRAPHS
-    amount_of_plots = 0
     i = -1
     print(Fore.RED, f'Starting run on {RUNNING_ALGORITHM} algorithm:')
+
     while i < amount_of_graphs:
         i += 1
-        print(Fore.BLUE, f"{i+1} Evaluating a new building...\n")
+        print(Fore.BLUE, f"{i+1} Evaluating a new building...")
 
         exit_flag = True
         tries = 0
-        graph_size = next(graph_sizes_cycle)
-        # graph_size = 1.0
-        # graph_size = randomize_dynamic_graph_size()
 
+        graph_size = next(graph_sizes_cycle)
         graph.model_name = next(cycle_graph_model_list)
-        # graph.randomize_graph_selection()
+
         print(f"Current building being evaluated - {graph.model_name}")
         amount_of_graph_runs = graph.coordinate['Building'][graph.model_name]['Run']['Amount']
+
         for run_number in range(1, amount_of_graph_runs + 1):
             graph.get_prioritized_points(graph_size, RUNNING_ALGORITHM)
 
             print(Fore.GREEN, f"Run number: {run_number} for graph: {graph.model_name}")
             for current_index in range(len(graph.starting_nodes)):
-                print(Fore.MAGENTA, f"Evaluating a new starting point for building {graph.model_name}...\n")
+                print(Fore.MAGENTA, f"Evaluating a new starting point for building {graph.model_name}...")
 
                 amount_of_plots += 1
                 graph.current_floor = graph.starting_nodes[current_index].z
@@ -344,7 +348,7 @@ if __name__ == '__main__':
                 print(f"Total time to escape building {graph.model_name} in minutes per {graph.starting_point.capacity} "
                       f"people: {graph.total_min_time} minutes")
                 print("---------------------------------------------------------")
-                # mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
+                mapping_utility_methods.create_3d_graph(X_LIST, Y_LIST, Z_LIST)
                 X_LIST, Y_LIST, Z_LIST = graph.clear_x_y_z_lists(X_LIST, Y_LIST, Z_LIST)
                 graph.total_min_time = 0
 
