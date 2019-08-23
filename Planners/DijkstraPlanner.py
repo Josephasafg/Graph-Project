@@ -1,5 +1,4 @@
 import math
-import numpy as np
 from typing import List
 from numpy import arange
 from Graph_Objects.Node import Node

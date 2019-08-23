@@ -17,13 +17,13 @@ from Utilities.utilities import randomize_dynamic_graph_size
 
 # global parameters
 TOTAL_TIME = 0
-GRAPH_SIZE = Size.LARGE
-RUNNING_ALGORITHM = "a_star"
-AMOUNT_OF_GRAPHS = 100
+GRAPH_SIZE = Size.MEDIUM
+RUNNING_ALGORITHM = "our_algorithm"
+AMOUNT_OF_GRAPHS = 50
 X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
-SHOW_ANIMATION = False
+SHOW_ANIMATION = True
 
 
 def _get_algorithm_function(algorithm_name):
