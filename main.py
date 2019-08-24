@@ -25,7 +25,7 @@ X_LIST = list()
 Y_LIST = list()
 Z_LIST = list()
 SHOW_ANIMATION = True
-LOG_NAME = f"\\{RUNNING_ALGORITHM}.log"
+LOG_NAME = f"\\{RUNNING_ALGORITHM}_{AMOUNT_OF_GRAPHS}.log"
 
 
 utilities.set_up_logger(LOG_NAME)
