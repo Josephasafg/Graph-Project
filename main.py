@@ -13,7 +13,6 @@ from Graph_Objects.KDTree import KDTree
 from Graph_Objects.Graph import Graph
 from Utilities.time_utilities import timer, calculate_average_time
 from Graph_Objects.Node import Node
-from colorama import Fore
 from itertools import cycle
 from Utilities.utilities import randomize_dynamic_graph_size
 
