@@ -15,6 +15,8 @@ to the one you want. Your options are
 3. dijkstra
 4. a_star
 
+Make sure you pick only one out of these four, otherwise you will receive an excpetion.
+
 Later you will need to choose on which building sizes you would like the algorithm to run. You have 3 options, all which include a range of sizes, in meters. 
 1. LARGE (90, 100, 110, 120, 130, 140, 150, 160, 170, 180)
 2. MEDIUM (50, 60, 70, 80, 90)
@@ -39,4 +41,5 @@ This shows I picked to test my algorithm on 50 buildings.
 
 Last you have the options to choose whether or not to show the result of your path in a 2D/3D model, by changing the boolean const on line 26: `SHOW_ANIMATION = True` True stands for show graphic graphs, False for the opposite.
 
-
+All of the algorithm's output will be saved to a log file in the project's directory under the name <algorithm name>.log
+You are now ready to start the execution of your test.
