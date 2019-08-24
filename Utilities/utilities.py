@@ -1,3 +1,6 @@
+import logging
+import os
+
 import math
 from typing import List, Iterator
 from Graph_Objects import Node
@@ -7,20 +10,37 @@ from itertools import cycle
 from Graph_Objects.buidling_sizes import Size
 
 
+logger = logging.getLogger(__name__)
+
+
+def set_up_logger(log_name: str):
+    logging.basicConfig(filename=os.getcwd() + log_name,
+                        filemode='w',
+                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.INFO)
+
+    os.chmod(os.getcwd() + log_name, 777)
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    logging.getLogger("").addHandler(console)
+
+
 def get_building_size(size: Size) -> List:
     if size == Size.LARGE:
         return [90 / 60, 100 / 60, 110 / 60, 120 / 60, 130 / 60, 140 / 60, 150 / 60, 160 / 60, 170 / 60, 180 / 60]
     elif size == Size.MEDIUM:
-        return [5 / 6, 1, 7 / 6, 4 / 3, 3 / 2]
+        return [50 / 60, 1, 70 / 60, 80 / 60, 90 / 60]
     elif size == Size.SMALL:
-        return [1 / 3, 1 / 2, 1 / 6, 2 / 3]
+        return [20 / 60, 30 / 60, 10 / 60, 40 / 60]
     else:
+        logger.error('Size is not supported')
         raise ValueError('Size is not supported')
 
 
-def print_total_time_distance(amount_of_total):
-    print(f"total distance (meters): {amount_of_total}")
-    print(f"total time in minutes: {weight_on_sub_path(amount_of_total)}\n")
+def print_total_time_distance(amount_of_total, logger: logging):
+    logger.info(f"total distance (meters): {amount_of_total}")
+    logger.info(f"total time in minutes: {weight_on_sub_path(amount_of_total)}\n")
 
 
 def randomize_dynamic_graph_size(size: Size) -> List:
