@@ -41,5 +41,5 @@ This shows I picked to test my algorithm on 50 buildings.
 
 Last you have the options to choose whether or not to show the result of your path in a 2D/3D model, by changing the boolean const on line 26: `SHOW_ANIMATION = True` True stands for show graphic graphs, False for the opposite.
 
-All of the algorithm's output will be saved to a log file in the project's directory under the name <algorithm name>.log
+All of the algorithm's output will be saved to a log file in the project's directory under the name <algorithm name+amount of graphs>.log
 You are now ready to start the execution of your test.
