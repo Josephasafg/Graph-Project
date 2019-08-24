@@ -1,9 +1,13 @@
+import logging
+
 import math
 from typing import List
 from numpy import arange
 from Graph_Objects.Node import Node
 from Utilities.dijkstra_utilities import get_motion_model
 from Utilities.utilities import print_total_time_distance
+
+logger = logging.getLogger(__name__)
 
 
 class DijkstraPlanner:
@@ -33,14 +37,14 @@ class DijkstraPlanner:
         while True:
             if len(open_set) == 0:
                 flag = 1
-                print("Open set is empty..")
+                logger.info("Open set is empty..")
                 break
 
             c_id = min(open_set, key=lambda o: open_set[o].cost)
             current = open_set[c_id]
 
             if current.x == goal_node.x and current.y == goal_node.y:
-                print("Find goal")
+                logger.info("Find goal")
                 goal_node.pind = current.pind
                 goal_node.cost = current.cost
                 break
@@ -73,7 +77,7 @@ class DijkstraPlanner:
                         open_set[n_id] = node
 
         result_x, result_y, amount_of_total = self.calc_final_path(goal_node, closed_set)
-        print_total_time_distance(amount_of_total)
+        print_total_time_distance(amount_of_total, logger)
 
         return result_x, result_y, amount_of_total, flag
 

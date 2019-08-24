@@ -1,9 +1,12 @@
+import logging
 import time
 import functools
 from math import sqrt
 from Graph_Objects.Node import Node
 global_list = list()
 global_list.append(0.0)
+
+logger = logging.getLogger(__name__)
 
 
 def calc_time_constraint(start_node: Node, goal_node: Node) -> float:
@@ -16,8 +19,8 @@ def calc_time_constraint(start_node: Node, goal_node: Node) -> float:
 
 
 def calculate_average_time(tries: int, item: str):
-    print(f"Total amount of {item}: {tries}")
-    print(f"Average time it took for the algorithm to run for one {item} is: {global_list[0] / tries} seconds\n")
+    logger.info(f"Total amount of {item}: {tries}")
+    logger.info(f"Average time it took for the algorithm to run for one {item} is: {global_list[0] / tries} seconds\n")
 
 
 def timer(func):
@@ -27,7 +30,7 @@ def timer(func):
         value = func(*args, **kwargs)
         end_time = time.perf_counter()
         run_time = end_time - start_time
-        print(f"Finished {func.__name__!r} in {run_time:.4f} secs")
+        logger.info(f"Finished {func.__name__!r} in {run_time:.4f} secs")
         global_list.insert(0, global_list[0] + run_time)
         return value
     return wrapper_timer
